@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta property="og:title" content="Géométrie Non-Commutative" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://http://alpheccar.github.com/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ],displayMath: [ ['$$','$$'], ["\\[","\]"] ],processEscapes: true}});</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" /></script><link rel="apple-touch-icon" href="http://http://alpheccar.github.com/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://http://alpheccar.github.com/favicon.ico" /><script src="http://http://alpheccar.github.com/rsrc/jquery.js" /></script><link href="http://http://alpheccar.github.com/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>Géométrie Non-Commutative</title>
+<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<body><div page><div id="banner"><a href="http://http://alpheccar.github.com/index.html"><img src="http://http://alpheccar.github.com/rsrc/banner.png">
+</a>
+</div>
+<div id="content"><h1>Géométrie Non-Commutative</h1><p>La géométrie non-commutative est une belle création des mathématiques du XXème siècle. C’est très abstrait mais très puissant et je voudrais essayer ici d’en exposer les idées principales pour le profane.
+</p><h1>La géométrie</h1><h2>Approche axiomatique</h2><p>Il y a plusieurs façons d’axiomatiser la géométrie. On peut, comme Euclide, postuler l’existence de certaines figures (points, droites, cercles) et étudier les
+relations de ces figures les unes par rapport aux autres ainsi que les propriétés vérifiées par chaque classe de figure. On ne cherchera pas à définir de 
+quoi sont faites ces figures. Ainsi, on ne dira pas qu’une droite est faite de points mais plutôt que deux droites qui ne sont pas parallèles se coupent en un point.
+</p><p>En étudiant les propriétés relatives de différentes figures, on découvre que la géométrie Euclidienne n’est pas la seule possible. Par exemple, dans la terminologie non standard de Hofstadter, nous avons les géométries : projective, affine, elliptique, iffine, hyperaffine, euclidienne, euclidual, hyperiffine, contra-affine, contra-iffine, écliptique, hyperbolique, contrajective, hyperbual, contra-offine, contra-uffine, hyperoffine, hyperb-euclidienne, hyperb-euclidual, hyperuffine, offine, uffine, subtropical et subjective.
+</p><p>Ce point de vue axiomatique amène à considérer les symétries qui existent pour une géométrie donnée. Pour la géométrie Euclidienne, il s’agit des transformations qui 
+conservent les angles et les distances. Le groupe constitué par ces symétries encode tout ce qu’il y a à savoir sur la géométrie en question.
+</p><p>En changeant de groupe on peut ainsi définir des géométries différentes qui ne sont plus des géométries du plan Euclidien. C’est le programme d’<a href="http://www.math.mcgill.ca/~malkoun/Erlangen_Program/Erlangen_Program.html">Erlangen</a>.
+</p><h2>Approche ensembliste</h2><p>Mais, si l’on veut utiliser les outils analytiques et algébriques pour la géométrie, il faut alors introduire des coordonnées pour les points. Et, il devient alors 
+nécessaire de définir qu’une droite est un ensemble de points pour pouvoir décrire algébriquement cette droite puisque le pont entre la géométrie 
+et l’algèbre se fait au niveau du point via l’introduction de coordonnées.
+</p><p>On passe donc dans le domaine de la théorie des ensembles. Mais, un ensemble d’éléments n’a pas de forme. Pour donner une forme 
+à un ensemble il faut introduire des structures mathématiques additionnelles.
+</p><h1>Les différentes structures pour l’approche ensembliste</h1><h2>Topologie</h2><p>La première de ces structures est la topologie. Donner une topologie à un ensemble c’est spécifier comment les points sont placés les uns par rapport aux
+autres. Cette notion ne prend pas en compte les distances. On parle à ce stade de géométrie des surfaces en caoutchouc. Du point de vue topologique,
+par exemple, il n’y a pas de différence entre une boule et un cube. La topologie définit les notions premières comme le nombre de morceaux, le nombre de trous,
+la continuité …
+</p><p>La topologie est une structure très abstraite et pas facile à manipuler. Si vous avez la topologie d’un espace très abstrait et impossible à imaginer, vous aurez 
+du mal à en extraire le nombre de trous. Ainsi, les mathématiciens ont besoin d’introduire des structures additionnelles qui permettent d’extraire des informations
+de la topologie par la construction d’invariants. 
+</p><p>Un invariant est un gadget algébrique calculé à partir d’une structure additionnelle. Lorsque l’objet est
+déformé sans que sa topologie change (même nombre de trous, de morceaux etc…), la structure additionnelle va changer. Il n’y a aucune raison qu’elle ne soit
+pas impactée. Mais, l’invariant, bien que construit à partir de cette structure additionnelle, ne va pas changer ! Il reflète donc des propriétés topologiques.
+</p><p>Par exemple, on pourrait introduire une structure additionnelle permettant de calculer la courbure d’un espace. D’un point de vue topologique, une sphère ou un
+ellipsoïde ont la même topologie mais pas la même courbure. Il est néanmoins possible de calculer, grâce à cette courbure, un invariant qui ne dépend
+que du nombre de trous sur la surface ! Déformer la sphère pour un faire un ellipsoïde va changer la courbure mais pas le nombre de trous.
+</p><p>L’étude des transformations qui conservent une structure est une procédure normale en maths. Pour la topologie ces transformations sont les 
+homéomorphismes. 
+</p><h2>Structure différentielle</h2><p>Une fois que l’on a donné une forme préliminaire à un ensemble via une topologie, on peut construire une structure additionnelle qui va permettre 
+de donner des coordonnées aux points de l’ensemble. Ces coordonnées pourront servir à définir des trajectoires par exemple.  Cette structure
+additionnelle est la structure différentielle. C’est en gros un ensemble de cartes qui forment un atlas. 
+</p><p>Mais, il y a certaines restrictions. Par exemple, on peut repérer
+un point sur la surface terrestre grâce à la longitude et latitude. Il n’y a donc besoin que d’une seule carte (un seul système de coordonnées). Mais ces
+coordonnées ne se comportent pas bien aux pôles. En effet, un pôle est défini par une latitude et une infinité de longitudes puisque un pôle se trouve
+sur tous les méridiens. Dans les structures différentielles, on veut qu’un point ait une et une seule coordonnée possible dans une carte donnée. Donc, le globe 
+terrestre nécessite au minimum deux cartes : deux systèmes de coordonnées.
+</p><p>Dans un atlas, certains points peuvent appartenir à plusieurs cartes différentes. On peut décrire la position d’un point en utilisant des systèmes de 
+coordonnées différents. Il faut pouvoir passer d’un point de vue à un autre. On a donc besoin de changements de carte. Ces changements de cartes
+doivent vérifier des contraintes techniques : continuité etc… On dit que les cartes doivent êtres compatibles.
+</p><p>On ne peut pas considérer autant de cartes que l’on veut. S’il y a trop de cartes, trop de redondance dans la description, alors certains changements de
+cartes ne vérifierons pas les contraintes. On arrive ainsi à la notion d’Atlas maximum : le plus grand nombre de cartes compatibles (mais maximum ne 
+signifie pas forcément fini).
+</p><p>Sur un même espace topologique, on peut souvent définir plusieurs Atlas maxima différents. Mais, il existe souvent des transformations 
+(les difféomorphismes) qui  permettent de passer d’un point de vue à l’autre. Donc, les structures différentielles définies par ces Atlas sont équivalentes.
+</p><p>Cela a été une grande surprise de découvrir que sur certains espaces topologiques on peut définir des structures différentielles qui sont fondamentalement
+différentes. Il n’existe pas de difféomorphisme permettant de passer d’un point de vue à l’autre. On parle de structures exotiques. Sur la sphère S7, il
+en existe 28. On le sait mais on n’a jamais pu en construire une seule.
+</p><p>Avec ces structures différentielles, on peut construire l’algèbre des formes extérieures qui permet de définir des répartitions. Par exemple : une répartition
+de charges permettant de calculer la quantité de charges contenues dans une portion d’espace. Notez que je ne parle pas de densité de charges ni de
+charges contenues dans un volume. Une forme extérieure est un nouveau gadget algébrique. Le mot forme dans “forme extérieure” ne doit pas être compris dans un sens géométrique. Prenez ça comme une appellation bizarre.
+</p><h2>Théorie de la mesure</h2><p>Avec les formes extérieures on a introduit une notion de mesure qui permet de mesurer ce que contient une portion de l’espace. La théorie de la mesure pourrait se
+passer des formes et être définie sans  structure différentielle mais c’est plus agréable de passer par la notion de forme.
+</p><h2>Structure métrique</h2><p>Une fois toutes ces structures définies, on peut enfin parler de la notion de distance et définir une structure métrique qui permettra aussi de parler de volume,
+de densité.
+</p><h2>Structures algébriques (linéaire, affine …)</h2><p>Enfin, certains espaces auront aussi une structure algébrique et donc un groupe de symétries pour cette structure ce qui permettra de retrouver la notion de
+géométrie telle que définie au début.
+</p><p>Par exemple, si l’on part de l’ensemble R^2 et que l’on suit la procédure précédente, on reconstruit la géométrie Euclidienne. La structure algébrique que
+l’on obtient est celle d’espace vectoriel ou espace affine.
+</p><h1>Algébrisation</h1><h2>La notion de point</h2><p>Ca paraît compliqué mais cela fournit des outils puissants. Cette approche a été motivé par la nécessité de tout construire avec des points pour pouvoir se
+servir du concept de coordonnées. Cela peut paraître surprenant, mais cette approche ouvre la voie à un abandon total de la notion de point ! Tout en
+offrant des outils algébriques encore plus puissants.
+</p><p>En effet, la notion de point est une approximation. Dans la réalité, nous utilisons des appareils de mesure : des appareils naturels comme nos sens ou
+des appareils artificiels. Ces appareils mesurent toujours une grandeur dans un volume donné et pendant un temps donné. Autrement dit, nous n’avons
+pas accès directement aux points d’un espace mais seulement par l’intermédiaire de fonctions définies sur cet espace de points.
+</p><p>Or, il se trouve que dans de nombreux cas l’espace géométrique d’origine peut être encodé par un objet algébrique qui peut s’interpréter comme une algèbre
+de fonctions définies sur cet espace. Cet objet permet de retrouver l’espace initial : ses points et sa topologie.
+</p><p>Ainsi, ce qui compte au final ce ne sont plus les points qui disparaissent totalement au profit d’une vision plus abstraite fondée sur des fonctions.
+</p><p>Mais on peut aller plus loin : les structures géométriques (distance, mesure …)  définies sur l’espace de départ, grâce à la notion de point , peuvent être transportées
+dans le domaine algébrique. On se retrouve finalement avec des objets purement algébriques qui permettent de faire de la géométrie sans la notion
+de point. C’est la géométrie algébrique (au sens large car “géométrie algébrique” se rapporte en maths à un domaine bien précis et qui
+établit une correspondance entre certain types d’espaces et certain types d’objets algébriques). 
+</p><p>Cette approche algébrique de la géométrie fournit des outils très puissants et suggère des généralisations de la notion même d’espace géométrique. 
+Par exemple : les schémas et la géométrie non commutative.
+</p><h2>Besoin de dépasser l’approche standard</h2><h3>Equations sur le tore</h3><p>Considérons l’équation dy=kdx (seule équation considérée dans ce texte). Dans le plan, c’est une équation qui décrit des droites. k étant la pente de la droite.
+Cette équation a une infinité de solutions car pour une pente donnée k, il existe des tas de droites parallèles de pente k.
+</p><p>Il est intéressant de décrire l’espace de toutes les solutions d’une équation. On peut souvent donner une forme géométrique à cet espace et cette
+géométrie nous enseigne plein de choses sur les propriétés de l’équation initiale. 
+</p><p>Mais, cet espace est parfois si étrange, même pour des équations simples, que les outils géométriques que je viens d’exposer ne peuvent plus rien !
+</p><p>Reprenons l’équation précédente mais cette fois-ci sur un tore (un doughnut). Sur les dessins ci-dessous j’ai tracé deux solutions comme si c’était des
+ ficelles s’enroulant autour du tore. Bien entendu, les solutions de l’équation sont des courbes sur le tore. Mais, avec les ficelles c’est plus joli.
+</p><div class="picture"><a href="http://http://alpheccar.github.com/post/2/torus_above.jpg" rel="prettyPhoto"><img src="http://http://alpheccar.github.com/post/2/torus_above.jpg"></a></div><div class="picture"><a href="http://http://alpheccar.github.com/post/2/torus_front.jpg" rel="prettyPhoto"><img src="http://http://alpheccar.github.com/post/2/torus_front.jpg"></a></div><p>Ces deux solutions sont “parallèles” (même pente) et périodiques. On pourrait penser qu’excepté cette périodicité due à la 
+forme du tore, on a une situation similaire à celle du plan. Mais, il y a un gros problème. La périodicité n’existe que lorsque k est rationnel car une fraction
+finit par avoir un développement décimal périodique après la virgule.
+</p><p>Si k est irrationnel, la courbe ne se referme jamais sur le tore. Elle est dense dans le tore. Tout point du tore est infiniment proche de la courbe. Et,
+toutes ces courbes ne peuvent être distinguées du tore entier par des fonctions continues. Ainsi, on a une infinité non dénombrable (car il y a plus d’irrationnels
+que de nombres rationnels) de solutions différentes mais qui ne peuvent être distinguées les unes des autres par les outils géométriques habituels.
+</p><h2>La géométrie non-commutative</h2><p>La géométrie non-commutative est une généralisation de la géométrie, inspirée par la physique quantique,
+dont le but est de pouvoir étudier des espaces aussi bizarres. L’idée est simple : un espace traditionnel
+peut être représenté par une structure algébrique commutative (ab=ba). On est capable de coder tous les outils géométriques
+dans cette structure algébrique. Serait-il possible de généraliser ces outils à des structures algébriques
+non commutatives (ab <> ba) qui seraient alors une description algébrique d’espaces impossibles à
+définir de façon traditionnelle ? On aurait alors une généralisation de la notion même d’espace
+géométrique. 
+</p><p>Cela est en effet possible bien que cela soit très abstrait. La géométrie non commutative permet
+d’étudier des espaces comme l’espace de tous les pavages non périodiques de Penrose
+</p><div class="picture"><a href="http://www.lbl.gov/wonder/images/rotenberg/quasi-tiling.jpg" rel="prettyPhoto"><img src="http://www.lbl.gov/wonder/images/rotenberg/quasi-tiling.jpg"></a></div><p>ou des espaces
+quantiques (plan quantique, sphère quantique…) qui sont des versions non commutatives des espaces 
+traditionnels. 
+</p><p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
+</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-text="Géométrie Non-Commutative" data-url="http://http://alpheccar.github.com/content/2.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js" /></script></div><div class="socialButton"><g:plusone href="http://http://alpheccar.github.com/content/2.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://http://alpheccar.github.com/content/2.html&amp;send=false&amp;layout=button_count&amp;width=450&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '2';var disqus_url = "http://http://alpheccar.github.com/content/2.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
+<div id="sidebar"><div id="about"><img src="http://http://alpheccar.github.com/rsrc/iconpage.png" /></div><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div></div><div id="tags"><h1>Tags</h1><div class="tag3"><a href="http://http://alpheccar.github.com/maths.html">maths</a></div><div class="tag3"><a href="http://http://alpheccar.github.com/general%20relativity.html">general relativity</a></div><div class="tag3"><a href="http://http://alpheccar.github.com/physics.html">physics</a></div><div class="tag3"><a href="http://http://alpheccar.github.com/algebra.html">algebra</a></div><div class="tag3"><a href="http://http://alpheccar.github.com/fractal.html">fractal</a></div><div class="tag3"><a href="http://http://alpheccar.github.com/geometry.html">geometry</a></div><div class="tag3"><a href="http://http://alpheccar.github.com/haskell.html">haskell</a></div><div class="tag3"><a href="http://http://alpheccar.github.com/iPhone.html">iPhone</a></div><div class="tag3"><a href="http://http://alpheccar.github.com/linguistique.html">linguistique</a></div><div class="tag3"><a href="http://http://alpheccar.github.com/web.html">web</a></div></div><div id="feed"><a class="feed" href="http://http://alpheccar.github.com/atom.xml">feed</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript" src="http://apis.google.com/js/plusone.js" /></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>alpheccar&#39;s blog</title>
+<link href="http://http://alpheccar.github.com/atom.xml" rel="self" />
+<link href="http://http://alpheccar.github.com" />
+<id>http://www.alpheccar.org</id>
+<updated>2011-07-27T15:16:10Z</updated>
+<author><name>alpheccar</name>
+</author>
+<entry><title>Relativité Générale</title>
+<link rel="alternate" type="text/html" href="http://http://alpheccar.github.com/content/3.html" />
+<id>3</id>
+<updated>2011-07-27T15:16:10Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>La meilleure théorie de la gravitation que l'on a est la relativité générale d'Einstein. Dans ce texte, je vais essayer d'expliquer, pour les profanes, ce que cette théorie nous enseigne sur le fonctionnement du monde. Il est nécessaire d'avoir lu et compris le chapitre sur la relativité restreinte que j'avais écrit pour le texte intitulé : Relativité Restreinte, Physique Quantique et Non-localité.
+</p></div>
+</content>
+</entry>
+<entry><title>Géométrie Non-Commutative</title>
+<link rel="alternate" type="text/html" href="http://http://alpheccar.github.com/content/2.html" />
+<id>2</id>
+<updated>2011-07-27T15:15:57Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>La géométrie non-commutative est une belle création des mathématiques du XXème siècle. C’est très abstrait mais très puissant et je voudrais essayer ici d’en exposer les idées principales pour le profane.
+</p></div>
+</content>
+</entry>
+<entry><title>Comment lire les hiéroglyphes I ?</title>
+<link rel="alternate" type="text/html" href="http://http://alpheccar.github.com/content/1.html" />
+<id>1</id>
+<updated>2011-07-27T15:15:45Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>Le système des hiéroglyphes est complexe et il ne sera donc question, ci-dessous, que d’une très rapide introduction au sujet mais néanmoins suffisante pour pouvoir commencer à décrypter quelques portions de phrases.
+</p></div>
+</content>
+</entry>
+<entry><title>Galois Connections</title>
+<link rel="alternate" type="text/html" href="http://http://alpheccar.github.com/content/32.html" />
+<id>32</id>
+<updated>2011-07-27T15:15:35Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>I propose you a very small overview of Galois connections. But first, I need to answer the question : why in English ?  I have realized that more and more people coming to this site are foreigners not reading French. So, I decided to write some texts in English assuming that people who can understand complex scientific texts can also read English. The other scientific texts (for grand public) and the ones about philosophy of freedom will still be written in French.
+</p></div>
+</content>
+</entry>
+<entry><title>Les Trous Noirs</title>
+<link rel="alternate" type="text/html" href="http://http://alpheccar.github.com/content/31.html" />
+<id>31</id>
+<updated>2011-07-27T15:15:16Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>Tout ce que vous avez toujours voulu savoir (ou presque) sur les trous noirs sans jamais oser le demander :-)
+</p><p>Avant de lire ce texte, je vous conseille fortement de relire la première partie de mon texte Relativité Restreinte, Physique Quantique et Non-localité qui parle des cônes de lumière ainsi que mon texte sur la Relativité Générale. En effet, les trous noirs sont des objets relativistes et il est donc nécessaire d’avoir quelques idées sur le sujet.
+</p></div>
+</content>
+</entry>
+</feed>
