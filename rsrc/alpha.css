@@ -29,6 +29,16 @@ a:visited {
  color:#73A;
 }
 
+.notFound {
+	color: red;
+	border-style: solid;
+	border-color: red;
+	margin-top: 0;
+	font: xx-large Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
+
 div .socialButton iframe {
      border:none; 
      width:90px; 
