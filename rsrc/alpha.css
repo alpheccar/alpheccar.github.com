@@ -21,6 +21,14 @@ a {
   text-decoration: none;
 }
 
+a:link {
+  color:#00E;
+}
+
+a:visited {
+ color:#73A;
+}
+
 div .socialButton iframe {
      border:none; 
      width:90px; 
