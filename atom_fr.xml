@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>alpheccar&#39;s blog</title>
+<link href="http://www.alpheccar.org/atom_fr.xml" rel="self" />
+<link href="http://www.alpheccar.org" />
+<id>http://www.alpheccar.org</id>
+<updated>2011-07-27T19:28:08Z</updated>
+<author><name>alpheccar</name>
+</author>
+<entry><title>Cross-compiling Haskell</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/94fr.html" />
+<id>94fr</id>
+<updated>2011-07-27T19:28:08Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>These patches (for GHC HEAD) would not have been possible without the first <a href="http://projects.haskell.org/ghc-iphone/">iphone-ghc patch</a> by Stephen Blackheath. He did a really big work on that patch.
+So, anything smart in this new version is from Stephen and any problem is probably coming from me.
+</p><p>For lots of reasons, I decided to port Stephen's patch to the new GHC build system and do some cleaning (like adding compilation flags and makefile variables).
+When I started I did not know anything about this new build system and I was not aware that Cabal was so smart and doing so many things. So, what is emerging from this work is that I absolutely don't understand Cabal and only very partially the new build system. The patch will need lot of work to be clean and generic. Some problems were solved with ad'hoc assumptions likely to be wrong in different environments.
+</p></div>
+</content>
+</entry>
+<entry><title>Meaning and monads</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/90fr.html" />
+<id>90fr</id>
+<updated>2011-07-27T19:27:47Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>This post is not about functional programming but about plain old imperative languages (C, Java, Python ... replace the dots with your favorite imperative language). I will try to show that you are forced to invent monads if you want to define the meaning of imperative languages ! I have not yet seen this approach to monads in the blogs and tutorials available on the web so I thought it could be a good idea to say a few words about it.
+</p></div>
+</content>
+</entry>
+<entry><title>Web Objects and the underappreciated recursive do</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/89fr.html" />
+<id>89fr</id>
+<updated>2011-07-27T19:27:36Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>I am doing some additional experiments with Haskell and web development. In this post, I am looking at the problem of composability for web pages.
+</p><p>I have tested different methods for building a web page and what I don't like is the lack of composability. When I look at most
+web pages, I see several components with their own state and control flow. But, when I build a web page from those components, the composability on
+the server side (for the request handlers) is less obvious.
+</p></div>
+</content>
+</entry>
+<entry><title>HTTP content-type comparison at the type level</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/88fr.html" />
+<id>88fr</id>
+<updated>2011-07-27T19:27:24Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>If you read <a href="http://www.alpheccar.org/content/87.html">my previous post</a>, you'll be interested by this one. Indeed, I have discovered that the idea introduced in the previous post is working but not practical at all since it does not work with type synonym definitions. But, without synonyms, you can't really write the kind of types required to do http content-type comparison at the type level. By luck, some additional type hacking is solving the problem. Moreover, I think it can be useful to show in a very informal way a few applications of computations at type level. It is not so hard (but not totally trivial. I had to make several experiments to get it right).
+</p></div>
+</content>
+</entry>
+<entry><title>A Web Monad</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/87fr.html" />
+<id>87fr</id>
+<updated>2011-07-27T19:27:11Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>In my last post, I was writing about the use of coproduct of free monads to do content-type dispatching in a web monad. It was working but it was not the right approach. I changed everything and introduced a lattice of lists at the type level to track hierarchical dependencies between formats and do content-type dispatching thanks to type information. I also added a few other features to my Web Monad.
+</p></div>
+</content>
+</entry>
+</feed>
