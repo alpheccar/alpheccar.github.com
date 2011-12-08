@@ -236,6 +236,7 @@ div.code {
       padding-left: 5px;
       font-family:monospace;
       white-space: pre;
+      line-height:0.9em;
 }
     
 .code br {

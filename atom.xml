@@ -3,9 +3,17 @@
 <link href="http://www.alpheccar.org/atom.xml" rel="self" />
 <link href="http://www.alpheccar.org" />
 <id>http://www.alpheccar.org</id>
-<updated>2011-07-27T19:28:08Z</updated>
+<updated>2011-12-08T16:11:02Z</updated>
 <author><name>alpheccar</name>
 </author>
+<entry><title>Comparing Ice Cream Sandwich with iOS 5</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/95.html" />
+<id>95</id>
+<updated>2011-12-08T16:11:02Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>In this document, I am trying to compare the APIs of ICS with those of iOS 5. So, the comparison is from the point of view of the developer. And I am looking only at the public APIs documented on the Android SDK web site. I know there are other APIs in the source code and they may be used by some applications. But if they are private it means they may change in the future and the applications using them would break. 
+</p></div>
+</content>
+</entry>
 <entry><title>Cross-compiling Haskell</title>
 <link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/94.html" />
 <id>94</id>
@@ -41,14 +49,6 @@ the server side (for the request handlers) is less obvious.
 <id>88</id>
 <updated>2011-07-27T19:27:24Z</updated>
 <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>If you read <a href="http://www.alpheccar.org/content/87.html">my previous post</a>, you'll be interested by this one. Indeed, I have discovered that the idea introduced in the previous post is working but not practical at all since it does not work with type synonym definitions. But, without synonyms, you can't really write the kind of types required to do http content-type comparison at the type level. By luck, some additional type hacking is solving the problem. Moreover, I think it can be useful to show in a very informal way a few applications of computations at type level. It is not so hard (but not totally trivial. I had to make several experiments to get it right).
-</p></div>
-</content>
-</entry>
-<entry><title>A Web Monad</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/87.html" />
-<id>87</id>
-<updated>2011-07-27T19:27:11Z</updated>
-<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>In my last post, I was writing about the use of coproduct of free monads to do content-type dispatching in a web monad. It was working but it was not the right approach. I changed everything and introduced a lattice of lists at the type level to track hierarchical dependencies between formats and do content-type dispatching thanks to type information. I also added a few other features to my Web Monad.
 </p></div>
 </content>
 </entry>
