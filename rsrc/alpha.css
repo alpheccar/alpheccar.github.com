@@ -80,7 +80,43 @@ div .socialButton iframe {
 
 #content h1 {
     line-height:1.4em;
+    background-color: #CCF;
+    font-size: 2.5em;
+    
 }
+
+#content h2 {
+    font-size: 2em;
+    font-weight: bold;
+    
+}
+
+#content h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    
+}
+
+#content h4 {
+    font-weight: bold;
+	margin: 0;
+	font-size: 1.1em;
+}
+
+#content div.posttitle {
+    line-height:1.4em;
+    font-weight: bold;
+    font-size: 3em;
+}
+
+.postQuote p {
+	margin-top: 0;
+}
+
+.postQuote {
+	padding-bottom: 1em;
+}
+
 
 #sidebar {
 padding: 10px 10px 0 10px;
@@ -227,6 +263,8 @@ div.picture img {
 
 .caption {
   text-align:center;
+	margin-top: 1em;
+	margin-bottom: 1em;
 }
 
 /* CODE */
