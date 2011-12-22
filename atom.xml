@@ -21,7 +21,7 @@
 <link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/95.html" />
 <id>95</id>
 <updated>2011-12-11T13:10:00Z</updated>
-<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>In this document, I am trying to compare the APIs of ICS with those of iOS 5. So, the comparison is from the point of view of the developer. And I am looking only at the public APIs documented on the Android SDK web site. I know there are other APIs in the source code and they may be used by some applications. But if they are private it means they may change in the future and the applications using them would break. 
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>In this document, I am trying to compare the APIs of ICS with those of iOS 5. So, the comparison is from the point of view of the developer. And, I am looking only at the public APIs documented on the Android SDK web site. I know there are other APIs in the source code and they may be used by some applications. But if they are private it means they may change in the future and the applications using them would break. 
 </p></div>
 </content>
 </entry>
