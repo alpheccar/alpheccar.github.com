@@ -3,9 +3,18 @@
 <link href="http://www.alpheccar.org/atom_fr.xml" rel="self" />
 <link href="http://www.alpheccar.org" />
 <id>http://www.alpheccar.org</id>
-<updated>2011-12-16T19:30:00Z</updated>
+<updated>2012-04-27T18:30:00Z</updated>
 <author><name>alpheccar</name>
 </author>
+<entry><title>Inference in Discrete Bayesian Networks with Haskell</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/98fr.html" />
+<id>98fr</id>
+<updated>2012-04-27T18:30:00Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>I am learning the algorithms used for inference with discrete bayesian networks. I decided to write an implementation in Haskell to give me an opportunity to code a bit in this beautiful language (I don't have a lot of opportunities at my office).
+</p><p>The first version of the library hbayes is very preliminary but already supporting junction trees.
+</p></div>
+</content>
+</entry>
 <entry><title>Gastronomy of the French Riviera</title>
 <link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/96fr.html" />
 <id>96fr</id>
@@ -41,17 +50,6 @@ When I started I did not know anything about this new build system and I was not
 <id>90fr</id>
 <updated>2011-12-10T13:10:00Z</updated>
 <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>This post is not about functional programming but about plain old imperative languages (C, Java, Python ... replace the dots with your favorite imperative language). I will try to show that you are forced to invent monads if you want to define the meaning of imperative languages ! I have not yet seen this approach to monads in the blogs and tutorials available on the web so I thought it could be a good idea to say a few words about it.
-</p></div>
-</content>
-</entry>
-<entry><title>Web Objects and the underappreciated recursive do</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/89fr.html" />
-<id>89fr</id>
-<updated>2011-12-10T13:10:00Z</updated>
-<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>I am doing some additional experiments with Haskell and web development. In this post, I am looking at the problem of composability for web pages.
-</p><p>I have tested different methods for building a web page and what I don't like is the lack of composability. When I look at most
-web pages, I see several components with their own state and control flow. But, when I build a web page from those components, the composability on
-the server side (for the request handlers) is less obvious.
 </p></div>
 </content>
 </entry>
