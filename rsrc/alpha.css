@@ -244,6 +244,14 @@ div.picture img {
   text-align:center;
 }
 
+div.file img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width:90%;
+  text-align:center;
+}
+
 .video {
   display: block;
   margin-left: auto;
