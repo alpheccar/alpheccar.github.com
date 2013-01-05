@@ -1,1 +1,78 @@
-<div id="tags"><h1>Tags</h1><div class="tag3"><a href="http://www.alpheccar.org/API.html">API</a></div><div class="tag3"><a href="http://www.alpheccar.org/ARM.html">ARM</a></div><div class="tag3"><a href="http://www.alpheccar.org/Algebre.html">Algèbre</a></div><div class="tag3"><a href="http://www.alpheccar.org/Android.html">Android</a></div><div class="tag3"><a href="http://www.alpheccar.org/Bayes.html">Bayes</a></div><div class="tag3"><a href="http://www.alpheccar.org/Biologie.html">Biologie</a></div><div class="tag3"><a href="http://www.alpheccar.org/Category%20Theory.html">Category Theory</a></div><div class="tag3"><a href="http://www.alpheccar.org/Coq.html">Coq</a></div><div class="tag3"><a href="http://www.alpheccar.org/Entropie.html">Entropie</a></div><div class="tag3"><a href="http://www.alpheccar.org/Food.html">Food</a></div><div class="tag3"><a href="http://www.alpheccar.org/Formal%20Proof.html">Formal Proof</a></div><div class="tag3"><a href="http://www.alpheccar.org/French%20Riviera.html">French Riviera</a></div><div class="tag3"><a href="http://www.alpheccar.org/Galois.html">Galois</a></div><div class="tag3"><a href="http://www.alpheccar.org/Gastronomy.html">Gastronomy</a></div><div class="tag3"><a href="http://www.alpheccar.org/Geometrie.html">Géométrie</a></div><div class="tag3"><a href="http://www.alpheccar.org/Geometrie%20Algebrique.html">Géométrie Algébrique</a></div><div class="tag1"><a href="http://www.alpheccar.org/Haskell.html">Haskell</a></div><div class="tag3"><a href="http://www.alpheccar.org/ICS.html">ICS</a></div><div class="tag3"><a href="http://www.alpheccar.org/Linguistique.html">Linguistique</a></div><div class="tag3"><a href="http://www.alpheccar.org/Logic.html">Logic</a></div><div class="tag2"><a href="http://www.alpheccar.org/Mathematics.html">Mathematics</a></div><div class="tag3"><a href="http://www.alpheccar.org/Mathematiques.html">Mathématiques</a></div><div class="tag3"><a href="http://www.alpheccar.org/Noeuds.html">Nœuds</a></div><div class="tag3"><a href="http://www.alpheccar.org/OMAP.html">OMAP</a></div><div class="tag2"><a href="http://www.alpheccar.org/PDF.html">PDF</a></div><div class="tag3"><a href="http://www.alpheccar.org/Philosophie.html">Philosophie</a></div><div class="tag2"><a href="http://www.alpheccar.org/Physique.html">Physique</a></div><div class="tag3"><a href="http://www.alpheccar.org/Physique%20Quantique.html">Physique Quantique</a></div><div class="tag3"><a href="http://www.alpheccar.org/Physique%20Statistique.html">Physique Statistique</a></div><div class="tag3"><a href="http://www.alpheccar.org/Probability.html">Probability</a></div><div class="tag3"><a href="http://www.alpheccar.org/Programmation%20Fonctionnelle.html">Programmation Fonctionnelle</a></div><div class="tag3"><a href="http://www.alpheccar.org/Programming%20Languages.html">Programming Languages</a></div><div class="tag3"><a href="http://www.alpheccar.org/Relativite.html">Relativité</a></div><div class="tag3"><a href="http://www.alpheccar.org/Relativite%20Generale.html">Relativité Générale</a></div><div class="tag3"><a href="http://www.alpheccar.org/Topologie.html">Topologie</a></div><div class="tag3"><a href="http://www.alpheccar.org/Virus.html">Virus</a></div><div class="tag2"><a href="http://www.alpheccar.org/Web.html">Web</a></div><div class="tag3"><a href="http://www.alpheccar.org/iOS.html">iOS</a></div></div>
+<div id="tags"><h1>Tags</h1>
+<div class="tag3"><a href="http://www.alpheccar.org/API.html">API</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/ARM.html">ARM</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Algebre.html">Algèbre</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Android.html">Android</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Bayes.html">Bayes</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Biologie.html">Biologie</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Category%20Theory.html">Category Theory</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Coq.html">Coq</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Entropie.html">Entropie</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Food.html">Food</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Formal%20Proof.html">Formal Proof</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/French%20Riviera.html">French Riviera</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Galois.html">Galois</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Gastronomy.html">Gastronomy</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Geometrie.html">Géométrie</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Geometrie%20Algebrique.html">Géométrie Algébrique</a>
+</div>
+<div class="tag1"><a href="http://www.alpheccar.org/Haskell.html">Haskell</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/ICS.html">ICS</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Linguistique.html">Linguistique</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Logic.html">Logic</a>
+</div>
+<div class="tag2"><a href="http://www.alpheccar.org/Mathematics.html">Mathematics</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Mathematiques.html">Mathématiques</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Noeuds.html">Nœuds</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/OMAP.html">OMAP</a>
+</div>
+<div class="tag2"><a href="http://www.alpheccar.org/PDF.html">PDF</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Philosophie.html">Philosophie</a>
+</div>
+<div class="tag2"><a href="http://www.alpheccar.org/Physique.html">Physique</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Physique%20Quantique.html">Physique Quantique</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Physique%20Statistique.html">Physique Statistique</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Probability.html">Probability</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Programmation%20Fonctionnelle.html">Programmation Fonctionnelle</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Programming%20Languages.html">Programming Languages</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Relativite.html">Relativité</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Relativite%20Generale.html">Relativité Générale</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Topologie.html">Topologie</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/Virus.html">Virus</a>
+</div>
+<div class="tag2"><a href="http://www.alpheccar.org/Web.html">Web</a>
+</div>
+<div class="tag3"><a href="http://www.alpheccar.org/iOS.html">iOS</a>
+</div>
+</div>

@@ -1,146 +1,396 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="Haskell Study Plan" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>Haskell Study Plan</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="Haskell Study Plan" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>Haskell Study Plan</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">Haskell Study Plan</div><p>I have recently convinced one of my friends to learn Haskell. But, he finds it very difficult. He is making a big effort and really wants to learn it but the beginning is hard and he may have spent too much time writing Java code.
-</p><p>So, to help him, I have written a short Haskell study plan. It may interest some other people so I decided to take the risk to post it on my blog. It is very informal and subjective but I think it is a good summary of the problems I had to solve myself to learn Haskell. So, when reading the post don't forget it was initially written for a friend and may look a bit too personal at some places. But, I don't have the energy to write another version.
-</p><h1>1.Forget the imperative world</h1><p>I think the most difficult for someone coming from the imperative world (Java, C etc...) is to look at program development in a totally different way : forget about state, control flow and time. A software is no more a succession of instructions changing a state.
-</p><p>You have to think in a totally different way : a software is a combination of data transformers.  You have some very powerful filters that you apply to data. You have combinators used to create complex filters from more simpler ones. A combinator is itself a kind of filter. There is no more any idea of state or time evolution. Once you have described the transformations to be applied to data to get the solution of your problem, the execution of the software must be understood as an algebraic simplification of your transformations. When no more simplification is possible you have your result.
-</p><p>Control flow is needed for what ? Most of the time it is needed to process some data which have a recursive structure (like a tree) or to extract some data from a structured object. For the former case, you use the powerful data transformers fold, map, iter, scan ... For the latter case you use pattern matching. In the unfrequent cases when you need more, you just use a recursive function.
-</p><p>Of course, nothing prevent you from reintroducing the notions of control flow, state and time in Haskell but you do it in a controlled way and only when needed. Most of the time, you should avoid these notions. If you use them too often it means you are still thinking in the imperative way. You must think in an algebraic way : you are really using an algebra of programming.
-</p><p>The data transformers generally respect some rules. For instance : 
-</p><div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>map</span>&nbsp;<span class='hs-varid'>g</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>map</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span><span class='hs-varop'>.</span><span class='hs-varid'>g</span><span class='hs-layout'>)</span><br/></div><p>In C, that kind of equivalence cannot be asserted because the order of evaluation matters (because of side effects and non local state). So, it is not possible to define an algebra of programming. Something as simple as f(x) + f(x) = 2 f(x) is generally wrong in C. It depends on f. In Haskell f+f is 2f so you can define an algebra of programming.
-</p><p>So, the first step for learning Haskell is to start learning the algebra of programming. Look at the Prelude. Learn the basic functions like map, fold etc.. Learn how to use them.
-</p><h1>2.Types</h1><p>Types are your friends. In C, types are used as a documentation and as an help for the compiler to generate better code. But they won't protect you from runtime errors because you can easily cast a value into the wrong type.
-</p><p>Types in Haskell are much much more powerful. They are strong so will prevent most of the runtime errors (a division by zero will raise an exception and is not detected at compile time by the types). Haskell types are a partial specification of your functions but giving a lot of information. Types are constraints on what a function is allowed to do or not. (I'll talk about that later in this post). 
-</p><p>The types are very flexible and it is the first strongly and statically typed language that I meet which is as pleasant to use as dynamically typed languages like Lisp. In fact, I only see one remaining reason for using dynamically typed languages : reflexivity when it is really needed (which is not so frequent). But I am less and less certain that advantage is compensating the problems with dynamic types : even if you are careful, are a good programmer, build the right abstractions you'll have too many details to check that could be more easily handled by the compiler. And, it is generally translated into much more unit tests and more exceptions at runtime and also more difficulty to prevent "leaky" abstractions. 
-</p><p>So, in Haskell you have to learn a bit about how to decode types and understand them. No need to be an expert in type theory or logic. It is easy. For instance, 
-</p><div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>b</span><span class='hs-keyglyph'>]</span><br/></div><p>The type of map is saying that map is taking as argument a function of type a -> b and a list of type [a] and is returning a list of type [b]. From the type we can nearly deduce what map is doing to the list.
-</p><p>Another weird thing is that a function of two variables has a type like:
-</p><div class="haskell"><span class='hs-definition'>f</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>c</span><br/></div><p>and not
-</p><div class="haskell"><span class='hs-definition'>f</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span><span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>c</span><br/></div><p>Why ?
-</p><p>Because you have to think about algebra : f 1 is not enough to get a result because f is needing two arguments but with one argument you can already start the simplification process and partially evaluate f. 
-</p><p>So, f 1 is a new function which is needing one argument. Don't forget : evaluation of a program is simplifying an algebraic expression. Forget state, forget time, forget control flow.
-</p><p>Is it useful ? Of course !
-</p><div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>+</span><span class='hs-num'>1</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>l</span><br/></div><p>We add 1 to all element of a list. So, we have partially evaluated the function + using just one argument. We get a new function and we finish the evaluation of this new function on each element of the list.
-</p><p>The list may even be infinite !
-</p><div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>+</span><span class='hs-num'>1</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>1</span><span class='hs-keyglyph'>..</span><span class='hs-keyglyph'>]</span><br/></div><p>Indeed, Haskell is lazy : it will first simplify the function definition and then it will simplify the arguments which are still needed. So, values will be computed only when needed. 
-</p><p>An infinite list is a data generation process that will generate elements only when needed by the data transformer which is consuming the list elements.
-</p><p>In the previous example, we should limit the consumption since map is consuming every element:
-</p><div class="haskell"><span class='hs-definition'>take</span>&nbsp;<span class='hs-num'>4</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>map</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>+</span><span class='hs-num'>1</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>1</span><span class='hs-keyglyph'>..</span><span class='hs-keyglyph'>]</span><br/></div><h1>3.Modules</h1><p>When a software is beginning to be complex, you have to modularize it and control what is visible from the clients of your modules. Modules are used for that : they allow to "encapsulate" your implementation and control what is visible from the outside. Since there is nothing new here, I won't detail. Most languages have similar features with more or less power.
-</p><h1>4.Class</h1><p>When we write:
-</p><div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>b</span><span class='hs-keyglyph'>]</span><br/></div><p>we have a function which can work with list of any type. It is the same function with the same definition for any kind of list.
-</p><p>Sometimes, we want to vary the definition according to the type. For instance, addition of integers, fractions and reals are implemented
+<div id="content"><div class="posttitle">Haskell Study Plan</div>
+<p>I have recently convinced one of my friends to learn Haskell. But, he finds it very difficult. He is making a big effort and really wants to learn it but the beginning is hard and he may have spent too much time writing Java code.
+</p>
+<p>So, to help him, I have written a short Haskell study plan. It may interest some other people so I decided to take the risk to post it on my blog. It is very informal and subjective but I think it is a good summary of the problems I had to solve myself to learn Haskell. So, when reading the post don't forget it was initially written for a friend and may look a bit too personal at some places. But, I don't have the energy to write another version.
+</p>
+<h1>1.Forget the imperative world</h1>
+<p>I think the most difficult for someone coming from the imperative world (Java, C etc...) is to look at program development in a totally different way : forget about state, control flow and time. A software is no more a succession of instructions changing a state.
+</p>
+<p>You have to think in a totally different way : a software is a combination of data transformers.  You have some very powerful filters that you apply to data. You have combinators used to create complex filters from more simpler ones. A combinator is itself a kind of filter. There is no more any idea of state or time evolution. Once you have described the transformations to be applied to data to get the solution of your problem, the execution of the software must be understood as an algebraic simplification of your transformations. When no more simplification is possible you have your result.
+</p>
+<p>Control flow is needed for what ? Most of the time it is needed to process some data which have a recursive structure (like a tree) or to extract some data from a structured object. For the former case, you use the powerful data transformers fold, map, iter, scan ... For the latter case you use pattern matching. In the unfrequent cases when you need more, you just use a recursive function.
+</p>
+<p>Of course, nothing prevent you from reintroducing the notions of control flow, state and time in Haskell but you do it in a controlled way and only when needed. Most of the time, you should avoid these notions. If you use them too often it means you are still thinking in the imperative way. You must think in an algebraic way : you are really using an algebra of programming.
+</p>
+<p>The data transformers generally respect some rules. For instance : 
+</p>
+<div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>map</span>&nbsp;<span class='hs-varid'>g</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>map</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span><span class='hs-varop'>.</span><span class='hs-varid'>g</span><span class='hs-layout'>)</span><br/></div>
+<p>In C, that kind of equivalence cannot be asserted because the order of evaluation matters (because of side effects and non local state). So, it is not possible to define an algebra of programming. Something as simple as f(x) + f(x) = 2 f(x) is generally wrong in C. It depends on f. In Haskell f+f is 2f so you can define an algebra of programming.
+</p>
+<p>So, the first step for learning Haskell is to start learning the algebra of programming. Look at the Prelude. Learn the basic functions like map, fold etc.. Learn how to use them.
+</p>
+<h1>2.Types</h1>
+<p>Types are your friends. In C, types are used as a documentation and as an help for the compiler to generate better code. But they won't protect you from runtime errors because you can easily cast a value into the wrong type.
+</p>
+<p>Types in Haskell are much much more powerful. They are strong so will prevent most of the runtime errors (a division by zero will raise an exception and is not detected at compile time by the types). Haskell types are a partial specification of your functions but giving a lot of information. Types are constraints on what a function is allowed to do or not. (I'll talk about that later in this post). 
+</p>
+<p>The types are very flexible and it is the first strongly and statically typed language that I meet which is as pleasant to use as dynamically typed languages like Lisp. In fact, I only see one remaining reason for using dynamically typed languages : reflexivity when it is really needed (which is not so frequent). But I am less and less certain that advantage is compensating the problems with dynamic types : even if you are careful, are a good programmer, build the right abstractions you'll have too many details to check that could be more easily handled by the compiler. And, it is generally translated into much more unit tests and more exceptions at runtime and also more difficulty to prevent "leaky" abstractions. 
+</p>
+<p>So, in Haskell you have to learn a bit about how to decode types and understand them. No need to be an expert in type theory or logic. It is easy. For instance, 
+</p>
+<div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>b</span><span class='hs-keyglyph'>]</span><br/></div>
+<p>The type of map is saying that map is taking as argument a function of type a -> b and a list of type [a] and is returning a list of type [b]. From the type we can nearly deduce what map is doing to the list.
+</p>
+<p>Another weird thing is that a function of two variables has a type like:
+</p>
+<div class="haskell"><span class='hs-definition'>f</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>c</span><br/></div>
+<p>and not
+</p>
+<div class="haskell"><span class='hs-definition'>f</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span><span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>c</span><br/></div>
+<p>Why ?
+</p>
+<p>Because you have to think about algebra : f 1 is not enough to get a result because f is needing two arguments but with one argument you can already start the simplification process and partially evaluate f. 
+</p>
+<p>So, f 1 is a new function which is needing one argument. Don't forget : evaluation of a program is simplifying an algebraic expression. Forget state, forget time, forget control flow.
+</p>
+<p>Is it useful ? Of course !
+</p>
+<div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>+</span><span class='hs-num'>1</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>l</span><br/></div>
+<p>We add 1 to all element of a list. So, we have partially evaluated the function + using just one argument. We get a new function and we finish the evaluation of this new function on each element of the list.
+</p>
+<p>The list may even be infinite !
+</p>
+<div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>+</span><span class='hs-num'>1</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>1</span><span class='hs-keyglyph'>..</span><span class='hs-keyglyph'>]</span><br/></div>
+<p>Indeed, Haskell is lazy : it will first simplify the function definition and then it will simplify the arguments which are still needed. So, values will be computed only when needed. 
+</p>
+<p>An infinite list is a data generation process that will generate elements only when needed by the data transformer which is consuming the list elements.
+</p>
+<p>In the previous example, we should limit the consumption since map is consuming every element:
+</p>
+<div class="haskell"><span class='hs-definition'>take</span>&nbsp;<span class='hs-num'>4</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>map</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>+</span><span class='hs-num'>1</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>1</span><span class='hs-keyglyph'>..</span><span class='hs-keyglyph'>]</span><br/></div>
+<h1>3.Modules</h1>
+<p>When a software is beginning to be complex, you have to modularize it and control what is visible from the clients of your modules. Modules are used for that : they allow to "encapsulate" your implementation and control what is visible from the outside. Since there is nothing new here, I won't detail. Most languages have similar features with more or less power.
+</p>
+<h1>4.Class</h1>
+<p>When we write:
+</p>
+<div class="haskell"><span class='hs-definition'>map</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>b</span><span class='hs-keyglyph'>]</span><br/></div>
+<p>we have a function which can work with list of any type. It is the same function with the same definition for any kind of list.
+</p>
+<p>Sometimes, we want to vary the definition according to the type. For instance, addition of integers, fractions and reals are implemented
 differently even if from a mathematical point of view we can see integers embedded into fractions and fractions into reals. So, we can say
 that it is always an addition.
-</p><p>First, we define the property of having an addition operation
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>Add</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>Then, we say that some type has the property of having an addition and we define it
-</p><div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Add</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-varid'>x</span>&nbsp;<span class='hs-varid'>y</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varop'>...</span><br/></div><p>It looks like OO but it is different. The instance are not runtime objects. It is not 3 or 4 which are instances of Add. It is Int !
-</p><p>instance means that the type has some property. It is another way to specify what a program can do and constrain it.
-</p><p>For instance, if I later decide to build an average function, I'll need an addition so I'll have to give this information:
-</p><div class="haskell"><span class='hs-definition'>average</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Add</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>For any type which can be added, I am able to compute an average of a list of elements of that type ... huh ? No ! I need also a division by
+</p>
+<p>First, we define the property of having an addition operation
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>Add</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>Then, we say that some type has the property of having an addition and we define it
+</p>
+<div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Add</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-varid'>x</span>&nbsp;<span class='hs-varid'>y</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varop'>...</span><br/></div>
+<p>It looks like OO but it is different. The instance are not runtime objects. It is not 3 or 4 which are instances of Add. It is Int !
+</p>
+<p>instance means that the type has some property. It is another way to specify what a program can do and constrain it.
+</p>
+<p>For instance, if I later decide to build an average function, I'll need an addition so I'll have to give this information:
+</p>
+<div class="haskell"><span class='hs-definition'>average</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Add</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>For any type which can be added, I am able to compute an average of a list of elements of that type ... huh ? No ! I need also a division by
 integers (length of the list). It is another property:
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>IntegerDivide</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>div</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>And then:
-</p><div class="haskell">&nbsp;<span class='hs-varid'>average</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Add</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>IntegerDivide</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>So, class are used to specify properties of the types. The properties are not always unrelated. For instance,
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Eq</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>Show</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Num</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/></div><p>Any type which has the property of being a Number has also the property of being testable for equality and has also the
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>IntegerDivide</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>div</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>And then:
+</p>
+<div class="haskell">&nbsp;<span class='hs-varid'>average</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Add</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>IntegerDivide</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>So, class are used to specify properties of the types. The properties are not always unrelated. For instance,
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Eq</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>Show</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Num</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/></div>
+<p>Any type which has the property of being a Number has also the property of being testable for equality and has also the
 property of being printable. The => must be read backward.
-</p><p>Said differently : you need to have the property Eq a and Show a to be able to have the property Num a.
-</p><p>But, not all types which have the Eq and Show properties are numbers.
-</p><p>Here again, we see that types are specifications and are allowing the developer to control how the functions can be used or not.
-</p><p>There is one very important property that a type can have : being a Monad !
-</p><h1>5.Monad</h1><p>In previous sections I explained that types are useful as a partial specifications and as constraints.
-</p><p>Let's see a very common and useful example : a controlled environment. We want to compute in a controlled environment and be sure that
+</p>
+<p>Said differently : you need to have the property Eq a and Show a to be able to have the property Num a.
+</p>
+<p>But, not all types which have the Eq and Show properties are numbers.
+</p>
+<p>Here again, we see that types are specifications and are allowing the developer to control how the functions can be used or not.
+</p>
+<p>There is one very important property that a type can have : being a Monad !
+</p>
+<h1>5.Monad</h1>
+<p>In previous sections I explained that types are useful as a partial specifications and as constraints.
+</p>
+<p>Let's see a very common and useful example : a controlled environment. We want to compute in a controlled environment and be sure that
 nothing can leak out of that environment or only through specific gateways.
-</p><p>So, we have a type:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Controlled</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>Let's assume we have a string in that controlled environment:
-</p><div class="haskell"><span class='hs-definition'>myString</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Controlled</span>&nbsp;<span class='hs-conid'>String</span><br/></div><p>We'd like to be able to compute the length of the string in the controlled environment. We cannot use the standard length function because
+</p>
+<p>So, we have a type:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Controlled</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>Let's assume we have a string in that controlled environment:
+</p>
+<div class="haskell"><span class='hs-definition'>myString</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Controlled</span>&nbsp;<span class='hs-conid'>String</span><br/></div>
+<p>We'd like to be able to compute the length of the string in the controlled environment. We cannot use the standard length function because
 its type is:
-</p><div class="haskell"><span class='hs-definition'>length</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span><br/></div><p>(The standard length function has a more general type but it does not matter for the current explanation).
-</p><p>We'd like to have a function returning the length in the controlled environment since we want to prevent anything from leaking out of
+</p>
+<div class="haskell"><span class='hs-definition'>length</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span><br/></div>
+<p>(The standard length function has a more general type but it does not matter for the current explanation).
+</p>
+<p>We'd like to have a function returning the length in the controlled environment since we want to prevent anything from leaking out of
 that controlled area. So, the type should be:
-</p><div class="haskell"><span class='hs-definition'>controlledLength</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Controlled</span>&nbsp;<span class='hs-conid'>Int</span><br/></div><p>But then we have a type mismatch. The function is expecting a String but we just have a Controlled String
-</p><p>But we are lucky, we have a magic operator : the bind operator which can extract the value from its controlled environment and transmit it to
+</p>
+<div class="haskell"><span class='hs-definition'>controlledLength</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Controlled</span>&nbsp;<span class='hs-conid'>Int</span><br/></div>
+<p>But then we have a type mismatch. The function is expecting a String but we just have a Controlled String
+</p>
+<p>But we are lucky, we have a magic operator : the bind operator which can extract the value from its controlled environment and transmit it to
 a function if and only if the function is returning its result in the same controlled environment. The bind combinator is >>= so we can write
-</p><div class="haskell"><span class='hs-definition'>myString</span>&nbsp;<span class='hs-varop'>&gt;&gt;=</span>&nbsp;<span class='hs-varid'>controlledLength</span><br/></div><p>Now that we have computed the length in a controlled environment we'd like to be able to use that result in other parts of the software
+</p>
+<div class="haskell"><span class='hs-definition'>myString</span>&nbsp;<span class='hs-varop'>&gt;&gt;=</span>&nbsp;<span class='hs-varid'>controlledLength</span><br/></div>
+<p>Now that we have computed the length in a controlled environment we'd like to be able to use that result in other parts of the software
 which are not under control. We can do it if the controlled environment is providing a function to escape from the controlled area. But, once
 we have escaped, the environment is lost. We cannot access it any more .
-</p><p>In general, when these escape functions are available they are named runXXX. So, here we may have a runControlled with type:
-</p><div class="haskell"><span class='hs-definition'>runControlled</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Controlled</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>The controlled environment may require some additional data so the function may be more general. It depends on the controlled environment where
+</p>
+<p>In general, when these escape functions are available they are named runXXX. So, here we may have a runControlled with type:
+</p>
+<div class="haskell"><span class='hs-definition'>runControlled</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Controlled</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>The controlled environment may require some additional data so the function may be more general. It depends on the controlled environment where
 the computation is taking place.
-</p><p>That kind of controlled environment is called a Monad !.
-</p><p>So, you want do to IO, just compute in IO. You need state, Just use State s where s is the type of your state. You need indeterminacy
+</p>
+<p>That kind of controlled environment is called a Monad !.
+</p>
+<p>So, you want do to IO, just compute in IO. You need state, Just use State s where s is the type of your state. You need indeterminacy
 and logic programming, just use LogicT or the simpler list monad. You want configuration information just use Reader. You need a
 log : just use Writer. You want to mix several controlled environments like a State and IO : StateT s IO.  
-</p><p>People are liking OO because OO is providing a controlled environment : State is encapsulated and can only be changed through a controlled interface.
+</p>
+<p>People are liking OO because OO is providing a controlled environment : State is encapsulated and can only be changed through a controlled interface.
 Here we are generalizing the idea : we are not just encapsulating State, we are encapsulating computation strategies : state, control flow,
 side effects, containers etc ...
-</p><p>You cannot escape from IO because IO is controlled by the dark side : the operating system. the runIO is in fact main and the OS is the consumer
+</p>
+<p>You cannot escape from IO because IO is controlled by the dark side : the operating system. the runIO is in fact main and the OS is the consumer
 of your IO actions.
-</p><p>Monad are possible thanks to the type system. Without the type system it will be difficult to prevent information from leaking out of your
+</p>
+<p>Monad are possible thanks to the type system. Without the type system it will be difficult to prevent information from leaking out of your
 controlled environment so Monads no more make as much sense without a type system.
-</p><p>So, do you still think Monads are hard ? Is the idea of working in a controlled environment difficult ? Monads are cool : you can build the
+</p>
+<p>So, do you still think Monads are hard ? Is the idea of working in a controlled environment difficult ? Monads are cool : you can build the
 controlled environments that you want and combine them as you want. You can define computations for a given environment and reuse them later
 so that they become a bit like new keywords for a specific language. For instance, in the IO environment you can define a computation
 loop of type:
-</p><div class="haskell"><span class='hs-definition'>loop</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>IO</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>IO</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>Since the output type is IO a, you can reuse that function in any IO computation:
-</p><div class="haskell"><span class='hs-keyword'>do</span><br/>&nbsp;<span class='hs-varid'>putStrLn</span>&nbsp;<span class='hs-str'>"Start&nbsp;of&nbsp;the&nbsp;loop"</span><br/>&nbsp;<span class='hs-varid'>loop</span>&nbsp;<span class='hs-num'>10</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyglyph'>\</span><span class='hs-varid'>i</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;<span class='hs-varid'>putStrLn</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-str'>"Loop&nbsp;iteration:"</span>&nbsp;<span class='hs-varop'>++</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>show</span>&nbsp;<span class='hs-varid'>i</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span><br/>&nbsp;<span class='hs-varid'>putStrLn</span>&nbsp;<span class='hs-str'>"end&nbsp;of&nbsp;loop"</span><br/></div><p>do is just a notation when the use of >>= may make the code less readable.
-</p><h1>6.Phantom types</h1><p>Type can constrain how to use functions and force some properties to be respected.
-</p><div class="haskell"><span class='hs-keyword'>newtype</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span><br/></div><p>The previous definition is just defining a new kind of list. But, look at the s parameter on the left. It is not used on the right !
+</p>
+<div class="haskell"><span class='hs-definition'>loop</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>IO</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>IO</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>Since the output type is IO a, you can reuse that function in any IO computation:
+</p>
+<div class="haskell"><span class='hs-keyword'>do</span><br/>&nbsp;<span class='hs-varid'>putStrLn</span>&nbsp;<span class='hs-str'>"Start&nbsp;of&nbsp;the&nbsp;loop"</span><br/>&nbsp;<span class='hs-varid'>loop</span>&nbsp;<span class='hs-num'>10</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyglyph'>\</span><span class='hs-varid'>i</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;<span class='hs-varid'>putStrLn</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-str'>"Loop&nbsp;iteration:"</span>&nbsp;<span class='hs-varop'>++</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>show</span>&nbsp;<span class='hs-varid'>i</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span><br/>&nbsp;<span class='hs-varid'>putStrLn</span>&nbsp;<span class='hs-str'>"end&nbsp;of&nbsp;loop"</span><br/></div>
+<p>do is just a notation when the use of >>= may make the code less readable.
+</p>
+<h1>6.Phantom types</h1>
+<p>Type can constrain how to use functions and force some properties to be respected.
+</p>
+<div class="haskell"><span class='hs-keyword'>newtype</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span><br/></div>
+<p>The previous definition is just defining a new kind of list. But, look at the s parameter on the left. It is not used on the right !
 It is just a tag that will be used to force some properties to be respected.
-</p><p>Let's define two new types:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Safe</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Unsafe</span><br/></div><p>These types are special because there is nothing on the right side of the data definition. So there is no data constructor.
-</p><p>You won't be able to create a value of type Safe or Unsafe. These types are phantom ones. They won't be used at runtime but they will be used
+</p>
+<p>Let's define two new types:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Safe</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Unsafe</span><br/></div>
+<p>These types are special because there is nothing on the right side of the data definition. So there is no data constructor.
+</p>
+<p>You won't be able to create a value of type Safe or Unsafe. These types are phantom ones. They won't be used at runtime but they will be used
 at compile time to tag definitions and force some constraints.
-</p><div class="haskell"><span class='hs-definition'>createList</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-conid'>Unsafe</span><br/></div><p>A new list is Unsafe because it is empty so we cannot get its head.
-</p><div class="haskell"><span class='hs-definition'>sTail</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-conid'>Unsafe</span><br/></div><p>The result of the special tail (not the standard one from Prelude) is Unsafe because the resulting list may be empty
-</p><div class="haskell"><span class='hs-definition'>sAdd</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-conid'>Safe</span><br/></div><p>If you add an element to the list then the resulting list is Safe
-</p><div class="haskell"><span class='hs-definition'>sHead</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-conid'>Safe</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>sHead can be applied only to safe lists. So, the typechecker will prevent us from applying head to an empty list ! We have defined a property
+</p>
+<div class="haskell"><span class='hs-definition'>createList</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-conid'>Unsafe</span><br/></div>
+<p>A new list is Unsafe because it is empty so we cannot get its head.
+</p>
+<div class="haskell"><span class='hs-definition'>sTail</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-conid'>Unsafe</span><br/></div>
+<p>The result of the special tail (not the standard one from Prelude) is Unsafe because the resulting list may be empty
+</p>
+<div class="haskell"><span class='hs-definition'>sAdd</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-conid'>Safe</span><br/></div>
+<p>If you add an element to the list then the resulting list is Safe
+</p>
+<div class="haskell"><span class='hs-definition'>sHead</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-conid'>Safe</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>sHead can be applied only to safe lists. So, the typechecker will prevent us from applying head to an empty list ! We have defined a property
 that we want to be respected by our lists and we have explained to the typechecker how to check it for us. Of course, it will work
 only if people use the API we have defined. So we must hide the List constructor. But module are used for that. We need to define
 a module where we control the API which is exported.
-</p><p>It is possible to do much much more with phantom types. I won't give an example because I would not like you to leave
+</p>
+<p>It is possible to do much much more with phantom types. I won't give an example because I would not like you to leave
 that study plan now. But remember that with types you are really writing partial specifications constraining how your functions are
 going to behave.
-</p><h1>7.Existential types</h1><p>We'd like to mix several values of different types in the same list ! So, we have to hide the types. We could do something like:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>forall</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-varop'>.</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>The type variable a is not visible on the left because of the forall. The type variable is not free. It is used by the forall. So, a is hidden
+</p>
+<h1>7.Existential types</h1>
+<p>We'd like to mix several values of different types in the same list ! So, we have to hide the types. We could do something like:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>forall</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-varop'>.</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>The type variable a is not visible on the left because of the forall. The type variable is not free. It is used by the forall. So, a is hidden
 from the outside. Now, you can write something like
-</p><div class="haskell"><span class='hs-definition'>myList</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>H</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-num'>1</span><span class='hs-keyglyph'>::</span><span class='hs-conid'>Int</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-str'>"Hello"</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-num'>2.4</span><span class='hs-keyglyph'>::</span><span class='hs-conid'>Float</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span><br/></div><p>But, it is not very useful if you cannot do something with these objects.
-</p><p>You cannot have access to the value hidden in H directly because:
-</p><div class="haskell"><span class='hs-definition'>f</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>will not typecheck. The a in the forall for H is distinct from the a defined by function f.
-</p><p>So, to be able to use the values hidden in H, you need to specify they have a common interface. After all, if you decided to mix them in the
+</p>
+<div class="haskell"><span class='hs-definition'>myList</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>H</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-num'>1</span><span class='hs-keyglyph'>::</span><span class='hs-conid'>Int</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-str'>"Hello"</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-num'>2.4</span><span class='hs-keyglyph'>::</span><span class='hs-conid'>Float</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span><br/></div>
+<p>But, it is not very useful if you cannot do something with these objects.
+</p>
+<p>You cannot have access to the value hidden in H directly because:
+</p>
+<div class="haskell"><span class='hs-definition'>f</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>will not typecheck. The a in the forall for H is distinct from the a defined by function f.
+</p>
+<p>So, to be able to use the values hidden in H, you need to specify they have a common interface. After all, if you decided to mix them in the
 same list it is probably because you wanted to apply the same kind of transformation to each value.
-</p><p>So, let's define a class:
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Bool</span><br/></div><p>And some instances:
-</p><div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-keyword'>_</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>True</span><br/></div><div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-conid'>Float</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-keyword'>_</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>True</span><br/></div><div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-keyword'>_</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>False</span><br/></div><p>and we need one more instance for H
-</p><div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>H</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>but it won't work ! Indeed, we need to tell Haskell that H is not containing any kind of value but only the one with a isNumber function.
-</p><p>So, let's write:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>forall</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-varop'>.</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>Now, you can mix several different kind of values in the same list and process them with a given function. But, even if all values have type
+</p>
+<p>So, let's define a class:
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Bool</span><br/></div>
+<p>And some instances:
+</p>
+<div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-keyword'>_</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>True</span><br/></div>
+<div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-conid'>Float</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-keyword'>_</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>True</span><br/></div>
+<div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-keyword'>_</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>False</span><br/></div>
+<p>and we need one more instance for H
+</p>
+<div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>H</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>isNumber</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>but it won't work ! Indeed, we need to tell Haskell that H is not containing any kind of value but only the one with a isNumber function.
+</p>
+<p>So, let's write:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>forall</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-varop'>.</span>&nbsp;<span class='hs-conid'>MyOperation</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>H</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>Now, you can mix several different kind of values in the same list and process them with a given function. But, even if all values have type
 H there is no risk of mixing a String with a Int. You have the flexibility and the security.
-</p><h1>8.GADT : Generalized Algebraic Data Type</h1><p>Imagine you'd like to build a calculator. You may define a new data type like:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>I</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>V</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Plus</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-conid'>Term</span><br/></div><p>But there is a problem : You could write Plus (I 1) (V [4,2,3]) where the list is a vector. Unfortunately, with the standard
+</p>
+<h1>8.GADT : Generalized Algebraic Data Type</h1>
+<p>Imagine you'd like to build a calculator. You may define a new data type like:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>I</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>V</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Plus</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-conid'>Term</span><br/></div>
+<p>But there is a problem : You could write Plus (I 1) (V [4,2,3]) where the list is a vector. Unfortunately, with the standard
 abstract data type you do not have enough flexibility to avoid this problem. With GADT you can use typechecking to prevent some values to be built
 because they have no meaning. So, you can define some new constraints:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;<span class='hs-conid'>I</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-conid'>Int</span><br/>&nbsp;&nbsp;<span class='hs-conid'>V</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;<span class='hs-conid'>Plus</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>Now our data constructor are not forced to create a value of type Term. We can create a value of type Term a and this a can be used to enforce
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;<span class='hs-conid'>I</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-conid'>Int</span><br/>&nbsp;&nbsp;<span class='hs-conid'>V</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;<span class='hs-conid'>Plus</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Term</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>Now our data constructor are not forced to create a value of type Term. We can create a value of type Term a and this a can be used to enforce
 some constraints a bit like with phantom types. 
-</p><p>In the previous definition we tell Haskell that Plus can only be applied to Term of the same type and
+</p>
+<p>In the previous definition we tell Haskell that Plus can only be applied to Term of the same type and
 we also say that I and V are generating Term of different type.
-</p><p>So, we prevent the developer from building values like Plus (I 1) (V [4,2,3]).
-</p><h1>9.Conclusion</h1><p>So, to understand Haskell you need to forget time, control and state and think about data flow, data transformer, algebra of programming.
-</p><p>Evaluation of a program is simplification of an algebraic expression and not evolution of a State in time.
-</p><p>You need to learn types and how they are used to document, enforce properties, partially specify a behavior, control the evaluation environments.
-</p><p>You need to understand lazy evaluation which allows to separate data generation from data consumption and is key to be able to prevent optimization from leaking through the APIs. 
-</p><p>For instance, you may develop as if a file was totally loaded into memory when it is in fact loaded block per block on a needed basis. But, as a consumer of the file content you do not need to know how the content is generated and made available to the client of the API.
-</p><p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
-</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Haskell Study Plan" data-url="http://www.alpheccar.org/content/67.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/67.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/67.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '67';var disqus_url = "http://www.alpheccar.org/content/67.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</p>
+<p>So, we prevent the developer from building values like Plus (I 1) (V [4,2,3]).
+</p>
+<h1>9.Conclusion</h1>
+<p>So, to understand Haskell you need to forget time, control and state and think about data flow, data transformer, algebra of programming.
+</p>
+<p>Evaluation of a program is simplification of an algebraic expression and not evolution of a State in time.
+</p>
+<p>You need to learn types and how they are used to document, enforce properties, partially specify a behavior, control the evaluation environments.
+</p>
+<p>You need to understand lazy evaluation which allows to separate data generation from data consumption and is key to be able to prevent optimization from leaking through the APIs. 
+</p>
+<p>For instance, you may develop as if a file was totally loaded into memory when it is in fact loaded block per block on a needed basis. But, as a consumer of the file content you do not need to know how the content is generated and made available to the client of the API.
+</p>
+<p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Haskell Study Plan" data-url="http://www.alpheccar.org/content/67.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/67.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/67.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '67';
+var disqus_url = "http://www.alpheccar.org/content/67.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>

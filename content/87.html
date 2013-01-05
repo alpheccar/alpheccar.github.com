@@ -1,85 +1,282 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="A Web Monad" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>A Web Monad</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="A Web Monad" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>A Web Monad</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">A Web Monad</div><p>In my last post, I was writing about the use of coproduct of free monads to do content-type dispatching in a web monad. It was working but it was not the right approach. I changed everything and introduced a lattice of lists at the type level to track hierarchical dependencies between formats and do content-type dispatching thanks to type information. I also added a few other features to my Web Monad.
-</p><h1>1. Requirements</h1><p>Here are the requirements I imposed to myself for developing the Web Monad :
-</p><div class="doclist"><ul><li> The type inferred from the code of an URL controller shall describe all the MIME formats supported by the controller ;
-</li><li> The type of a controller shall be used to choose the best format among the ones requested by the client;
-</li><li> The code in the controller shall forbid execution of code which is not related to the chosen format;
-</li><li> It shall not be possible to mix code specific to RSS generation with the one specific to HTML generation (generalize the constraint to any format);
-</li><li> When a page is using secure elements, the page shall be automatically tagged as secure and authentification done in an automatic way;
-</li><li> No irreversible action shall be possible from an HTTP GET;
-</li></ul></div><h1>2. Type of the Web Monad</h1><p>A Web monad value has type:
-</p><div class="haskell"><span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>f is a type used to track the formats supported by the controller. s is a type used for security. Let's first talk about f.
-</p><h2>2.1. Type for formats</h2><p>f must be a list of formats. So, I define a type constructor:
-</p><div class="haskell"><span class='hs-keyword'>infixr</span>&nbsp;<span class='hs-num'>6</span>&nbsp;<span class='hs-conop'>:+:</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-varid'>g</span><span class='hs-layout'>)</span>&nbsp;<br/></div><p>With this type constructor, I can write types like :
-</p><div class="haskell"><span class='hs-conid'>A</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>B</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>C</span><br/></div><p>which is just a list. But the order will not be important so it is really an encoding of a Set of types.
-</p><p>I can convert such a type to a list of MIME types using a class:
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>ContentType</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;<span class='hs-varid'>contentType</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>MIME</span><span class='hs-keyglyph'>]</span><br/></div><p>and defining (f :+: g) as instance of ContentType.
-</p><p>I also define Web f s a as instance of ContentType when f is instance of ContentType.
-</p><p>Then, in the URL handler, I can write something like:
-</p><div class="haskell"><span class='hs-definition'>handler</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/><span class='hs-definition'>handler</span>&nbsp;<span class='hs-varid'>controller</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;<span class='hs-varid'>formats</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>contentType</span>&nbsp;<span class='hs-varid'>controller</span><br/></div><p>I just use the type f to get the list of formats supported by the controller.
-</p><p>Let's define a few formats:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>XML</span><br/></div><p>XML is any format made of XML tags. But, we need to make a distinction, for instance, between HTML and RSS. HTML and RSS are containing XML tags
+<div id="content"><div class="posttitle">A Web Monad</div>
+<p>In my last post, I was writing about the use of coproduct of free monads to do content-type dispatching in a web monad. It was working but it was not the right approach. I changed everything and introduced a lattice of lists at the type level to track hierarchical dependencies between formats and do content-type dispatching thanks to type information. I also added a few other features to my Web Monad.
+</p>
+<h1>1. Requirements</h1>
+<p>Here are the requirements I imposed to myself for developing the Web Monad :
+</p>
+<div class="doclist"><ul><li> The type inferred from the code of an URL controller shall describe all the MIME formats supported by the controller ;
+</li>
+<li> The type of a controller shall be used to choose the best format among the ones requested by the client;
+</li>
+<li> The code in the controller shall forbid execution of code which is not related to the chosen format;
+</li>
+<li> It shall not be possible to mix code specific to RSS generation with the one specific to HTML generation (generalize the constraint to any format);
+</li>
+<li> When a page is using secure elements, the page shall be automatically tagged as secure and authentification done in an automatic way;
+</li>
+<li> No irreversible action shall be possible from an HTTP GET;
+</li>
+</ul>
+</div>
+<h1>2. Type of the Web Monad</h1>
+<p>A Web monad value has type:
+</p>
+<div class="haskell"><span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>f is a type used to track the formats supported by the controller. s is a type used for security. Let's first talk about f.
+</p>
+<h2>2.1. Type for formats</h2>
+<p>f must be a list of formats. So, I define a type constructor:
+</p>
+<div class="haskell"><span class='hs-keyword'>infixr</span>&nbsp;<span class='hs-num'>6</span>&nbsp;<span class='hs-conop'>:+:</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-varid'>g</span><span class='hs-layout'>)</span>&nbsp;<br/></div>
+<p>With this type constructor, I can write types like :
+</p>
+<div class="haskell"><span class='hs-conid'>A</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>B</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>C</span><br/></div>
+<p>which is just a list. But the order will not be important so it is really an encoding of a Set of types.
+</p>
+<p>I can convert such a type to a list of MIME types using a class:
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>ContentType</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;<span class='hs-varid'>contentType</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>MIME</span><span class='hs-keyglyph'>]</span><br/></div>
+<p>and defining (f :+: g) as instance of ContentType.
+</p>
+<p>I also define Web f s a as instance of ContentType when f is instance of ContentType.
+</p>
+<p>Then, in the URL handler, I can write something like:
+</p>
+<div class="haskell"><span class='hs-definition'>handler</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/><span class='hs-definition'>handler</span>&nbsp;<span class='hs-varid'>controller</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;<span class='hs-varid'>formats</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>contentType</span>&nbsp;<span class='hs-varid'>controller</span><br/></div>
+<p>I just use the type f to get the list of formats supported by the controller.
+</p>
+<p>Let's define a few formats:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>XML</span><br/></div>
+<p>XML is any format made of XML tags. But, we need to make a distinction, for instance, between HTML and RSS. HTML and RSS are containing XML tags
 but they are more specific. So, I need to define HTML and RSS such that it is possible to use an inclusion relation on types. The following
 constraints must typecheck:
-</p><div class="haskell">&nbsp;<span class='hs-layout'>(</span><span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-conid'>HTML</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/>&nbsp;<span class='hs-layout'>(</span><span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-conid'>RSS</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/></div><p>Since, I am using a list of types, I must encode HTML and RSS as lists containing XML. So, I declare:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>HTMLEXTENSIONS</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>RSSEXTENSIONS</span><br/><br/><span class='hs-keyword'>type</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>HTMLEXTENSIONS</span><br/><span class='hs-keyword'>type</span>&nbsp;<span class='hs-conid'>RSS</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>RSSEXTENSIONS</span><br/></div><p>I agree it is not very intuitive. But, that's just an encoding of the fact that HTML is more specific and contains XML.
-</p><p>I just need to define the inclusion relation (:<:). First, I must be able to check that an element is member of a list. So, let's define:
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>c</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/></div><p>a is an element of [a].
-</p><p>a is an element of [a,b]
-</p><p>if a is an element of b then a is an element of c ++ b
-</p><p>Now, it is possible to define (:<:) a b. We just check that all elements of the list a are also elements of the list b.
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>c</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>c</span><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>c</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-varid'>c</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>c</span><br/></div><p>With these constraints, I can start to write useful functions. First, functions for basic XML generation:
-</p><div class="haskell"><span class='hs-definition'>tag</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>The tag function can be used in any controller whose type f is containing XML. So, it is a very general function. With tag, I can write specialized tags for the HTML.
-</p><div class="haskell"><span class='hs-definition'>h1</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-conid'>()</span><br/><span class='hs-definition'>h1</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>tag</span>&nbsp;<span class='hs-str'>"h1"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>text</span>&nbsp;<span class='hs-varid'>s</span><span class='hs-layout'>)</span><br/></div><p>h1 is tagged with HTML. So, in the definition of h1 we can use any XML tag. But, since HTML is not a subset of RSS and RSS is not a subset of HTML, it won't be possible to use h1 in the code for the RSS.
-</p><p>In my controller, I may want to be able to generate the HTML and the RSS depending of the preferences of the client. So, I need to be able to mix
+</p>
+<div class="haskell">&nbsp;<span class='hs-layout'>(</span><span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-conid'>HTML</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/>&nbsp;<span class='hs-layout'>(</span><span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-conid'>RSS</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/></div>
+<p>Since, I am using a list of types, I must encode HTML and RSS as lists containing XML. So, I declare:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>HTMLEXTENSIONS</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>RSSEXTENSIONS</span><br/><br/><span class='hs-keyword'>type</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>HTMLEXTENSIONS</span><br/><span class='hs-keyword'>type</span>&nbsp;<span class='hs-conid'>RSS</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>RSSEXTENSIONS</span><br/></div>
+<p>I agree it is not very intuitive. But, that's just an encoding of the fact that HTML is more specific and contains XML.
+</p>
+<p>I just need to define the inclusion relation (:<:). First, I must be able to check that an element is member of a list. So, let's define:
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>c</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/></div>
+<p>a is an element of [a].
+</p>
+<p>a is an element of [a,b]
+</p>
+<p>if a is an element of b then a is an element of c ++ b
+</p>
+<p>Now, it is possible to define (:<:) a b. We just check that all elements of the list a are also elements of the list b.
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Elem</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>c</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>c</span><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>c</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-varid'>c</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>c</span><br/></div>
+<p>With these constraints, I can start to write useful functions. First, functions for basic XML generation:
+</p>
+<div class="haskell"><span class='hs-definition'>tag</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>XML</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>The tag function can be used in any controller whose type f is containing XML. So, it is a very general function. With tag, I can write specialized tags for the HTML.
+</p>
+<div class="haskell"><span class='hs-definition'>h1</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-conid'>()</span><br/><span class='hs-definition'>h1</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>tag</span>&nbsp;<span class='hs-str'>"h1"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>text</span>&nbsp;<span class='hs-varid'>s</span><span class='hs-layout'>)</span><br/></div>
+<p>h1 is tagged with HTML. So, in the definition of h1 we can use any XML tag. But, since HTML is not a subset of RSS and RSS is not a subset of HTML, it won't be possible to use h1 in the code for the RSS.
+</p>
+<p>In my controller, I may want to be able to generate the HTML and the RSS depending of the preferences of the client. So, I need to be able to mix
 both of them. The controller will have the type Web (HTML :+: RSS) s () so it can contains code for HTML and RSS. But, we don't want the code for HTML to be executed when the chosen format is RSS.
-</p><p>So, I define:
-</p><div class="haskell"><span class='hs-definition'>forHTML</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-conid'>()</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-conid'>()</span><br/></div><p>forHTML is the only way to embed HTML code inside any code whose type f in containing HTML. 
-</p><p>The Web monad is also a Reader monad and the environment
+</p>
+<p>So, I define:
+</p>
+<div class="haskell"><span class='hs-definition'>forHTML</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-conid'>()</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-conid'>()</span><br/></div>
+<p>forHTML is the only way to embed HTML code inside any code whose type f in containing HTML. 
+</p>
+<p>The Web monad is also a Reader monad and the environment
 provided by Reader is containing the chosen format. So, forHTML is just checking that the chosen format is corresponding to the HTML format. The code is:
-</p><div class="haskell"><span class='hs-definition'>forHTML</span>&nbsp;<span class='hs-varid'>d</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;<span class='hs-varid'>k</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>ask</span><br/>&nbsp;&nbsp;<span class='hs-varid'>when</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>k</span>&nbsp;<span class='hs-varop'>`elem`</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>contentType</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>d</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>ifNotHeaderSet</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>setHeader</span>&nbsp;<span class='hs-str'>"Content-type"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>head</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>contentType</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>d</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varop'>...</span><br/></div><p>So, we execute the Web action d, only if the type of d is containing the chosen MIME type. And, if the code is executed, we set the header if it was
+</p>
+<div class="haskell"><span class='hs-definition'>forHTML</span>&nbsp;<span class='hs-varid'>d</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;<span class='hs-varid'>k</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>ask</span><br/>&nbsp;&nbsp;<span class='hs-varid'>when</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>k</span>&nbsp;<span class='hs-varop'>`elem`</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>contentType</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>d</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>ifNotHeaderSet</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>setHeader</span>&nbsp;<span class='hs-str'>"Content-type"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>head</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>contentType</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>d</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varop'>...</span><br/></div>
+<p>So, we execute the Web action d, only if the type of d is containing the chosen MIME type. And, if the code is executed, we set the header if it was
 not set. The code is generic and work for any Web f s a where f is instance of ContentType. The MIME to check for and the header generation are just depending on the type f.
-</p><p>HTML is instance of ContentType but XML is not.
-</p><p>So, now it is possible to write something like:
-</p><div class="haskell"><span class='hs-definition'>myController</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>HTML</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>RSS</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-conid'>()</span><br/><span class='hs-definition'>myController</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;<span class='hs-varid'>genericCode</span><br/>&nbsp;&nbsp;<span class='hs-varid'>forHTML</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>htmlActions</span><br/>&nbsp;&nbsp;<span class='hs-varid'>forRSS</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>rssActions</span><br/>&nbsp;&nbsp;<span class='hs-varid'>forHTML</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>additionalHtmlActions</span><br/></div><p>It is not possible to mix the RSS code with the HTML one. Indeed, the HTML tag can only work in a Web HTML s a context. To be able to work
+</p>
+<p>HTML is instance of ContentType but XML is not.
+</p>
+<p>So, now it is possible to write something like:
+</p>
+<div class="haskell"><span class='hs-definition'>myController</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>HTML</span>&nbsp;<span class='hs-conop'>:+:</span>&nbsp;<span class='hs-conid'>RSS</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-conid'>()</span><br/><span class='hs-definition'>myController</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;<span class='hs-varid'>genericCode</span><br/>&nbsp;&nbsp;<span class='hs-varid'>forHTML</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>htmlActions</span><br/>&nbsp;&nbsp;<span class='hs-varid'>forRSS</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>rssActions</span><br/>&nbsp;&nbsp;<span class='hs-varid'>forHTML</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>additionalHtmlActions</span><br/></div>
+<p>It is not possible to mix the RSS code with the HTML one. Indeed, the HTML tag can only work in a Web HTML s a context. To be able to work
 in a Web f s a context where f is containing HTML, I need to use fromHTML which is doing the injection and the dynamical tests.
-</p><p>But, we can nevertheless reuse some functions to define HTML functions and RSS functions.
-</p><p>Of course, it can be generalized to any format (AJAX). And, it is possible to specialize even more. You may want to have HTML generation for a web browser and HTML generation for the iPhone. In that case, you would define two new types IPhone and Browser such that the following constraints typecheck:
-</p><div class="haskell">&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-conid'>Browser</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-conid'>IPhone</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/></div><p>You could also do things differently and define an IPhone type containing two specialized type : IphoneHtml and IphoneAjax. The solution is quite flexible.
-</p><p>Now, let's talk about security.
-</p><h2>2.2. Security</h2><p>It is too easy to use an element that should be visible only by logged users and forget to do any check to prevent anonymous users from seeing it. The use of a phantom type s in the Web monad can easily track and avoid that problem.
-</p><p>As soon as any part of your controller is setting s to Protected then the whole controller will have the attribute protected :
-</p><div class="haskell"><span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-conid'>Protected</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>If you write your generic handler such that it is checking the credentials when s is Protected then you are sure that you will never forget
+</p>
+<p>But, we can nevertheless reuse some functions to define HTML functions and RSS functions.
+</p>
+<p>Of course, it can be generalized to any format (AJAX). And, it is possible to specialize even more. You may want to have HTML generation for a web browser and HTML generation for the iPhone. In that case, you would define two new types IPhone and Browser such that the following constraints typecheck:
+</p>
+<div class="haskell">&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-conid'>Browser</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:&lt;:</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-conid'>HTML</span>&nbsp;<span class='hs-conid'>IPhone</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-varop'>...</span><br/></div>
+<p>You could also do things differently and define an IPhone type containing two specialized type : IphoneHtml and IphoneAjax. The solution is quite flexible.
+</p>
+<p>Now, let's talk about security.
+</p>
+<h2>2.2. Security</h2>
+<p>It is too easy to use an element that should be visible only by logged users and forget to do any check to prevent anonymous users from seeing it. The use of a phantom type s in the Web monad can easily track and avoid that problem.
+</p>
+<p>As soon as any part of your controller is setting s to Protected then the whole controller will have the attribute protected :
+</p>
+<div class="haskell"><span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-conid'>Protected</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>If you write your generic handler such that it is checking the credentials when s is Protected then you are sure that you will never forget
 to do any security check when a secure element is used anywhere on your page.
-</p><p>But, you may not want to require authentification for seeing the page. You may just want to hide the secure elements on a page when the person viewing it is not allowed to look at the secure elements. Then, you just have to define a function like:
-</p><div class="haskell"><span class='hs-definition'>ifAllowed</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-conid'>Secure</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>If the person can view the secure element, then the code for the element will be taken into account and otherwise it won't be displayed. Once the security check has been made, the security tag can be dropped and it can ONLY be dropped by the function ifAllowed.
-</p><p>So, at worst, if you forget to use this function, the whole page will be secure. But, note that when you define your page you can also force the security attribute and write:
-</p><div class="haskell"><span class='hs-definition'>myController</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-conid'>Public</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>Then, if you put a secure element in the controller and forget to use ifAllowed then the code won't typecheck !
-</p><p>For security, we need to define:
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>Security</span>&nbsp;<span class='hs-varid'>s</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Public</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Protected</span><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Security</span>&nbsp;<span class='hs-conid'>Public</span><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Security</span>&nbsp;<span class='hs-conid'>Protected</span><br/></div><p>Then, for each use of Web f s a , you should add the constraint:
-</p><div class="haskell"><span class='hs-conid'>Security</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span><br/></div><p>to be sure s is only used with the types Protected and Public.
-</p><h2>2.3. Irreversibility and HTTP GET</h2><p>The method used is similar to the one used for the security. You can refer to an <a href="http://www.alpheccar.org/content/73.html">old post about it</a>.
-</p><p>In short, I am using:
-</p><div class="haskell"><span class='hs-definition'>db</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>DB</span>&nbsp;<span class='hs-conid'>Idempotent</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Either</span>&nbsp;<span class='hs-conid'>FieldErrors</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span><br/></div><p>and
-</p><div class="haskell"><span class='hs-definition'>checkPost</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>QueryType</span>&nbsp;<span class='hs-varid'>s</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>DB</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s'</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>DB</span>&nbsp;<span class='hs-conid'>Idempotent</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span><br/></div><h1>3. Conclusion</h1><p>The web monad is also a CGI monad and an unique identifier monad since, for form generation, I need to generate unique identifiers.
+</p>
+<p>But, you may not want to require authentification for seeing the page. You may just want to hide the secure elements on a page when the person viewing it is not allowed to look at the secure elements. Then, you just have to define a function like:
+</p>
+<div class="haskell"><span class='hs-definition'>ifAllowed</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-conid'>Secure</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>If the person can view the secure element, then the code for the element will be taken into account and otherwise it won't be displayed. Once the security check has been made, the security tag can be dropped and it can ONLY be dropped by the function ifAllowed.
+</p>
+<p>So, at worst, if you forget to use this function, the whole page will be secure. But, note that when you define your page you can also force the security attribute and write:
+</p>
+<div class="haskell"><span class='hs-definition'>myController</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-conid'>Public</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>Then, if you put a secure element in the controller and forget to use ifAllowed then the code won't typecheck !
+</p>
+<p>For security, we need to define:
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>Security</span>&nbsp;<span class='hs-varid'>s</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Public</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Protected</span><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Security</span>&nbsp;<span class='hs-conid'>Public</span><br/><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Security</span>&nbsp;<span class='hs-conid'>Protected</span><br/></div>
+<p>Then, for each use of Web f s a , you should add the constraint:
+</p>
+<div class="haskell"><span class='hs-conid'>Security</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span><br/></div>
+<p>to be sure s is only used with the types Protected and Public.
+</p>
+<h2>2.3. Irreversibility and HTTP GET</h2>
+<p>The method used is similar to the one used for the security. You can refer to an <a href="http://www.alpheccar.org/content/73.html">old post about it</a>.
+</p>
+<p>In short, I am using:
+</p>
+<div class="haskell"><span class='hs-definition'>db</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>DB</span>&nbsp;<span class='hs-conid'>Idempotent</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Either</span>&nbsp;<span class='hs-conid'>FieldErrors</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span><br/></div>
+<p>and
+</p>
+<div class="haskell"><span class='hs-definition'>checkPost</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>QueryType</span>&nbsp;<span class='hs-varid'>s</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>DB</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Web</span>&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>s'</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>DB</span>&nbsp;<span class='hs-conid'>Idempotent</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span><br/></div>
+<h1>3. Conclusion</h1>
+<p>The web monad is also a CGI monad and an unique identifier monad since, for form generation, I need to generate unique identifiers.
 With the types, I think I have now a good tradeoff between security and flexibility. 
-</p><p>I have had problem with Exceptions. I find it weird that you can't use catch (whose type is involving IO) in Monads which are instance of MonadIO.
+</p>
+<p>I have had problem with Exceptions. I find it weird that you can't use catch (whose type is involving IO) in Monads which are instance of MonadIO.
 By luck, I found some source code proposed for Haskell' that it solving the problem.
-</p><p>Now, I am going to focus on form generation and form management. Then, I'll have to work a little bit on cache. And someday, perhaps, I'll replace my blog with an Haskell implementation ! The initial motivation is not just that Haskell is cool. The initial motivation is that I have too many problems with Ruby On Rails to reach a good level of quality and security. It is not true that you have less work to do with RoR. You can start more quickly but when the project is growing you discover the pain of dynamically typed languages and the incredible amount of details you have to check yourself instead of having a typechecker do it for you.
-</p><p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
-</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="A Web Monad" data-url="http://www.alpheccar.org/content/87.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/87.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/87.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '87';var disqus_url = "http://www.alpheccar.org/content/87.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</p>
+<p>Now, I am going to focus on form generation and form management. Then, I'll have to work a little bit on cache. And someday, perhaps, I'll replace my blog with an Haskell implementation ! The initial motivation is not just that Haskell is cool. The initial motivation is that I have too many problems with Ruby On Rails to reach a good level of quality and security. It is not true that you have less work to do with RoR. You can start more quickly but when the project is growing you discover the pain of dynamically typed languages and the incredible amount of details you have to check yourself instead of having a typechecker do it for you.
+</p>
+<p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="A Web Monad" data-url="http://www.alpheccar.org/content/87.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/87.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/87.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '87';
+var disqus_url = "http://www.alpheccar.org/content/87.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>

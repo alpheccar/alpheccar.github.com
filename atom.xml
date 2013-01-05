@@ -1,57 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>alpheccar&#39;s blog</title>
-<link href="http://www.alpheccar.org/atom.xml" rel="self" />
-<link href="http://www.alpheccar.org" />
+<link href="http://www.alpheccar.org/atom.xml" rel="self" //>
+<link href="http://www.alpheccar.org" //>
 <id>http://www.alpheccar.org</id>
 <updated>2012-05-16T20:30:00Z</updated>
 <author><name>alpheccar</name>
 </author>
 <entry><title>hbayes 0.3</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/99.html" />
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/99.html" //>
 <id>99</id>
 <updated>2012-05-16T20:30:00Z</updated>
 <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>Lot of news in this version : big network, mpe, soft evidence, logical table ...
-</p><p>The documentation is available in the package.
-</p></div>
+</p>
+<p>The documentation is available in the package.
+</p>
+</div>
 </content>
 </entry>
 <entry><title>Inference in Discrete Bayesian Networks with Haskell</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/98.html" />
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/98.html" //>
 <id>98</id>
 <updated>2012-04-27T18:30:00Z</updated>
 <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>I am learning the algorithms used for inference with discrete bayesian networks. I decided to write an implementation in Haskell to give me an opportunity to code a bit in this beautiful language (I don't have a lot of opportunities at my office).
-</p><p>The first version of the library hbayes is very preliminary but already supporting junction trees.
-</p></div>
+</p>
+<p>The first version of the library hbayes is very preliminary but already supporting junction trees.
+</p>
+</div>
 </content>
 </entry>
 <entry><title>Gastronomy of the French Riviera</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/96.html" />
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/96.html" //>
 <id>96</id>
 <updated>2011-12-16T19:30:00Z</updated>
 <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>French Riviera is known abroad thanks to the Cannes Festival or thanks to the casinos in Monaco. You may also know it for the sea and the sky. But, I would say it is the superficial part of this place. 
-</p><p>Some of the towns on the French Riviera are some of the oldest of France and Europe : they were founded by the Greeks in the antiquity or before the greeks by some other less known civilizations (Ligures for instance).
-</p><p>So, there is a long history and some traditions. Food is one important part of this history. But, this post is not about history. I won't try to check if a meal has been invented in Nice or Antibes or somewhere else. I just want to focus on the typical meals of the town of Nice and around it. Also, I am not expert at Niçoise food. But I hope I'll avoid the biggest mistakes.
-</p><p>Let's start with the most famous abroad and I'll end with the most famous in Nice.
-</p></div>
+</p>
+<p>Some of the towns on the French Riviera are some of the oldest of France and Europe : they were founded by the Greeks in the antiquity or before the greeks by some other less known civilizations (Ligures for instance).
+</p>
+<p>So, there is a long history and some traditions. Food is one important part of this history. But, this post is not about history. I won't try to check if a meal has been invented in Nice or Antibes or somewhere else. I just want to focus on the typical meals of the town of Nice and around it. Also, I am not expert at Niçoise food. But I hope I'll avoid the biggest mistakes.
+</p>
+<p>Let's start with the most famous abroad and I'll end with the most famous in Nice.
+</p>
+</div>
 </content>
 </entry>
 <entry><title>Comparing Ice Cream Sandwich with iOS 5</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/95.html" />
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/95.html" //>
 <id>95</id>
 <updated>2011-12-11T13:10:00Z</updated>
 <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>In this document, I am trying to compare the APIs of ICS with those of iOS 5. So, the comparison is from the point of view of the developer. And, I am looking only at the public APIs documented on the Android SDK web site. I know there are other APIs in the source code and they may be used by some applications. But if they are private it means they may change in the future and the applications using them would break. 
-</p></div>
+</p>
+</div>
 </content>
 </entry>
 <entry><title>Cross-compiling Haskell</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/94.html" />
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/94.html" //>
 <id>94</id>
 <updated>2011-12-10T13:10:00Z</updated>
 <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>These patches (for GHC HEAD) would not have been possible without the first <a href="http://projects.haskell.org/ghc-iphone/">iphone-ghc patch</a> by Stephen Blackheath. He did a really big work on that patch.
 So, anything smart in this new version is from Stephen and any problem is probably coming from me.
-</p><p>For lots of reasons, I decided to port Stephen's patch to the new GHC build system and do some cleaning (like adding compilation flags and makefile variables).
+</p>
+<p>For lots of reasons, I decided to port Stephen's patch to the new GHC build system and do some cleaning (like adding compilation flags and makefile variables).
 When I started I did not know anything about this new build system and I was not aware that Cabal was so smart and doing so many things. So, what is emerging from this work is that I absolutely don't understand Cabal and only very partially the new build system. The patch will need lot of work to be clean and generic. Some problems were solved with ad'hoc assumptions likely to be wrong in different environments.
-</p></div>
+</p>
+</div>
 </content>
 </entry>
 </feed>

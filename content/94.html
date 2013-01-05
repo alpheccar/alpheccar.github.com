@@ -1,109 +1,339 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="Cross-compiling Haskell" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>Cross-compiling Haskell</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="Cross-compiling Haskell" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>Cross-compiling Haskell</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">Cross-compiling Haskell</div><p>These patches (for GHC HEAD) would not have been possible without the first <a href="http://projects.haskell.org/ghc-iphone/">iphone-ghc patch</a> by Stephen Blackheath. He did a really big work on that patch.
+<div id="content"><div class="posttitle">Cross-compiling Haskell</div>
+<p>These patches (for GHC HEAD) would not have been possible without the first <a href="http://projects.haskell.org/ghc-iphone/">iphone-ghc patch</a> by Stephen Blackheath. He did a really big work on that patch.
 So, anything smart in this new version is from Stephen and any problem is probably coming from me.
-</p><p>For lots of reasons, I decided to port Stephen's patch to the new GHC build system and do some cleaning (like adding compilation flags and makefile variables).
+</p>
+<p>For lots of reasons, I decided to port Stephen's patch to the new GHC build system and do some cleaning (like adding compilation flags and makefile variables).
 When I started I did not know anything about this new build system and I was not aware that Cabal was so smart and doing so many things. So, what is emerging from this work is that I absolutely don't understand Cabal and only very partially the new build system. The patch will need lot of work to be clean and generic. Some problems were solved with ad'hoc assumptions likely to be wrong in different environments.
-</p><p>But, at least, it is building on Snow Leopard and Ubuntu and cross-compiling to iPhone, iPhone Simulator and OMAP3 platform. OMAP3 is the chip inside the new Motorola Droid, the Nokia N900 and the Palm Pre. So, GHC can now target some of the best mobile phones. Since the iPhone Simulator is in this list, it means I had to extend the meaning of cross compilation. The autoconf triplet is not enough to make a distinction between Snow Leopard and the iPhone Simulator environment so I finally adopted the Stephen's way of doing it by adding flags to configure.
-</p><p>Here is an highlight of the main changes. For more details, you'll have to look for IPHONE and GhcCrossCompile in the files. If something is not clear, ask and I'll improve this document (which obviously will have to be improved but I wanted to make a first release of the patch quickly).
-</p><h1>1. CrossCompilation Folder</h1><p>I have created a CrossCompilation folder containing some scripts, some configuration files and the <em>build.mk</em> file for each target. You'll have to customize a bit the OMAP3 one. Each subfolder is containing some configuration files that have to be generated on the target : <em>DerivedConstants.h</em>, <em>GHCConstants.h</em> (the same file but in Haskell format).
-</p><p><em>HsBaseConfig.h</em> may not be needed but at the beginning of my experiment I had problems with this file and the one generated by configure was wrong.
+</p>
+<p>But, at least, it is building on Snow Leopard and Ubuntu and cross-compiling to iPhone, iPhone Simulator and OMAP3 platform. OMAP3 is the chip inside the new Motorola Droid, the Nokia N900 and the Palm Pre. So, GHC can now target some of the best mobile phones. Since the iPhone Simulator is in this list, it means I had to extend the meaning of cross compilation. The autoconf triplet is not enough to make a distinction between Snow Leopard and the iPhone Simulator environment so I finally adopted the Stephen's way of doing it by adding flags to configure.
+</p>
+<p>Here is an highlight of the main changes. For more details, you'll have to look for IPHONE and GhcCrossCompile in the files. If something is not clear, ask and I'll improve this document (which obviously will have to be improved but I wanted to make a first release of the patch quickly).
+</p>
+<h1>1. CrossCompilation Folder</h1>
+<p>I have created a CrossCompilation folder containing some scripts, some configuration files and the <em>build.mk</em> file for each target. You'll have to customize a bit the OMAP3 one. Each subfolder is containing some configuration files that have to be generated on the target : <em>DerivedConstants.h</em>, <em>GHCConstants.h</em> (the same file but in Haskell format).
+</p>
+<p><em>HsBaseConfig.h</em> may not be needed but at the beginning of my experiment I had problems with this file and the one generated by configure was wrong.
 So, now it is just copied during the build and overwriting the one generated by configure. That's why you have the variable <em>TARGET_CONFIG_DIR</em> in the <em>build.mk</em>. To tell the build system where to find this file. The copy is done in <em>rules/build-package-data.mk</em>.
-</p><p>It is the first ugly hack. Don't worry. There will be many other ones.
-</p><p><em>DerivedConstants</em> and <em>GHCConstant</em> are generated with <em>mkDerivedConstants</em> : a tool you'll find inside the <em>includes</em> folder of the distribution.
-</p><h2>1.1. build.mk</h2><p>Two new makefile variables are introduced : <em>GhcCrossCompile</em> and <em>IPHONE</em>.
-</p><p><em>CROSS_AR</em> is needed because it was causing problem when relying only on the configure script. I am sure it could be cleaned and removed from the build.mk.
-</p><h2>1.2. build.sh</h2><p>It is the script to configure. Normally, once you have downloaded a darcs version of GHC and typed <em>sh boot</em>, you're ready to configure with something like
+</p>
+<p>It is the first ugly hack. Don't worry. There will be many other ones.
+</p>
+<p><em>DerivedConstants</em> and <em>GHCConstant</em> are generated with <em>mkDerivedConstants</em> : a tool you'll find inside the <em>includes</em> folder of the distribution.
+</p>
+<h2>1.1. build.mk</h2>
+<p>Two new makefile variables are introduced : <em>GhcCrossCompile</em> and <em>IPHONE</em>.
+</p>
+<p><em>CROSS_AR</em> is needed because it was causing problem when relying only on the configure script. I am sure it could be cleaned and removed from the build.mk.
+</p>
+<h2>1.2. build.sh</h2>
+<p>It is the script to configure. Normally, once you have downloaded a darcs version of GHC and typed <em>sh boot</em>, you're ready to configure with something like
 <em>sh CrossCompile/iPhoneDevice/build.sh</em> for instance.
-</p><p>It will copy the needed target configuration files, copy the <em>build.mk</em> to the mk folder (because it is too easy to forget to do it) and set lot of new
+</p>
+<p>It will copy the needed target configuration files, copy the <em>build.mk</em> to the mk folder (because it is too easy to forget to do it) and set lot of new
 command line options for configure. Most should be obvious but not the last one : <em>with-toolchain-name</em>.
-</p><p>When using <em>cabal-install</em> and installing with <em>--user</em>, you don't want all binaries to be mixed in the same folder <em>~/.cabal/bin</em>.
-</p><p>So, the customized <em>cabal-install</em> provided with this system is creating other <em>.cabal</em> folders : <em>.cabal-iPhoneDevice</em> for instance.
-</p><p>It is also important when building to the iPhoneSimulator since the autoconf triplet is the same but there are some differences in the generated code due to some iPhone specificities (explained later)
-</p><p>The only problem of this approach : you'll have to do a <em>cabal update</em> for each folder (<em>cabal-iphone update</em>, <em>cabal-iphone-simulator-update</em>, <em>cabal-OMAP3 update</em> etc ...)
-</p><h1>2. compiler</h1><p>iPhone is forbidding code generation at runtime. So, there is a problem for the adjustor used to implement the wrapper callbacks of the FFI. I reused the code from Stephen for this:
-</p><p>This iPhone port solves the problem by pre-compiling a pool of functions, and allocating from it. 
-</p><p>If the pool is too small for a given application, you can increase it by using a
+</p>
+<p>When using <em>cabal-install</em> and installing with <em>--user</em>, you don't want all binaries to be mixed in the same folder <em>~/.cabal/bin</em>.
+</p>
+<p>So, the customized <em>cabal-install</em> provided with this system is creating other <em>.cabal</em> folders : <em>.cabal-iPhoneDevice</em> for instance.
+</p>
+<p>It is also important when building to the iPhoneSimulator since the autoconf triplet is the same but there are some differences in the generated code due to some iPhone specificities (explained later)
+</p>
+<p>The only problem of this approach : you'll have to do a <em>cabal update</em> for each folder (<em>cabal-iphone update</em>, <em>cabal-iphone-simulator-update</em>, <em>cabal-OMAP3 update</em> etc ...)
+</p>
+<h1>2. compiler</h1>
+<p>iPhone is forbidding code generation at runtime. So, there is a problem for the adjustor used to implement the wrapper callbacks of the FFI. I reused the code from Stephen for this:
+</p>
+<p>This iPhone port solves the problem by pre-compiling a pool of functions, and allocating from it. 
+</p>
+<p>If the pool is too small for a given application, you can increase it by using a
 {-# POOLSIZE x #-} pragma, which must appear after the "wrapper" token.  e.g.
-</p><div class="haskell"><span class='hs-keyword'>foreign</span>&nbsp;<span class='hs-keyword'>import</span>&nbsp;<span class='hs-keyword'>ccall</span>&nbsp;<span class='hs-keyword'>safe</span>&nbsp;<span class='hs-str'>"wrapper"</span>&nbsp;<span class='hs-comment'>{-# POOLSIZE 100 #-}</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;<span class='hs-varid'>mkDelegate</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>IO</span>&nbsp;<span class='hs-conid'>()</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>IO</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>FunPtr</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>IO</span>&nbsp;<span class='hs-conid'>()</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span><br/></div><h2>2.1. ghc.mk</h2><p>This makefile is changed to introduce the new compilation flags.
-</p><p>The makefile is generating some configuration files included during the build. These files are containing different flags for compiling and linking on the chosen target. Instead of using the <em>words</em> function as initially done to convert the flags (a string) to an Haskell list, a <em>commandLineOptions</em> function is introduced for options containing a space (like <em>-isysroot /</em>....). The implementation of this function is very preliminary.
-</p><p>The <em>TOOLCHAIN</em> name is also introduced so that the compiler can find the packages in the <em>.cabal-TOOLCHAIN</em> folder by default
-</p><p>The build system is installing the phase 2 compiler but for the cross compiler only phase 1 is built. So, the dirty hack is to copy the phase 1 compiler to phase 2 destination to avoid having to change too many things in the install part of the make (that I don't understand very well)
-</p><h2>2.2. Lexer.x.pp</h2><p><em>Lexer.x</em> is now generated from <em>Lexer.x.pp</em> to be able to take into account the new compilation flags
-</p><h2>2.3. DriverPhases.hs</h2><p>Now, ObjectiveC <em>.m</em> files can be used on the GHC command line
-</p><h2>2.4. DriverPipeline.hs</h2><p>On iPhone we want to use XCode. But, it is really annoying to have to add all Haskell libraries by hand to an XCode project (like <em>libHSrts.a</em>, <em>libHSrts_debug_.a</em>).
-</p><p>So, the compiler is changed to generate a <em>.a</em> library when building an executable ! This <em>.a</em> library is containing all needed Haskell librairies (not the case when you build a library with cabal for instance)
-</p><p><em>libtool</em> is used for that but some options not recognized by <em>libtool</em> must be removed. It is done by the temporary <em>removeDynamicallyLinkedLibrariesAndOptions</em> function.
+</p>
+<div class="haskell"><span class='hs-keyword'>foreign</span>&nbsp;<span class='hs-keyword'>import</span>&nbsp;<span class='hs-keyword'>ccall</span>&nbsp;<span class='hs-keyword'>safe</span>&nbsp;<span class='hs-str'>"wrapper"</span>&nbsp;<span class='hs-comment'>{-# POOLSIZE 100 #-}</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;<span class='hs-varid'>mkDelegate</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>IO</span>&nbsp;<span class='hs-conid'>()</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>IO</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>FunPtr</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>IO</span>&nbsp;<span class='hs-conid'>()</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span><br/></div>
+<h2>2.1. ghc.mk</h2>
+<p>This makefile is changed to introduce the new compilation flags.
+</p>
+<p>The makefile is generating some configuration files included during the build. These files are containing different flags for compiling and linking on the chosen target. Instead of using the <em>words</em> function as initially done to convert the flags (a string) to an Haskell list, a <em>commandLineOptions</em> function is introduced for options containing a space (like <em>-isysroot /</em>....). The implementation of this function is very preliminary.
+</p>
+<p>The <em>TOOLCHAIN</em> name is also introduced so that the compiler can find the packages in the <em>.cabal-TOOLCHAIN</em> folder by default
+</p>
+<p>The build system is installing the phase 2 compiler but for the cross compiler only phase 1 is built. So, the dirty hack is to copy the phase 1 compiler to phase 2 destination to avoid having to change too many things in the install part of the make (that I don't understand very well)
+</p>
+<h2>2.2. Lexer.x.pp</h2>
+<p><em>Lexer.x</em> is now generated from <em>Lexer.x.pp</em> to be able to take into account the new compilation flags
+</p>
+<h2>2.3. DriverPhases.hs</h2>
+<p>Now, ObjectiveC <em>.m</em> files can be used on the GHC command line
+</p>
+<h2>2.4. DriverPipeline.hs</h2>
+<p>On iPhone we want to use XCode. But, it is really annoying to have to add all Haskell libraries by hand to an XCode project (like <em>libHSrts.a</em>, <em>libHSrts_debug_.a</em>).
+</p>
+<p>So, the compiler is changed to generate a <em>.a</em> library when building an executable ! This <em>.a</em> library is containing all needed Haskell librairies (not the case when you build a library with cabal for instance)
+</p>
+<p><em>libtool</em> is used for that but some options not recognized by <em>libtool</em> must be removed. It is done by the temporary <em>removeDynamicallyLinkedLibrariesAndOptions</em> function.
 Temporary because only covering the cases I had.
-</p><p>This patch is coming from Stephen who is adding : "<em>libtool</em> gives lots of warnings which can apparently be safely ignored.  We
+</p>
+<p>This patch is coming from Stephen who is adding : "<em>libtool</em> gives lots of warnings which can apparently be safely ignored.  We
 filter libtool's output so the user doesn't see them".
-</p><h2>2.5. main/Packages.lhs</h2><p><em>TOOLCHAIN</em> name is used to select the right <em>.cabal</em> directory when looking for packages
-</p><h1>3. configure.ac</h1><p>New options for configure have been added. In case ARM is the target, the size of primitive datatypes is forced.
-</p><p>A new <em>ToolChain.hs</em> file is generated in the Cabal folder
-</p><h1>4. ghc.mk</h1><p>The customized <em>cabal-install</em> is added to the list of tools to be built. This customized <em>cabal-install</em> must be installed in the <em>utils</em> folder.
-</p><p><em>haskeline</em> removed (because not really tested by me)
-</p><h1>5. ghc</h1><p>Some hacks for "building" phase 2
-</p><h1>6. rts</h1><p>Lots of changes for the Adjustor on iPhone.
-</p><h2>6.1. Linker.c</h2><p>The <em>RTS_SYMBOLS</em> table had to be modified. <em>createAdjustor</em> replaced with <em>iPhoneCreateAdjustor</em> to be coherent with other parts of the code. 
-</p><p>It was not present in Stephen's patch. So, I hope something is not wrong in the Adjustor code I got from Stephen's patch (missing file ?).
-</p><h2>6.2. main.c </h2><p>Using <em>Haskell_main</em> as entry point on iPhone because we'd like main to be the general entry point.
-</p><h2>6.3. sm/GC.c </h2><p>Parallel GC disabled
-</p><h1>7. libffi</h1><h2>7.1. ghc.mk</h2><p>Modified to cross compile (new options for the configure step)
-</p><h1>8. mk</h1><h2>8.1. config.mk.in</h2><p>GHCi, Interpreter disabled
-</p><p>Introducing new variables for <em>cabal-install</em>
-</p><p>Modifying the definition of <em>GHC_STAGE2</em> and <em>GHC_STAGE3</em> because we want to build with the host compiler
-</p><p>New makefile variables, corresponding to the new configure options, are introduced
-</p><h2>8.2. tree.mk</h2><p>New variables for the new <em>cabal-install</em> folder in <em>utils</em>
-</p><h1>9. rules</h1><h2>9.1. build-package-data.mk</h2><p>This is an ugly hack and the result of some experiments. I am not really understanding everything here.
-</p><p>The new inplace <em>cabal</em> is used to configure the packages. The boot packages used to build <em>ghc</em> need to be compiled with the host tools.
-</p><p>Other packages need to be built with the target tools. The configuration phase can involve some autoconf script and the generation of some C code compiled and linked to check dependencies.
-</p><p>Finally, during the build, hsc2hs is used to convert some files. It is generating C code which is executed on host to generate the Haskell file.
-</p><p>Due to all of these reasons, the configure step is taking a long list of options on the command line.
-</p><h2>9.2. shell-wrapper.mk</h2><p>Needed some changes to install the wrappers for some tools located at a different place than assumed by the original wrapper makefile
-</p><h1>10. utils</h1><h2>10.1. Makefile</h2><p><em>cabal-install</em> added to the list of tools to build
-</p><h2>10.2. ghc-pkg</h2><p>Added the <em>TOOLCHAIN</em> name to select the right <em>.cabal</em> folder
-</p><h2>10.3. cabal-install</h2><p>I dropped the <em>darcs</em> version of <em>cabal-install</em> in this folder and customized it.
-</p><p>First, it is using the <em>TOOLCHAIN</em> name for <em>.cabal</em> folder.
-</p><p>The source was changed to be able to build directly with the new Cabal included in this GHC distribution (some changes for exception handling).
-</p><h3>10.3.1. Distribution/Client/SetupWrapper.hs</h3><p>Changed to build the <em>Setup.hs</em> file with the host <em>ghc</em>.
-</p><p>The <em>Setup.hs</em> is linked with the customized <em>Cabal</em> contained in this <em>Ghc</em> distribution. Hence the need to install it somewhere.
-</p><p>During the build of <em>cabal-install</em>, the customized cabal is also built : <em>CustomCabal</em>. When installing, it will be installed in a folder <em>bootstrapping</em> 
+</p>
+<h2>2.5. main/Packages.lhs</h2>
+<p><em>TOOLCHAIN</em> name is used to select the right <em>.cabal</em> directory when looking for packages
+</p>
+<h1>3. configure.ac</h1>
+<p>New options for configure have been added. In case ARM is the target, the size of primitive datatypes is forced.
+</p>
+<p>A new <em>ToolChain.hs</em> file is generated in the Cabal folder
+</p>
+<h1>4. ghc.mk</h1>
+<p>The customized <em>cabal-install</em> is added to the list of tools to be built. This customized <em>cabal-install</em> must be installed in the <em>utils</em> folder.
+</p>
+<p><em>haskeline</em> removed (because not really tested by me)
+</p>
+<h1>5. ghc</h1>
+<p>Some hacks for "building" phase 2
+</p>
+<h1>6. rts</h1>
+<p>Lots of changes for the Adjustor on iPhone.
+</p>
+<h2>6.1. Linker.c</h2>
+<p>The <em>RTS_SYMBOLS</em> table had to be modified. <em>createAdjustor</em> replaced with <em>iPhoneCreateAdjustor</em> to be coherent with other parts of the code. 
+</p>
+<p>It was not present in Stephen's patch. So, I hope something is not wrong in the Adjustor code I got from Stephen's patch (missing file ?).
+</p>
+<h2>6.2. main.c </h2>
+<p>Using <em>Haskell_main</em> as entry point on iPhone because we'd like main to be the general entry point.
+</p>
+<h2>6.3. sm/GC.c </h2>
+<p>Parallel GC disabled
+</p>
+<h1>7. libffi</h1>
+<h2>7.1. ghc.mk</h2>
+<p>Modified to cross compile (new options for the configure step)
+</p>
+<h1>8. mk</h1>
+<h2>8.1. config.mk.in</h2>
+<p>GHCi, Interpreter disabled
+</p>
+<p>Introducing new variables for <em>cabal-install</em>
+</p>
+<p>Modifying the definition of <em>GHC_STAGE2</em> and <em>GHC_STAGE3</em> because we want to build with the host compiler
+</p>
+<p>New makefile variables, corresponding to the new configure options, are introduced
+</p>
+<h2>8.2. tree.mk</h2>
+<p>New variables for the new <em>cabal-install</em> folder in <em>utils</em>
+</p>
+<h1>9. rules</h1>
+<h2>9.1. build-package-data.mk</h2>
+<p>This is an ugly hack and the result of some experiments. I am not really understanding everything here.
+</p>
+<p>The new inplace <em>cabal</em> is used to configure the packages. The boot packages used to build <em>ghc</em> need to be compiled with the host tools.
+</p>
+<p>Other packages need to be built with the target tools. The configuration phase can involve some autoconf script and the generation of some C code compiled and linked to check dependencies.
+</p>
+<p>Finally, during the build, hsc2hs is used to convert some files. It is generating C code which is executed on host to generate the Haskell file.
+</p>
+<p>Due to all of these reasons, the configure step is taking a long list of options on the command line.
+</p>
+<h2>9.2. shell-wrapper.mk</h2>
+<p>Needed some changes to install the wrappers for some tools located at a different place than assumed by the original wrapper makefile
+</p>
+<h1>10. utils</h1>
+<h2>10.1. Makefile</h2>
+<p><em>cabal-install</em> added to the list of tools to build
+</p>
+<h2>10.2. ghc-pkg</h2>
+<p>Added the <em>TOOLCHAIN</em> name to select the right <em>.cabal</em> folder
+</p>
+<h2>10.3. cabal-install</h2>
+<p>I dropped the <em>darcs</em> version of <em>cabal-install</em> in this folder and customized it.
+</p>
+<p>First, it is using the <em>TOOLCHAIN</em> name for <em>.cabal</em> folder.
+</p>
+<p>The source was changed to be able to build directly with the new Cabal included in this GHC distribution (some changes for exception handling).
+</p>
+<h3>10.3.1. Distribution/Client/SetupWrapper.hs</h3>
+<p>Changed to build the <em>Setup.hs</em> file with the host <em>ghc</em>.
+</p>
+<p>The <em>Setup.hs</em> is linked with the customized <em>Cabal</em> contained in this <em>Ghc</em> distribution. Hence the need to install it somewhere.
+</p>
+<p>During the build of <em>cabal-install</em>, the customized cabal is also built : <em>CustomCabal</em>. When installing, it will be installed in a folder <em>bootstrapping</em> 
 at same level as the other <em>shared</em>, <em>bin</em> and <em>lib</em> folders of the prefix you chose. It can't be in <em>bin</em> because <em>bin</em> is containing target binaries and this <em>CustomCabal</em> is for the host and cross-compilation.
-</p><p><em>Setup.hs</em> will always be linked with this <em>CustomCabal</em> so that it can recognize the new options introduced for the configuration (target tools and host tools)
-</p><h3>10.3.2. Distribution/Compat </h3><p>The files in this folder are no more needed since the code was changed to link with the <em>CustomizedCabal</em>.
-</p><h3>10.3.3. Main.hs </h3><p>Configuration is calling <em>configureAllKnownPrograms</em> to force the loading of all default tools that were passed on the configure command line when building this <em>GHC</em> distribution. So, the default host and target tools. They will be passed to the <em>setup configure</em> step where <em>setup</em> has been built as explained above
-</p><h3>10.3.4. ghc.mk </h3><p>A bit ugly.
-</p><h1>11. libraries</h1><h2>11.1. Cabal</h2><p>Force <em>GHCiLib</em> to False. No <em>.o</em> library is ever generated nor installed for the cross compilation
-</p><p>Other changes are from Stephen's patch like the addition of a new <em>ToolChain.hs</em> file containing the settings for host and target
-</p><p>I may have changed a little the command line options passed to some tools to be able to configure and build on the several plaforms that I used for testing.
-</p><h3>11.1.1. Distribution/Simple/Configure.hs</h3><p>Add the default the target LDFlags to the configure step 
-</p><h1>12. What need to be improved</h1><p>In short : A LOT !
-</p><p>First, testing must be improved but I need help for this. I am not sure the FFI is fully ok. I have had no problems on many tests but I have a project which is not working well. I don't yet know if the problem is really FFI related. I am still working on it.
-</p><p>Once testing is enough, the next step will be to clean this patch. I'll also need help. My knowledge of Cabal and the GHC build system is really too weak and I don't have enough free time.
-</p><p>Then, for future I hope we'll be able to use the LLVM codegen to generate ARM code and finally, a nice to have but not mandatory : <a href="http://hackage.haskell.org/trac/ghc/ticket/698">Trac ticket 698</a>. Indeed, on most smartphones, the swap is disabled and physical memory very constrained.
-</p><p>I have not tested the patches attached to this post :-( Sorry for that. So, in case I made a mistake, you can get the <a href="http://dl.dropbox.com/u/2735527/cross_ghc.tar.bz2">full source code from my Dropbox</a> and for a LIMITED time only. I hope someone can host the source code somewhere.
-</p><p>To know how to configure XCode, refer to te original <a href="http://projects.haskell.org/ghc-iphone/">iphone-ghc patch</a>. There is a PDF documentation. I'll release an XCode template when I have time.
-</p><h1>13. How to build</h1><p>Download the above source or a darcs version of GHC head (not tested with GHC 6.12).
-</p><p><em>sh boot</em>
-</p><p>Customize a bit the <em>build.mk</em> and <em>build.sh</em> in the target subfolder of the <em>CrossCompile</em> folder
-</p><p><em>sh CrossCompile/Target/build.sh</em>
-</p><p><em>make</em> and cross fingers
-</p><p><em>make install</em>
-</p><p>Tested on SnowLeopard with iPhone SDK 3.1 and on Ubuntu with OMAP development board and a GHC 6.10.4 to build.
-</p><h1>14. Updates</h1><h2>14.1. 22 Nov 2009</h2><p>Problem with Posix.getFileStatus detected. Probably a problem with hsc2hs not called with the right compilation flags. I am working on it ...
-</p><p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
-</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Cross-compiling Haskell" data-url="http://www.alpheccar.org/content/94.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/94.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/94.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '94';var disqus_url = "http://www.alpheccar.org/content/94.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</p>
+<p><em>Setup.hs</em> will always be linked with this <em>CustomCabal</em> so that it can recognize the new options introduced for the configuration (target tools and host tools)
+</p>
+<h3>10.3.2. Distribution/Compat </h3>
+<p>The files in this folder are no more needed since the code was changed to link with the <em>CustomizedCabal</em>.
+</p>
+<h3>10.3.3. Main.hs </h3>
+<p>Configuration is calling <em>configureAllKnownPrograms</em> to force the loading of all default tools that were passed on the configure command line when building this <em>GHC</em> distribution. So, the default host and target tools. They will be passed to the <em>setup configure</em> step where <em>setup</em> has been built as explained above
+</p>
+<h3>10.3.4. ghc.mk </h3>
+<p>A bit ugly.
+</p>
+<h1>11. libraries</h1>
+<h2>11.1. Cabal</h2>
+<p>Force <em>GHCiLib</em> to False. No <em>.o</em> library is ever generated nor installed for the cross compilation
+</p>
+<p>Other changes are from Stephen's patch like the addition of a new <em>ToolChain.hs</em> file containing the settings for host and target
+</p>
+<p>I may have changed a little the command line options passed to some tools to be able to configure and build on the several plaforms that I used for testing.
+</p>
+<h3>11.1.1. Distribution/Simple/Configure.hs</h3>
+<p>Add the default the target LDFlags to the configure step 
+</p>
+<h1>12. What need to be improved</h1>
+<p>In short : A LOT !
+</p>
+<p>First, testing must be improved but I need help for this. I am not sure the FFI is fully ok. I have had no problems on many tests but I have a project which is not working well. I don't yet know if the problem is really FFI related. I am still working on it.
+</p>
+<p>Once testing is enough, the next step will be to clean this patch. I'll also need help. My knowledge of Cabal and the GHC build system is really too weak and I don't have enough free time.
+</p>
+<p>Then, for future I hope we'll be able to use the LLVM codegen to generate ARM code and finally, a nice to have but not mandatory : <a href="http://hackage.haskell.org/trac/ghc/ticket/698">Trac ticket 698</a>. Indeed, on most smartphones, the swap is disabled and physical memory very constrained.
+</p>
+<p>I have not tested the patches attached to this post :-( Sorry for that. So, in case I made a mistake, you can get the <a href="http://dl.dropbox.com/u/2735527/cross_ghc.tar.bz2">full source code from my Dropbox</a> and for a LIMITED time only. I hope someone can host the source code somewhere.
+</p>
+<p>To know how to configure XCode, refer to te original <a href="http://projects.haskell.org/ghc-iphone/">iphone-ghc patch</a>. There is a PDF documentation. I'll release an XCode template when I have time.
+</p>
+<h1>13. How to build</h1>
+<p>Download the above source or a darcs version of GHC head (not tested with GHC 6.12).
+</p>
+<p><em>sh boot</em>
+</p>
+<p>Customize a bit the <em>build.mk</em> and <em>build.sh</em> in the target subfolder of the <em>CrossCompile</em> folder
+</p>
+<p><em>sh CrossCompile/Target/build.sh</em>
+</p>
+<p><em>make</em> and cross fingers
+</p>
+<p><em>make install</em>
+</p>
+<p>Tested on SnowLeopard with iPhone SDK 3.1 and on Ubuntu with OMAP development board and a GHC 6.10.4 to build.
+</p>
+<h1>14. Updates</h1>
+<h2>14.1. 22 Nov 2009</h2>
+<p>Problem with Posix.getFileStatus detected. Probably a problem with hsc2hs not called with the right compilation flags. I am working on it ...
+</p>
+<p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Cross-compiling Haskell" data-url="http://www.alpheccar.org/content/94.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/94.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/94.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '94';
+var disqus_url = "http://www.alpheccar.org/content/94.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>

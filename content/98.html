@@ -1,35 +1,171 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="Inference in Discrete Bayesian Networks with Haskell" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>Inference in Discrete Bayesian Networks with Haskell</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="Inference in Discrete Bayesian Networks with Haskell" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>Inference in Discrete Bayesian Networks with Haskell</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">Inference in Discrete Bayesian Networks with Haskell</div><p>I am learning the algorithms used for inference with discrete bayesian networks. I decided to write an implementation in Haskell to give me an opportunity to code a bit in this beautiful language (I don't have a lot of opportunities at my office).
-</p><p>The first version of the library hbayes is very preliminary but already supporting junction trees.
-</p><p>You can find more info in the <a href="http://hackage.haskell.org/package/hbayes">hbayes package</a> on hackage.
-</p><p>But, here are a few examples.
-</p><h1>1. Creating a network</h1><div class="haskell"><span class='hs-definition'>example</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>DVSet</span><span class='hs-layout'>,</span><span class='hs-conid'>SBN</span>&nbsp;<span class='hs-conid'>CPT</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>example</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>runBN</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>winter</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"winter"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>sprinkler</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"sprinkler"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>wet</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"wet&nbsp;grass"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>rain</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"rain"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>road</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"slippery&nbsp;road"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>&nbsp;<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>proba</span>&nbsp;<span class='hs-varid'>winter</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>0.4</span><span class='hs-layout'>,</span><span class='hs-num'>0.6</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>cpt</span>&nbsp;<span class='hs-varid'>sprinkler</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>0.25</span><span class='hs-layout'>,</span><span class='hs-num'>0.8</span><span class='hs-layout'>,</span><span class='hs-num'>0.75</span><span class='hs-layout'>,</span><span class='hs-num'>0.2</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>cpt</span>&nbsp;<span class='hs-varid'>rain</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>0.9</span><span class='hs-layout'>,</span><span class='hs-num'>0.2</span><span class='hs-layout'>,</span><span class='hs-num'>0.1</span><span class='hs-layout'>,</span><span class='hs-num'>0.8</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>cpt</span>&nbsp;<span class='hs-varid'>wet</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>rain</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>1</span><span class='hs-layout'>,</span><span class='hs-num'>0.2</span><span class='hs-layout'>,</span><span class='hs-num'>0.1</span><span class='hs-layout'>,</span><span class='hs-num'>0.05</span><span class='hs-layout'>,</span><span class='hs-num'>0</span><span class='hs-layout'>,</span><span class='hs-num'>0.8</span><span class='hs-layout'>,</span><span class='hs-num'>0.9</span><span class='hs-layout'>,</span><span class='hs-num'>0.95</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>cpt</span>&nbsp;<span class='hs-varid'>road</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>rain</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>1</span><span class='hs-layout'>,</span><span class='hs-num'>0.3</span><span class='hs-layout'>,</span><span class='hs-num'>0</span><span class='hs-layout'>,</span><span class='hs-num'>0.7</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>return</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-layout'>,</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>rain</span><span class='hs-layout'>,</span><span class='hs-varid'>wet</span><span class='hs-layout'>,</span><span class='hs-varid'>road</span><span class='hs-keyglyph'>]</span><br/></div><h1>2. Inference with variable elimination</h1><p>First, we need the graph and the variables:
-</p><div class="haskell"><span class='hs-keyword'>let</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-layout'>,</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>rain</span><span class='hs-layout'>,</span><span class='hs-varid'>wet</span><span class='hs-layout'>,</span><span class='hs-varid'>road</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span><span class='hs-varid'>exampleG</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>example</span><br/></div><p>then we can start doing some inferences
-</p><div class="haskell"><span class='hs-definition'>print</span>&nbsp;<span class='hs-str'>"Prior&nbsp;Marginal&nbsp;:&nbsp;probability&nbsp;of&nbsp;rain"</span><br/><span class='hs-definition'>print</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>priorMarginal</span>&nbsp;<span class='hs-varid'>exampleG</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-layout'>,</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>wet</span><span class='hs-layout'>,</span><span class='hs-varid'>road</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>rain</span><span class='hs-keyglyph'>]</span>&nbsp;<br/></div><p>and with some evidence
-</p><div class="haskell"><span class='hs-definition'>print</span>&nbsp;<span class='hs-str'>"Posterior&nbsp;Marginal&nbsp;:&nbsp;probability&nbsp;of&nbsp;rain&nbsp;if&nbsp;grass&nbsp;wet"</span><br/><span class='hs-definition'>print</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>posteriorMarginal</span>&nbsp;<span class='hs-varid'>exampleG</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-layout'>,</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>wet</span><span class='hs-layout'>,</span><span class='hs-varid'>road</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>rain</span><span class='hs-keyglyph'>]</span>&nbsp;&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>wet</span>&nbsp;<span class='hs-varop'>=:</span>&nbsp;<span class='hs-conid'>True</span><span class='hs-keyglyph'>]</span><br/></div><h1>3. Inference with factor elimination (junction tree)</h1><p>First, we need to create the junction tree. The junction tree created is dependent on the cost function used.
-</p><div class="haskell"><span class='hs-keyword'>let</span>&nbsp;<span class='hs-varid'>jt</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>createJunctionTree</span>&nbsp;<span class='hs-varid'>nodeComparisonForTriangulation</span>&nbsp;<span class='hs-varid'>exampleG</span><br/></div><p>Once the junction tree is available, it can be used to compute several marginals:
-</p><div class="haskell"><span class='hs-definition'>print</span>&nbsp;<span class='hs-str'>"Prior&nbsp;Marginal&nbsp;:&nbsp;probability&nbsp;of&nbsp;rain"</span><br/><span class='hs-definition'>print</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>posterior</span>&nbsp;<span class='hs-varid'>jt</span>&nbsp;<span class='hs-varid'>rain</span><br/></div><p>The function is named <em>posterior</em> although we are computing a prior. It is normal. The same function is used in both cases.
+<div id="content"><div class="posttitle">Inference in Discrete Bayesian Networks with Haskell</div>
+<p>I am learning the algorithms used for inference with discrete bayesian networks. I decided to write an implementation in Haskell to give me an opportunity to code a bit in this beautiful language (I don't have a lot of opportunities at my office).
+</p>
+<p>The first version of the library hbayes is very preliminary but already supporting junction trees.
+</p>
+<p>You can find more info in the <a href="http://hackage.haskell.org/package/hbayes">hbayes package</a> on hackage.
+</p>
+<p>But, here are a few examples.
+</p>
+<h1>1. Creating a network</h1>
+<div class="haskell"><span class='hs-definition'>example</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>DVSet</span><span class='hs-layout'>,</span><span class='hs-conid'>SBN</span>&nbsp;<span class='hs-conid'>CPT</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>example</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>runBN</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>winter</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"winter"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>sprinkler</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"sprinkler"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>wet</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"wet&nbsp;grass"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>rain</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"rain"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>road</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varid'>variable</span>&nbsp;<span class='hs-str'>"slippery&nbsp;road"</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>&nbsp;<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>proba</span>&nbsp;<span class='hs-varid'>winter</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>0.4</span><span class='hs-layout'>,</span><span class='hs-num'>0.6</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>cpt</span>&nbsp;<span class='hs-varid'>sprinkler</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>0.25</span><span class='hs-layout'>,</span><span class='hs-num'>0.8</span><span class='hs-layout'>,</span><span class='hs-num'>0.75</span><span class='hs-layout'>,</span><span class='hs-num'>0.2</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>cpt</span>&nbsp;<span class='hs-varid'>rain</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>0.9</span><span class='hs-layout'>,</span><span class='hs-num'>0.2</span><span class='hs-layout'>,</span><span class='hs-num'>0.1</span><span class='hs-layout'>,</span><span class='hs-num'>0.8</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>cpt</span>&nbsp;<span class='hs-varid'>wet</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>rain</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>1</span><span class='hs-layout'>,</span><span class='hs-num'>0.2</span><span class='hs-layout'>,</span><span class='hs-num'>0.1</span><span class='hs-layout'>,</span><span class='hs-num'>0.05</span><span class='hs-layout'>,</span><span class='hs-num'>0</span><span class='hs-layout'>,</span><span class='hs-num'>0.8</span><span class='hs-layout'>,</span><span class='hs-num'>0.9</span><span class='hs-layout'>,</span><span class='hs-num'>0.95</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>cpt</span>&nbsp;<span class='hs-varid'>road</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>rain</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varop'>~~</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-num'>1</span><span class='hs-layout'>,</span><span class='hs-num'>0.3</span><span class='hs-layout'>,</span><span class='hs-num'>0</span><span class='hs-layout'>,</span><span class='hs-num'>0.7</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>return</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-layout'>,</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>rain</span><span class='hs-layout'>,</span><span class='hs-varid'>wet</span><span class='hs-layout'>,</span><span class='hs-varid'>road</span><span class='hs-keyglyph'>]</span><br/></div>
+<h1>2. Inference with variable elimination</h1>
+<p>First, we need the graph and the variables:
+</p>
+<div class="haskell"><span class='hs-keyword'>let</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-layout'>,</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>rain</span><span class='hs-layout'>,</span><span class='hs-varid'>wet</span><span class='hs-layout'>,</span><span class='hs-varid'>road</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span><span class='hs-varid'>exampleG</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>example</span><br/></div>
+<p>then we can start doing some inferences
+</p>
+<div class="haskell"><span class='hs-definition'>print</span>&nbsp;<span class='hs-str'>"Prior&nbsp;Marginal&nbsp;:&nbsp;probability&nbsp;of&nbsp;rain"</span><br/><span class='hs-definition'>print</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>priorMarginal</span>&nbsp;<span class='hs-varid'>exampleG</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-layout'>,</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>wet</span><span class='hs-layout'>,</span><span class='hs-varid'>road</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>rain</span><span class='hs-keyglyph'>]</span>&nbsp;<br/></div>
+<p>and with some evidence
+</p>
+<div class="haskell"><span class='hs-definition'>print</span>&nbsp;<span class='hs-str'>"Posterior&nbsp;Marginal&nbsp;:&nbsp;probability&nbsp;of&nbsp;rain&nbsp;if&nbsp;grass&nbsp;wet"</span><br/><span class='hs-definition'>print</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>posteriorMarginal</span>&nbsp;<span class='hs-varid'>exampleG</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>winter</span><span class='hs-layout'>,</span><span class='hs-varid'>sprinkler</span><span class='hs-layout'>,</span><span class='hs-varid'>wet</span><span class='hs-layout'>,</span><span class='hs-varid'>road</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>rain</span><span class='hs-keyglyph'>]</span>&nbsp;&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>wet</span>&nbsp;<span class='hs-varop'>=:</span>&nbsp;<span class='hs-conid'>True</span><span class='hs-keyglyph'>]</span><br/></div>
+<h1>3. Inference with factor elimination (junction tree)</h1>
+<p>First, we need to create the junction tree. The junction tree created is dependent on the cost function used.
+</p>
+<div class="haskell"><span class='hs-keyword'>let</span>&nbsp;<span class='hs-varid'>jt</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>createJunctionTree</span>&nbsp;<span class='hs-varid'>nodeComparisonForTriangulation</span>&nbsp;<span class='hs-varid'>exampleG</span><br/></div>
+<p>Once the junction tree is available, it can be used to compute several marginals:
+</p>
+<div class="haskell"><span class='hs-definition'>print</span>&nbsp;<span class='hs-str'>"Prior&nbsp;Marginal&nbsp;:&nbsp;probability&nbsp;of&nbsp;rain"</span><br/><span class='hs-definition'>print</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>posterior</span>&nbsp;<span class='hs-varid'>jt</span>&nbsp;<span class='hs-varid'>rain</span><br/></div>
+<p>The function is named <em>posterior</em> although we are computing a prior. It is normal. The same function is used in both cases.
 The only difference is the presence of evidence in the tree or not.
-</p><p>To use some evidence, the junction has to be "loaded" with that evidence:
-</p><div class="haskell"><span class='hs-keyword'>let</span>&nbsp;<span class='hs-varid'>jt'</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>updateEvidence</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>wet</span>&nbsp;<span class='hs-varop'>=:</span>&nbsp;<span class='hs-conid'>True</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varid'>jt</span>&nbsp;<br/></div><p>This new tree can now be used to compute posterior marginals
-</p><div class="haskell"><span class='hs-definition'>print</span>&nbsp;<span class='hs-str'>"Posterior&nbsp;Marginal&nbsp;:&nbsp;probability&nbsp;of&nbsp;rain&nbsp;if&nbsp;grass&nbsp;wet"</span><br/><span class='hs-definition'>print</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>posterior</span>&nbsp;<span class='hs-varid'>jt'</span>&nbsp;<span class='hs-varid'>rain</span><br/></div><h1>4. Problems</h1><p>It is a very preliminary library. I have only tested it on a few number of bayesian networks and on a few queries. I don't know if it will work on other networks. I have implemented a few quickcheck tests (and one to check the key junction tree property). But, it is not enough. I need to make the algorithms clearer and more elegant. Then, it will be easier to discover problems.
-</p><p>The library has not been optimized. I have tested it on a big network and it was EXTREMELY slow.
-</p><p>I have not provided any additional tools to create the networks : soft evidence, additional nodes for more complex logical queries, noisy OR etc ... It will come in a future release.
-</p><p>Also, the Hugin importer has just been used to help me import a few networks for testing the algorithms. It is not a real Hugin parser.
-</p><p>So, in conclusion, it is still a toy library but you can already have some fun with it.
-</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Inference in Discrete Bayesian Networks with Haskell" data-url="http://www.alpheccar.org/content/98.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/98.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/98.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '98';var disqus_url = "http://www.alpheccar.org/content/98.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</p>
+<p>To use some evidence, the junction has to be "loaded" with that evidence:
+</p>
+<div class="haskell"><span class='hs-keyword'>let</span>&nbsp;<span class='hs-varid'>jt'</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>updateEvidence</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>wet</span>&nbsp;<span class='hs-varop'>=:</span>&nbsp;<span class='hs-conid'>True</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-varid'>jt</span>&nbsp;<br/></div>
+<p>This new tree can now be used to compute posterior marginals
+</p>
+<div class="haskell"><span class='hs-definition'>print</span>&nbsp;<span class='hs-str'>"Posterior&nbsp;Marginal&nbsp;:&nbsp;probability&nbsp;of&nbsp;rain&nbsp;if&nbsp;grass&nbsp;wet"</span><br/><span class='hs-definition'>print</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>posterior</span>&nbsp;<span class='hs-varid'>jt'</span>&nbsp;<span class='hs-varid'>rain</span><br/></div>
+<h1>4. Problems</h1>
+<p>It is a very preliminary library. I have only tested it on a few number of bayesian networks and on a few queries. I don't know if it will work on other networks. I have implemented a few quickcheck tests (and one to check the key junction tree property). But, it is not enough. I need to make the algorithms clearer and more elegant. Then, it will be easier to discover problems.
+</p>
+<p>The library has not been optimized. I have tested it on a big network and it was EXTREMELY slow.
+</p>
+<p>I have not provided any additional tools to create the networks : soft evidence, additional nodes for more complex logical queries, noisy OR etc ... It will come in a future release.
+</p>
+<p>Also, the Hugin importer has just been used to help me import a few networks for testing the algorithms. It is not a real Hugin parser.
+</p>
+<p>So, in conclusion, it is still a toy library but you can already have some fun with it.
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Inference in Discrete Bayesian Networks with Haskell" data-url="http://www.alpheccar.org/content/98.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/98.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/98.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '98';
+var disqus_url = "http://www.alpheccar.org/content/98.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>

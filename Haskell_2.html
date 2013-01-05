@@ -1,45 +1,193 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="Haskell 2" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="website" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>Haskell 2</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="Haskell 2" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="website" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>Haskell 2</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/81.html">HPDF 1.1 teaser</a></div><p>The text operators of the release 1.0 of my Haskell PDF library are very low level. You have access to most of the PDF text operators but it means you can just specify where to put
+<div id="content"><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/81.html">HPDF 1.1 teaser</a>
+</div>
+<p>The text operators of the release 1.0 of my Haskell PDF library are very low level. You have access to most of the PDF text operators but it means you can just specify where to put
 a line of text. So, it is difficult to do more than displaying some labels on a chart. The styles are also very limited : you can use bold and italic if it is supported by the standard
 PDF fonts.
-</p><p>For the 1.1 release of my library, I have decided to improve this and write something cool.
-</p><p>First, I have implemented the TeX line breaking algorithm with glues and penalties. Contrary to the real TeX algorithm, there is no looseness parameter and the hyphenation algorithm is
+</p>
+<p>For the 1.1 release of my library, I have decided to improve this and write something cool.
+</p>
+<p>First, I have implemented the TeX line breaking algorithm with glues and penalties. Contrary to the real TeX algorithm, there is no looseness parameter and the hyphenation algorithm is
 not implemented (will be for another release).
-</p><div class="more"><a href="http://www.alpheccar.org/content/81.html">read more ...</a></div><div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img><a href="http://www.alpheccar.org/content/81.html#disqus_thread" data-disqus-identifier="81" /></a></div></div><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/80.html">Haskell PDF 1.0</a></div><p>Here it is ! I finally released a version 1.0 of my Haskell PDF library. It is a totally 
+</p>
+
+<div class="more"><a href="http://www.alpheccar.org/content/81.html">read more ...</a>
+</div>
+<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
+<a href="http://www.alpheccar.org/content/81.html#disqus_thread" data-disqus-identifier="81" /></a>
+</div>
+</div>
+<div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/80.html">Haskell PDF 1.0</a>
+</div>
+<p>Here it is ! I finally released a version 1.0 of my Haskell PDF library. It is a totally 
 new implementation and a totally new version. But, it is not done yet. There are several other features I'd like to introduce in future versions
 and some things I'd like to improve. But, I had to release something. I could not wait forever.
-</p><p>Here is a summary of the features with some criticisms. The package is containing a demo in the Test folder.
-</p><p>Note before reading : I <a href="http://www.alpheccar.org/content/82.html">released</a> a 1.1 version with additional features described in <a href="http://www.alpheccar.org/content/82.html">another</a> post.
-</p><div class="more"><a href="http://www.alpheccar.org/content/80.html">read more ...</a></div><div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img><a href="http://www.alpheccar.org/content/80.html#disqus_thread" data-disqus-identifier="80" /></a></div></div><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/77.html">Category Theory and Haskell 3 : Algebra and Monads</a></div><p>This is the third part of my serie about Haskell and category theory. In the <a href="http://www.alpheccar.org/content/76.html">previous post</a>, I described a bit the Hask category and some categorical constructs.
+</p>
+<p>Here is a summary of the features with some criticisms. The package is containing a demo in the Test folder.
+</p>
+<p>Note before reading : I <a href="http://www.alpheccar.org/content/82.html">released</a> a 1.1 version with additional features described in <a href="http://www.alpheccar.org/content/82.html">another</a> post.
+</p>
+
+<div class="more"><a href="http://www.alpheccar.org/content/80.html">read more ...</a>
+</div>
+<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
+<a href="http://www.alpheccar.org/content/80.html#disqus_thread" data-disqus-identifier="80" /></a>
+</div>
+</div>
+<div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/77.html">Category Theory and Haskell 3 : Algebra and Monads</a>
+</div>
+<p>This is the third part of my serie about Haskell and category theory. In the <a href="http://www.alpheccar.org/content/76.html">previous post</a>, I described a bit the Hask category and some categorical constructs.
 The goal of this text is to understand
 the meaning of a recursive type like List. For that, we will have to understand what is a free algebra and have a quick look at the relationship with
 monads (for applications look at <a href="http://sigfpe.blogspot.com/2007/06/monads-from-algebra-and-the-gray-code.html">the blog of sigfpe</a>). 
 But first, I would like to highlight a problem with the category Hask.
-</p><div class="more"><a href="http://www.alpheccar.org/content/77.html">read more ...</a></div><div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img><a href="http://www.alpheccar.org/content/77.html#disqus_thread" data-disqus-identifier="77" /></a></div></div><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/76.html">Category theory and Haskell : Part 2</a></div><p>In my <a href="http://www.alpheccar.org/content/74.html">previous post</a>, I explained that with category theory you can define some concepts in 
+</p>
+
+<div class="more"><a href="http://www.alpheccar.org/content/77.html">read more ...</a>
+</div>
+<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
+<a href="http://www.alpheccar.org/content/77.html#disqus_thread" data-disqus-identifier="77" /></a>
+</div>
+</div>
+<div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/76.html">Category theory and Haskell : Part 2</a>
+</div>
+<p>In my <a href="http://www.alpheccar.org/content/74.html">previous post</a>, I explained that with category theory you can define some concepts in 
 such a way that they can be used in several different contexts.
 As a side effect, the definitions are rather abstract since they are forbidden from talking about the implementation of the objects and must rely
 only on the provided interfaces.
-</p><p>So, a first thing to do when studying category theory is learning some of these definitions. Some of them 
+</p>
+<p>So, a first thing to do when studying category theory is learning some of these definitions. Some of them 
 are just generalizations of ideas commonly used in set theory. I introduced a few of them in my <a href="http://www.alpheccar.org/content/74.html">previous post</a> but 
 I used a terminology that is not standard.
-</p><p>So, before continuing and introducing some additional definitions, let me complete my previous post and give the standard terminology that I will now use.
-</p><div class="more"><a href="http://www.alpheccar.org/content/76.html">read more ...</a></div><div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img><a href="http://www.alpheccar.org/content/76.html#disqus_thread" data-disqus-identifier="76" /></a></div></div><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/74.html">Category Theory and the category of Haskell programs : Part 1</a></div><p>"Category theory" is an expression that is generally frightening people. But, if you have attempted to read some research papers in Computer Science, Mathematics, Physics or even Philosophy,
+</p>
+<p>So, before continuing and introducing some additional definitions, let me complete my previous post and give the standard terminology that I will now use.
+</p>
+
+<div class="more"><a href="http://www.alpheccar.org/content/76.html">read more ...</a>
+</div>
+<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
+<a href="http://www.alpheccar.org/content/76.html#disqus_thread" data-disqus-identifier="76" /></a>
+</div>
+</div>
+<div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/74.html">Category Theory and the category of Haskell programs : Part 1</a>
+</div>
+<p>"Category theory" is an expression that is generally frightening people. But, if you have attempted to read some research papers in Computer Science, Mathematics, Physics or even Philosophy,
 you've surely remarked that Category theory is used a lot and you probably asked yourself : what is Category theory ? Why is it so useful ? Is it so difficult ? What the link(s) 
 with computer science ? Answering to those questions in an easy way that can be understood by most people is really challenging but I am going to try and I'll use the category of Haskell
 programs to illustrate some points. I hope the experts will forgive me some slight inaccuracies and/or an unconventional presentation.
-</p><div class="more"><a href="http://www.alpheccar.org/content/74.html">read more ...</a></div><div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img><a href="http://www.alpheccar.org/content/74.html#disqus_thread" data-disqus-identifier="74" /></a></div></div><div id="indexNavigation"><div class="previous"><a href="http://www.alpheccar.org/Haskell_1.html">previous</a></div><div class="next"><a href="http://www.alpheccar.org/Haskell_3.html">next</a></div></div><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</p>
+
+<div class="more"><a href="http://www.alpheccar.org/content/74.html">read more ...</a>
+</div>
+<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
+<a href="http://www.alpheccar.org/content/74.html#disqus_thread" data-disqus-identifier="74" /></a>
+</div>
+</div>
+<div id="indexNavigation"><div class="previous"><a href="http://www.alpheccar.org/Haskell_1.html">previous</a>
+</div>
+<div class="next"><a href="http://www.alpheccar.org/Haskell_3.html">next</a>
+</div>
+</div>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>

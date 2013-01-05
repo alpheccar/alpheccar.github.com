@@ -1,31 +1,155 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="HPDF 1.1 teaser" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>HPDF 1.1 teaser</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="HPDF 1.1 teaser" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>HPDF 1.1 teaser</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">HPDF 1.1 teaser</div><p>The text operators of the release 1.0 of my Haskell PDF library are very low level. You have access to most of the PDF text operators but it means you can just specify where to put
+<div id="content"><div class="posttitle">HPDF 1.1 teaser</div>
+<p>The text operators of the release 1.0 of my Haskell PDF library are very low level. You have access to most of the PDF text operators but it means you can just specify where to put
 a line of text. So, it is difficult to do more than displaying some labels on a chart. The styles are also very limited : you can use bold and italic if it is supported by the standard
 PDF fonts.
-</p><p>For the 1.1 release of my library, I have decided to improve this and write something cool.
-</p><p>First, I have implemented the TeX line breaking algorithm with glues and penalties. Contrary to the real TeX algorithm, there is no looseness parameter and the hyphenation algorithm is
+</p>
+<p>For the 1.1 release of my library, I have decided to improve this and write something cool.
+</p>
+<p>First, I have implemented the TeX line breaking algorithm with glues and penalties. Contrary to the real TeX algorithm, there is no looseness parameter and the hyphenation algorithm is
 not implemented (will be for another release).
-</p><p>Second, for the style, I have concluded that a style has to be a triple of Haskell functions in the Draw monad. So, text style can be anything !
-</p><p>Now, I am working on the next step : implementing the vertical mode to split a text into pages. And, I am thinking about cross reference (perhaps I'll use something similar to the galley idea from Lout).
-</p><p>Here is a screen shot:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/81/Image_1.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/81/Image_1.jpg"></a></div><p>Currently, a style is a type of class:
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>Style</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>sentenceStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Rectangle</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-conid'>()</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>wordStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Maybe</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Rectangle</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>StyleFunction</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-conid'>()</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>textStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>TextStyle</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>styleCode</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>updateStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>wordTransform</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>B</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>B</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>styleHeight</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>styleDescent</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span><br/></div><p>StyleFunction is:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>StyleFunction</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>DrawWord</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>DrawGlue</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>)</span><br/></div><p>and TextStyle is:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>TextStyle</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>TextStyle</span>&nbsp;<span class='hs-layout'>{</span>&nbsp;<span class='hs-varid'>textFont</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFont</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>textStrokeColor</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>Color</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>textFillColor</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>Color</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>textMode</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>TextMode</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>penWidth</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>scaleSpace</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>scaleDilatation</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>scaleCompression</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>}</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>)</span><br/></div><p>Be patient for the 1.1 release. I have lot of work to do on it.
-</p><p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
-</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="HPDF 1.1 teaser" data-url="http://www.alpheccar.org/content/81.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/81.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/81.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '81';var disqus_url = "http://www.alpheccar.org/content/81.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</p>
+<p>Second, for the style, I have concluded that a style has to be a triple of Haskell functions in the Draw monad. So, text style can be anything !
+</p>
+<p>Now, I am working on the next step : implementing the vertical mode to split a text into pages. And, I am thinking about cross reference (perhaps I'll use something similar to the galley idea from Lout).
+</p>
+<p>Here is a screen shot:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/81/Image_1.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/81/Image_1.jpg">
+</a>
+</div>
+<p>Currently, a style is a type of class:
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>Style</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>sentenceStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Rectangle</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-conid'>()</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>wordStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Maybe</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Rectangle</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>StyleFunction</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-conid'>()</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>textStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>TextStyle</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>styleCode</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>updateStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>wordTransform</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>B</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>B</span><span class='hs-keyglyph'>]</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>styleHeight</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>styleDescent</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span><br/></div>
+<p>StyleFunction is:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>StyleFunction</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>DrawWord</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>DrawGlue</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>)</span><br/></div>
+<p>and TextStyle is:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>TextStyle</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>TextStyle</span>&nbsp;<span class='hs-layout'>{</span>&nbsp;<span class='hs-varid'>textFont</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFont</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>textStrokeColor</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>Color</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>textFillColor</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>Color</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>textMode</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>TextMode</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>penWidth</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>scaleSpace</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>scaleDilatation</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-varid'>scaleCompression</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>}</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>)</span><br/></div>
+<p>Be patient for the 1.1 release. I have lot of work to do on it.
+</p>
+<p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="HPDF 1.1 teaser" data-url="http://www.alpheccar.org/content/81.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/81.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/81.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '81';
+var disqus_url = "http://www.alpheccar.org/content/81.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>

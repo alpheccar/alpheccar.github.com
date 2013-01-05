@@ -1,51 +1,199 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="HPDF 1.1 : Introducing typesetting" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>HPDF 1.1 : Introducing typesetting</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="HPDF 1.1 : Introducing typesetting" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>HPDF 1.1 : Introducing typesetting</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">HPDF 1.1 : Introducing typesetting</div><p>I have finally released HPDF 1.1 with some typesetting features. More details are in this post. It is very experimental but working. I am not happy at all with the API of HPDF but I have no choice. I need, for another project, to add features as fast as possible. I'll think about the elegance of the API later even if I need to change lots of things in HPDF (not really a good development methodology I agree). In addition to the typesetting features, I corrected lots of problems, optimized the code and changed a little bit the image API.
-</p><h1>1. Typesetting a paragraph</h1><p>Typesetting is a complex thing and the current implementation is very limited. You'll be able to use it to generate slides but not a book. There is no support for several pages (they have to be created manually. The typesetting code is assuming that the whole output is on the same page). 
-</p><p>I have focused on the line breaking algorithm and on styles. Here is an example:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/82/Image_1.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/82/Image_1.jpg"></a></div><p>This example was created thanks to a ParagraphStyle.
-</p><p>Here is a part of the ParagraphStyle class (the full definition is in the Haddock documentation):
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>ParagraphStyle</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>lineWidth</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>linePosition</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>paraChange</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>Letter</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>Letter</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>paragraphStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Maybe</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Rectangle</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-conid'>()</span><span class='hs-layout'>)</span><br/></div><p>Let's see how this interface can be used to create the above example. When a paragraph monad is run, the text is transformed into a sequence
+<div id="content"><div class="posttitle">HPDF 1.1 : Introducing typesetting</div>
+<p>I have finally released HPDF 1.1 with some typesetting features. More details are in this post. It is very experimental but working. I am not happy at all with the API of HPDF but I have no choice. I need, for another project, to add features as fast as possible. I'll think about the elegance of the API later even if I need to change lots of things in HPDF (not really a good development methodology I agree). In addition to the typesetting features, I corrected lots of problems, optimized the code and changed a little bit the image API.
+</p>
+<h1>1. Typesetting a paragraph</h1>
+<p>Typesetting is a complex thing and the current implementation is very limited. You'll be able to use it to generate slides but not a book. There is no support for several pages (they have to be created manually. The typesetting code is assuming that the whole output is on the same page). 
+</p>
+<p>I have focused on the line breaking algorithm and on styles. Here is an example:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/82/Image_1.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/82/Image_1.jpg">
+</a>
+</div>
+<p>This example was created thanks to a ParagraphStyle.
+</p>
+<p>Here is a part of the ParagraphStyle class (the full definition is in the Haddock documentation):
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>ParagraphStyle</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>lineWidth</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>linePosition</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>PDFFloat</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>paraChange</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>Letter</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>Letter</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>paragraphStyle</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Maybe</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Rectangle</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Draw</span>&nbsp;<span class='hs-conid'>()</span><span class='hs-layout'>)</span><br/></div>
+<p>Let's see how this interface can be used to create the above example. When a paragraph monad is run, the text is transformed into a sequence
 of Letters. Here is a part of the Letter type:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Letter</span>&nbsp;&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Letter</span>&nbsp;<span class='hs-conid'>BoxDimension</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>AnyBox</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span>&nbsp;<span class='hs-conid'>AnyStyle</span><span class='hs-layout'>)</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Glue</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span>&nbsp;<span class='hs-conid'>AnyStyle</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>AChar</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>AnyStyle</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>Char</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/></div><p>In this definition, a Letter is in fact any object that can be displayed. Perhaps I should have named it : generalized letter.
-</p><p>A sequence of letters is processed by the paraChange function. In the style used for the previous example, this function is removing the first letter of the paragraph (AChar), and is replacing it with a generalized Letter containing a colored bigger picture. The size of this new letter is remembered in a new
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Letter</span>&nbsp;&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Letter</span>&nbsp;<span class='hs-conid'>BoxDimension</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>AnyBox</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span>&nbsp;<span class='hs-conid'>AnyStyle</span><span class='hs-layout'>)</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Glue</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span>&nbsp;<span class='hs-conid'>AnyStyle</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>AChar</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>AnyStyle</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>Char</span>&nbsp;<span class='hs-varop'>!</span><span class='hs-conid'>PDFFloat</span><br/></div>
+<p>In this definition, a Letter is in fact any object that can be displayed. Perhaps I should have named it : generalized letter.
+</p>
+<p>A sequence of letters is processed by the paraChange function. In the style used for the previous example, this function is removing the first letter of the paragraph (AChar), and is replacing it with a generalized Letter containing a colored bigger picture. The size of this new letter is remembered in a new
 version of the style. That's why paraChange is returning a new style in addition to a new sequence of letters.
-</p><p>Then, when the linebreaking algorithm is called, it is using the lineWidth and linePosition function to know the shape
+</p>
+<p>Then, when the linebreaking algorithm is called, it is using the lineWidth and linePosition function to know the shape
 of the paragraph. The shape of the paragraph is dependent on the size of the letter recorded in the previous step.
-</p><p>There is a final trick : the new bigger letter should not change the interline space. So, the Box created by paraChange to contain the letter has null
+</p>
+<p>There is a final trick : the new bigger letter should not change the interline space. So, the Box created by paraChange to contain the letter has null
 dimensions. Its only function is to display a big letter.
-</p><p>Finally, when the lines are displayed, the style function paragraphStyle is used. For that function, a paragraph is a sequence of lines with the same paragraph style. One argument of that function is the paragraph bounding rectangle. It is used to draw the red border and fill the paragraph background.
-</p><p>So, to display the previous example you finally just need to write:
-</p><div class="haskell"><span class='hs-definition'>setStyle</span>&nbsp;<span class='hs-conid'>BlueStyle</span><br/><span class='hs-definition'>setParaStyle</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>BluePara</span>&nbsp;<span class='hs-num'>0</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>paragraph</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"Lorem&nbsp;ipsum&nbsp;dolor&nbsp;sit&nbsp;amet,&nbsp;consectetur&nbsp;adipisicing&nbsp;elit,&nbsp;sed&nbsp;do"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"eiusmod&nbsp;tempor&nbsp;incididunt&nbsp;ut&nbsp;labore&nbsp;et&nbsp;dolore&nbsp;magna&nbsp;aliqua.&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"Ut&nbsp;enim&nbsp;ad&nbsp;minim&nbsp;veniam,&nbsp;quis&nbsp;nostrud&nbsp;exercitation&nbsp;ullamco&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"laboris&nbsp;nisi&nbsp;ut&nbsp;aliquip&nbsp;ex&nbsp;ea&nbsp;commodo&nbsp;consequat.&nbsp;Duis&nbsp;aute&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"irure&nbsp;dolor&nbsp;&nbsp;in&nbsp;reprehenderit&nbsp;in&nbsp;voluptate&nbsp;velit&nbsp;esse&nbsp;cillum&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"dolore&nbsp;eu&nbsp;fugiat&nbsp;nulla&nbsp;pariatur.&nbsp;Excepteur&nbsp;sint&nbsp;occaecat&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"cupidatat&nbsp;non&nbsp;proident,&nbsp;sunt&nbsp;in&nbsp;cu"</span><br/></div><p>The paragraph style is doing all the work.
-</p><h1>2. Sentence and word styles</h1><p>Here is a new example:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/82/Image_2.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/82/Image_2.jpg"></a></div><p>The method is the same. Instead of using a paragraph style,  I am using sentence and word styles. The first style used in this example is a sentence style responsible
+</p>
+<p>Finally, when the lines are displayed, the style function paragraphStyle is used. For that function, a paragraph is a sequence of lines with the same paragraph style. One argument of that function is the paragraph bounding rectangle. It is used to draw the red border and fill the paragraph background.
+</p>
+<p>So, to display the previous example you finally just need to write:
+</p>
+<div class="haskell"><span class='hs-definition'>setStyle</span>&nbsp;<span class='hs-conid'>BlueStyle</span><br/><span class='hs-definition'>setParaStyle</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>BluePara</span>&nbsp;<span class='hs-num'>0</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>paragraph</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-keyword'>do</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"Lorem&nbsp;ipsum&nbsp;dolor&nbsp;sit&nbsp;amet,&nbsp;consectetur&nbsp;adipisicing&nbsp;elit,&nbsp;sed&nbsp;do"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"eiusmod&nbsp;tempor&nbsp;incididunt&nbsp;ut&nbsp;labore&nbsp;et&nbsp;dolore&nbsp;magna&nbsp;aliqua.&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"Ut&nbsp;enim&nbsp;ad&nbsp;minim&nbsp;veniam,&nbsp;quis&nbsp;nostrud&nbsp;exercitation&nbsp;ullamco&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"laboris&nbsp;nisi&nbsp;ut&nbsp;aliquip&nbsp;ex&nbsp;ea&nbsp;commodo&nbsp;consequat.&nbsp;Duis&nbsp;aute&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"irure&nbsp;dolor&nbsp;&nbsp;in&nbsp;reprehenderit&nbsp;in&nbsp;voluptate&nbsp;velit&nbsp;esse&nbsp;cillum&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"dolore&nbsp;eu&nbsp;fugiat&nbsp;nulla&nbsp;pariatur.&nbsp;Excepteur&nbsp;sint&nbsp;occaecat&nbsp;"</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-varid'>txt</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-str'>"cupidatat&nbsp;non&nbsp;proident,&nbsp;sunt&nbsp;in&nbsp;cu"</span><br/></div>
+<p>The paragraph style is doing all the work.
+</p>
+<h1>2. Sentence and word styles</h1>
+<p>Here is a new example:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/82/Image_2.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/82/Image_2.jpg">
+</a>
+</div>
+<p>The method is the same. Instead of using a paragraph style,  I am using sentence and word styles. The first style used in this example is a sentence style responsible
 for drawing a red rectangle around words. Note that for a sentence style, the unit of processing is the line. So, if a sentence is broken by the line breaking
 algorithm then it will be processed as several sentences (think about an URL).
-</p><p>After the red rectangle, the picture is containing an example of a word style. At the beginning of the style, a random generator is started and used to style the words. It means
+</p>
+<p>After the red rectangle, the picture is containing an example of a word style. At the beginning of the style, a random generator is started and used to style the words. It means
 that the style is updated from word to word. It is not visible on this screenshot because there is a bug and the update was not occuring. I have corrected it before uploading the library to hackage ... and I hope this quick fix has not introduced other problems.
-</p><p>Finally, the last example is using a sentence style and a word style. The word style is styling the words and the glues in a different way. The sentence style
+</p>
+<p>Finally, the last example is using a sentence style and a word style. The word style is styling the words and the glues in a different way. The sentence style
 is drawing a blue rectangle under the text, and a blue line over the text.
-</p><p>Note that the styling functions are receiving a Draw monad value as argument so they can potentially do much more like for instance rotating each word etc...
-</p><h1>3. Paragraph shape</h1><p>Another example:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/82/Image_3.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/82/Image_3.jpg"></a></div><p>This last example is using another paragraph style to fill a circle with text. Note that the display is stopping as soon as there is a line outside of
+</p>
+<p>Note that the styling functions are receiving a Draw monad value as argument so they can potentially do much more like for instance rotating each word etc...
+</p>
+<h1>3. Paragraph shape</h1>
+<p>Another example:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/82/Image_3.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/82/Image_3.jpg">
+</a>
+</div>
+<p>This last example is using another paragraph style to fill a circle with text. Note that the display is stopping as soon as there is a line outside of
 the bounding rectangle bottom frontier.
-</p><h1>4. Conclusion</h1><p>It is perhaps too much work for a person alone during his spare time :-) In a next post, perhaps, I'll try to explain how allegories (an extension of category theory) are relevant to the problem of designing a line breaking algorithm and how I could improve my current algorithm.
-</p><p>You can find the lib on <a href="http://hackage.haskell.org/packages/archive/pkg-list.html">hackage</a>
-</p><p>Once the lib is installed, go to the test folder, type make demo and then ./test. It should create the demo.pdf file.
-</p><p>It was tested with GHC only.
-</p><p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
-</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="HPDF 1.1 : Introducing typesetting" data-url="http://www.alpheccar.org/content/82.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/82.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/82.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '82';var disqus_url = "http://www.alpheccar.org/content/82.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</p>
+<h1>4. Conclusion</h1>
+<p>It is perhaps too much work for a person alone during his spare time :-) In a next post, perhaps, I'll try to explain how allegories (an extension of category theory) are relevant to the problem of designing a line breaking algorithm and how I could improve my current algorithm.
+</p>
+<p>You can find the lib on <a href="http://hackage.haskell.org/packages/archive/pkg-list.html">hackage</a>
+</p>
+<p>Once the lib is installed, go to the test folder, type make demo and then ./test. It should create the demo.pdf file.
+</p>
+<p>It was tested with GHC only.
+</p>
+<p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="HPDF 1.1 : Introducing typesetting" data-url="http://www.alpheccar.org/content/82.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/82.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/82.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '82';
+var disqus_url = "http://www.alpheccar.org/content/82.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>

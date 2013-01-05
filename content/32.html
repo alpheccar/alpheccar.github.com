@@ -1,50 +1,211 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="Galois Connections" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ],displayMath: [ ['$$','$$'], ["\\[","\\]"] ],processEscapes: true}});</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" /></script><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>Galois Connections</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="Galois Connections" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+processEscapes: true}});</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" /></script>
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>Galois Connections</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">Galois Connections</div><p>I propose you a very small overview of Galois connections. But first, I need to answer the question : why in English ?  I have realized that more and more people coming to this site are foreigners not reading French. So, I decided to write some texts in English assuming that people who can understand complex scientific texts can also read English. The other scientific texts (for grand public) and the ones about philosophy of freedom will still be written in French.
-</p><h1>1.Galois Theory</h1><p>I hope that my not so good English will not prevent people from understanding what I mean.
-</p><p>So, let’s start our journey in Galois theory. This theory was born thanks to attempts to solve the following question : does it exist a general method to solve algebraic equations of degree $\geq 5$. By general, I mean a formula built from the arithmetical operators (-,+,* and /) and the square root operation. The answer is no and is related to consideration of symmetries.
-</p><p>Let’s take a simple example: the equation $x^2 - a$ has two solutions : $\sqrt a$ and $- \sqrt a\ $. We see that there is a symmetry on the set of solutions. We can exchange the roots and the equation is not changed. If I replace each solution by its opposite one then I still get the same set of solutions. More generally, we can study the symmetries of the set of solutions of an equation and also the symmetries that we can get from numbers built using the arithmetical operators and the square root one. We discover that the most general equation of degree 5 has a group of symmetry which cannot be reproduced using square root and the arithmetical operators. That’s the reason why we cannot generate the solutions of an equation of degree 5 using the standard algebraic operators. They don’t have the same symmetry properties.
-</p><p>What we have introduced here is the set of symmetries acting on $K=Q(\sqrt a)\ $ without changing $k=Q$ (the operators are behaving as the identity one when acting on Q). It is the Galois group of $K/k$ : $Gal(K/k)\ $ . This Galois group is not only related to fields. The Galois group $Gal(K/k)\ $  of a big thing K containing a smaller thing k is the set of symmetries of the big thing K fixing everything in the little one. 
-</p><p>The more elements you want to fix with your symmetry group, the smaller your symmetry group. $Gal(K/k) $ gives the symmetry group fixing k while acting on K-k. If you want to fix more elements than in k then you’ll get less symmetries than in $Gal(K/k)\ $. And, if you want to fix everything (the whole K) then you get only one symmetry : Identity. The only way to fix everything is to change nothing.
-</p><h1>2.Galois Connection</h1><h2>2.1.Definition</h2><p>In the previous example, we have a connection between two worlds : field extensions and groups. It is called a Galois connection because it is the first known instance of that kind of connection. More generally, a Galois connection is related to the idea of order and not to the idea of fields or groups. An order can be an inclusion relation where you start from a small set which is contained in a bigger one etc… But, you can use any order relation.
-</p><p>Assume you have two worlds A and B. In the world A you use the order relation < to compare elements. In the word B, you use a different order relation : {. Then, assume you have a way to pass from the word A to B (using f) and a way to come back from B to A using g. We have a Galois connection when:
-</p><div class="equation">$$ a &lt; gb\ if\ and\ only\ if\ fa \lbrace b $$</div><p>So, we have two different views of the same problem. Looking at the problem in world A is equivalent to looking at the problem in world B because we have a Galois connection between both words. (There are different equivalent definitions where the order is changed when passing from one world to the other).
-</p><h2>2.2.Floor and Ceil functions</h2><p>An example of a Galois connection is given by the operations floor and ceil for rounding. floor(x) rounding to the largest integer smaller or equal to x (example:floor(3.2)=3) and ceil(x) rounding to the smaller integer higher or equal to x (example:ceil(3.2)=4).
-</p><p>Consider the two worlds : integer and real.
-</p><h3>2.2.1.  The f function is the embeding of integers inside reals.</h3><h3>2.2.2. The g function is the floor one. We have:</h3><div class="doclist"><ul><li> $f(a) \leq  b$ if and only if $a \leq floor(b)$
-</li><li> $a \leq b$ if and only if $a \leq floor(b)$
-</li></ul></div><p>And we have a dual definition for function ceil.
-</p><p>Floor is an adjoint to the function of embedding of the integers inside reals. It is part of a Galois connection between reals and integers !
-</p><h2>2.3.Galois Theory Revisited</h2><p>Let’s look again at the Galois Theory : one of the first examples of Galois Connection. If we have a set X of elements and S a subset of a group of transformations of the elements, we define two functions L and R. LX is the subgroup of G fixing all elements of X. And RS is the set of elements fixed by all group transformations in S. The two worlds are : the subsets of elements ordered by the inclusion relation and the subsets of the group ordered by the inclusion relation.  L and R form a Galois connection !
-</p><h2>2.4.Existential and universal quantifiers</h2><p>We define:
-</p><div class="equation">$$ P_{*}(S)=\lbrace x | \exists y, y \in V\ and\ &lt; x,y &gt; \in S \rbrace $$</div><div class="equation">$$ P_{\#}(S)=\lbrace x | \forall y, y \in V\ implies\ &lt; x,y &gt; \in S \rbrace $$</div><p>and we define also:
-</p><div class="equation">$$ P^{*}(Y)=\lbrace x | fx=y\ for\ some\ y\in Y\rbrace $$</div><p>$P_{*}$ represents the “exist” quantifier with a set operator. $P_{\#}$ represents the “forall” operator.
-</p><p>Now, we have, if the inclusion order is $\leq\ $:
-</p><div class="equation">$$ S \leq P^{*}(X) \equiv P_{*}(S) \leq X $$</div><div class="equation">$$ P^{*}(X) \leq S \equiv X \leq P_{\#}(S) $$</div><p>So, $P^{*}$ has a left and right adjoints : the existential and universal quantifiers. And we have again examples of Galois connections.
-</p><h1>3.Galois Concept</h1><p>Another interesting example of Galois connection is the idea of concept and the lattice of concepts in formal concept analysis.
-</p><p>A concept is an unit of thoughts consisting of two parts : the extension and the intension of the concept. The extension is the set of objects belonging to the concept. The intention comprise all attributes valid for the objects under consideration. So, we define a formal context $K = (G,M,I)$ where G is the set of objects, M the set of attributes and I a binary relation between the set of attributes and the set of objects. $gIm$ means the object g has attribute m.
-</p><p>So, what is a formal concept ? It is a pair $(A,B)$ where B is the set of attributes from M which apply to each object in A. And A is the set of all objects of G to which each attribute of B applies.
-</p><p>A is called the extend of the concept and B is the intent of the concept.
-</p><p>A concept where A is a single object is an object concept. A concept where B is a single attribute is an attribute concept. 
-</p><p>Now, let’s define an order relation on the set of formal concepts. $(A_{1},B_{1}) \leq (A_{2},B_{2})\ $ if and only if $A_{1}$ is a subset of $A_{2}$ or (that’s equivalent) $B_{2}$ is a subset of $B_{1}$.
-</p><p>We say that $(A_{1},B_{1})$ is a subconcept and $(A_{2},B_{2})$
+<div id="content"><div class="posttitle">Galois Connections</div>
+<p>I propose you a very small overview of Galois connections. But first, I need to answer the question : why in English ?  I have realized that more and more people coming to this site are foreigners not reading French. So, I decided to write some texts in English assuming that people who can understand complex scientific texts can also read English. The other scientific texts (for grand public) and the ones about philosophy of freedom will still be written in French.
+</p>
+<h1>1.Galois Theory</h1>
+<p>I hope that my not so good English will not prevent people from understanding what I mean.
+</p>
+<p>So, let’s start our journey in Galois theory. This theory was born thanks to attempts to solve the following question : does it exist a general method to solve algebraic equations of degree $\geq 5$. By general, I mean a formula built from the arithmetical operators (-,+,* and /) and the square root operation. The answer is no and is related to consideration of symmetries.
+</p>
+<p>Let’s take a simple example: the equation $x^2 - a$ has two solutions : $\sqrt a$ and $- \sqrt a\ $. We see that there is a symmetry on the set of solutions. We can exchange the roots and the equation is not changed. If I replace each solution by its opposite one then I still get the same set of solutions. More generally, we can study the symmetries of the set of solutions of an equation and also the symmetries that we can get from numbers built using the arithmetical operators and the square root one. We discover that the most general equation of degree 5 has a group of symmetry which cannot be reproduced using square root and the arithmetical operators. That’s the reason why we cannot generate the solutions of an equation of degree 5 using the standard algebraic operators. They don’t have the same symmetry properties.
+</p>
+<p>What we have introduced here is the set of symmetries acting on $K=Q(\sqrt a)\ $ without changing $k=Q$ (the operators are behaving as the identity one when acting on Q). It is the Galois group of $K/k$ : $Gal(K/k)\ $ . This Galois group is not only related to fields. The Galois group $Gal(K/k)\ $  of a big thing K containing a smaller thing k is the set of symmetries of the big thing K fixing everything in the little one. 
+</p>
+<p>The more elements you want to fix with your symmetry group, the smaller your symmetry group. $Gal(K/k) $ gives the symmetry group fixing k while acting on K-k. If you want to fix more elements than in k then you’ll get less symmetries than in $Gal(K/k)\ $. And, if you want to fix everything (the whole K) then you get only one symmetry : Identity. The only way to fix everything is to change nothing.
+</p>
+<h1>2.Galois Connection</h1>
+<h2>2.1.Definition</h2>
+<p>In the previous example, we have a connection between two worlds : field extensions and groups. It is called a Galois connection because it is the first known instance of that kind of connection. More generally, a Galois connection is related to the idea of order and not to the idea of fields or groups. An order can be an inclusion relation where you start from a small set which is contained in a bigger one etc… But, you can use any order relation.
+</p>
+<p>Assume you have two worlds A and B. In the world A you use the order relation < to compare elements. In the word B, you use a different order relation : {. Then, assume you have a way to pass from the word A to B (using f) and a way to come back from B to A using g. We have a Galois connection when:
+</p>
+<div class="equation">$$ a &lt; gb\ if\ and\ only\ if\ fa \lbrace b $$</div>
+<p>So, we have two different views of the same problem. Looking at the problem in world A is equivalent to looking at the problem in world B because we have a Galois connection between both words. (There are different equivalent definitions where the order is changed when passing from one world to the other).
+</p>
+<h2>2.2.Floor and Ceil functions</h2>
+<p>An example of a Galois connection is given by the operations floor and ceil for rounding. floor(x) rounding to the largest integer smaller or equal to x (example:floor(3.2)=3) and ceil(x) rounding to the smaller integer higher or equal to x (example:ceil(3.2)=4).
+</p>
+<p>Consider the two worlds : integer and real.
+</p>
+<h3>2.2.1.  The f function is the embeding of integers inside reals.</h3>
+<h3>2.2.2. The g function is the floor one. We have:</h3>
+<div class="doclist"><ul><li> $f(a) \leq  b$ if and only if $a \leq floor(b)$
+</li>
+<li> $a \leq b$ if and only if $a \leq floor(b)$
+</li>
+</ul>
+</div>
+<p>And we have a dual definition for function ceil.
+</p>
+<p>Floor is an adjoint to the function of embedding of the integers inside reals. It is part of a Galois connection between reals and integers !
+</p>
+<h2>2.3.Galois Theory Revisited</h2>
+<p>Let’s look again at the Galois Theory : one of the first examples of Galois Connection. If we have a set X of elements and S a subset of a group of transformations of the elements, we define two functions L and R. LX is the subgroup of G fixing all elements of X. And RS is the set of elements fixed by all group transformations in S. The two worlds are : the subsets of elements ordered by the inclusion relation and the subsets of the group ordered by the inclusion relation.  L and R form a Galois connection !
+</p>
+<h2>2.4.Existential and universal quantifiers</h2>
+<p>We define:
+</p>
+<div class="equation">$$ P_{*}(S)=\lbrace x | \exists y, y \in V\ and\ &lt; x,y &gt; \in S \rbrace $$</div>
+<div class="equation">$$ P_{\#}(S)=\lbrace x | \forall y, y \in V\ implies\ &lt; x,y &gt; \in S \rbrace $$</div>
+<p>and we define also:
+</p>
+<div class="equation">$$ P^{*}(Y)=\lbrace x | fx=y\ for\ some\ y\in Y\rbrace $$</div>
+<p>$P_{*}$ represents the “exist” quantifier with a set operator. $P_{\#}$ represents the “forall” operator.
+</p>
+<p>Now, we have, if the inclusion order is $\leq\ $:
+</p>
+<div class="equation">$$ S \leq P^{*}(X) \equiv P_{*}(S) \leq X $$</div>
+<div class="equation">$$ P^{*}(X) \leq S \equiv X \leq P_{\#}(S) $$</div>
+<p>So, $P^{*}$ has a left and right adjoints : the existential and universal quantifiers. And we have again examples of Galois connections.
+</p>
+<h1>3.Galois Concept</h1>
+<p>Another interesting example of Galois connection is the idea of concept and the lattice of concepts in formal concept analysis.
+</p>
+<p>A concept is an unit of thoughts consisting of two parts : the extension and the intension of the concept. The extension is the set of objects belonging to the concept. The intention comprise all attributes valid for the objects under consideration. So, we define a formal context $K = (G,M,I)$ where G is the set of objects, M the set of attributes and I a binary relation between the set of attributes and the set of objects. $gIm$ means the object g has attribute m.
+</p>
+<p>So, what is a formal concept ? It is a pair $(A,B)$ where B is the set of attributes from M which apply to each object in A. And A is the set of all objects of G to which each attribute of B applies.
+</p>
+<p>A is called the extend of the concept and B is the intent of the concept.
+</p>
+<p>A concept where A is a single object is an object concept. A concept where B is a single attribute is an attribute concept. 
+</p>
+<p>Now, let’s define an order relation on the set of formal concepts. $(A_{1},B_{1}) \leq (A_{2},B_{2})\ $ if and only if $A_{1}$ is a subset of $A_{2}$ or (that’s equivalent) $B_{2}$ is a subset of $B_{1}$.
+</p>
+<p>We say that $(A_{1},B_{1})$ is a subconcept and $(A_{2},B_{2})$
 a superconcept.
-</p><p>This order relation on the set of concepts is such that we get a lattice (in French : treilli or espace réticulé). I won’t define what is a lattice here because I’ll write something about lattices on my blog in a future text.
-</p><p>A central notion of the formal concept analysis is the idea of Galois connection between the two set of items named objects and attributes (or similarly : extend and intent) : if one makes larger a set of one type then the other set gets smaller. This duality also means that we have a duality between syntax and semantic … but that’s another story.
-</p><h1>4.Conclusion</h1><p>The idea of Galois Connection is one of the most important in mathematics and it can be found everywhere. It is not related to the Galois Theory, which is “just” the first example of a Galois connection between field extensions and symmetry groups. Galois connection is related to the idea of order. 
-</p><p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
-</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Galois Connections" data-url="http://www.alpheccar.org/content/32.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/32.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/32.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '32';var disqus_url = "http://www.alpheccar.org/content/32.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</p>
+<p>This order relation on the set of concepts is such that we get a lattice (in French : treilli or espace réticulé). I won’t define what is a lattice here because I’ll write something about lattices on my blog in a future text.
+</p>
+<p>A central notion of the formal concept analysis is the idea of Galois connection between the two set of items named objects and attributes (or similarly : extend and intent) : if one makes larger a set of one type then the other set gets smaller. This duality also means that we have a duality between syntax and semantic … but that’s another story.
+</p>
+<h1>4.Conclusion</h1>
+<p>The idea of Galois Connection is one of the most important in mathematics and it can be found everywhere. It is not related to the Galois Theory, which is “just” the first example of a Galois connection between field extensions and symmetry groups. Galois connection is related to the idea of order. 
+</p>
+<p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Galois Connections" data-url="http://www.alpheccar.org/content/32.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/32.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/32.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '32';
+var disqus_url = "http://www.alpheccar.org/content/32.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>

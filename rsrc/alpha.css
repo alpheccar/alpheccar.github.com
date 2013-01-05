@@ -81,12 +81,12 @@ div .socialButton iframe {
 #content h1 {
     line-height:1.4em;
     background-color: #CCF;
-    font-size: 2.5em;
+    font-size: 2.0em;
     
 }
 
 #content h2 {
-    font-size: 2em;
+    font-size: 1.8em;
     font-weight: bold;
     
 }
@@ -106,7 +106,7 @@ div .socialButton iframe {
 #content div.posttitle {
     line-height:1.4em;
     font-weight: bold;
-    font-size: 3em;
+    font-size: 2.2em;
 }
 
 .postQuote p {

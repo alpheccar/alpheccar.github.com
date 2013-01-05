@@ -1,63 +1,330 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="Théorie des nœuds" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>Théorie des nœuds</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="Théorie des nœuds" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>Théorie des nœuds</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">Théorie des nœuds</div><p>Le symbole de mon blog étant un nœud, il fallait bien que j’écrive un texte sur la théorie des nœuds.
-</p><h1>1.Introduction</h1><p>En parcourant <a href="http://www.amazon.fr/exec/obidos/ASIN/2070600432/qid=1109067151/sr=1-1/ref=sr_1_8_1/171-1324501-7724216">le grand livre des nœuds</a>, on est stupéfait par la quantité de nœuds qui ont été inventés. Nombreux sont purement décoratifs mais la plupart ont une utilité comme les nœuds du chirurgien, du marin …
-</p><p>Mais, je ne vais pas parler des nœuds physiques. Peu importe le type de corde utilisée, son diamètre ou les forces de frottements qui assurent la cohésion du nœud. Je vais m’intéresser au nœud mathématique idéal utilisant un fil infiniment fin et infiniment extensible. Je vais m’intéresser à l’essence des nœuds et pas à la façon dont ils sont faits.
-</p><h1>2.Qu’est-ce qu’un nœud ?</h1><p>En pratique un nœud ressemble plutôt à ceci:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/noeud3.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/noeud3.jpg"></a><div class="caption"></div></div><p>mais les mathématiciens ont pris l’habitude de connecter les deux extrémités de la corde pour obtenir ceci:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/treflea.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/treflea.jpg"></a><div class="caption"></div></div><p>donc un nœud est toujours une boucle qui se referme sur elle-même.
-</p><h1>3.Classification et nœuds premiers</h1><p>Ces deux nœuds sont deux représentations du même type de nœud : le nœud de trefle.
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/treflea.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/treflea.jpg"></a><div class="caption"></div></div><div class="picture"><a href="http://www.alpheccar.org/post/19/trefleb.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/trefleb.jpg"></a><div class="caption"></div></div><p>Plus difficile, Perko a montré que ces deux nœuds de la paire dite de Perko, sont en fait le même nœud:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/perko.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/perko.jpg"></a><div class="caption"></div></div><p>Il n’est donc pas évident de savoir lorsque deux objets physiques représentent fondamentalement le même nœud. Mais, c’est cela qui intéresse les mathématiciens. Plus précisemment, ils aimeraient classifier les nœuds, c’est-à-dire déterminer tous les types de nœuds qui sont fondamentalement différents et pas simplement en apparence.
-</p><p>Une première étape vers ce but est la notion de nœud premier. Un nœud peut être compliqué parce qu’il est la succession de nœuds simples:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/double.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/double.jpg"></a><div class="caption"></div></div><p>Ces nœuds simples peuvent être séparés en coupant la corde.
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/doublecut.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/doublecut.jpg"></a><div class="caption"></div></div><p>Un nœud premier est un nœud qui ne peut être séparé en nœuds plus simples : couper la corde dénoue le nœud. Classifier les nœuds c’est chercher à déterminer les briques élémentaires : tous les nœuds premiers.
-</p><p>Pour cela, il faut trouver des outils qui permettent de vérifier quand deux nœuds premiers sont bien différents. On a vu qu’en se servant de l’objet tridimensionnel ce n’est pas simple.
-</p><h1>4.Invariants</h1><p>On utilise pour cela des invariants topologiques (j’ai rapidement expliqué ce qu’est un invariant topologique dans mon texte sur la géométrie non commutative).
-</p><p>Un invariant topologique est un objet algébrique qui dépend uniquement de l’essence du nœud mais pas de sa forme tridimensionnelle. C’est un objet algébrique qui ne change pas lorsque le nœud est déformé tout en restant le meme type de nœud. Un invariant topologique est donc quelque chose d’assez subtil : il ne doit pas être sensible aux détails de la forme du nœud tout en étant sensible à ce qui le différencie des autres nœuds. Calculer l’invariant d’un nœud est beaucoup plus facile que de déformer (à la main ou mentalement) sa structure tridimensionnelle afin de vérifier qu’il est différent d’un autre nœud.
-</p><p>Pour montrer qu’un objet algébrique est un invariant, il faut montrer qu’il ne change pas quand on déforme le nœud. Les déformations de nœuds sont appelées isotopies. Il semble qu’il y a tellement de façons de déformer un nœud qu’on ne pourra jamais vérifier que l’ objet algébrique ne change pas pour toutes les déformations. Mais, en fait, toutes les isotopies peuvent se ramener à 3 types de déformations fondamentales : les mouvements de Reidemeister.
-</p><h2>4.1.Mouvement de Reidemeister de type 1</h2><div class="picture"><a href="http://www.alpheccar.org/post/19/red0a.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red0a.jpg"></a><div class="caption"></div></div><div class="picture"><a href="http://www.alpheccar.org/post/19/arrow.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/arrow.jpg"></a><div class="caption"></div></div><div class="picture"><a href="http://www.alpheccar.org/post/19/red0b.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red0b.jpg"></a><div class="caption"></div></div><h2>4.2.Mouvement de Reidemeister de type 2</h2><div class="picture"><a href="http://www.alpheccar.org/post/19/red1a.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red1a.jpg"></a><div class="caption"></div></div><div class="picture"><a href="http://www.alpheccar.org/post/19/arrow.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/arrow.jpg"></a><div class="caption"></div></div><div class="picture"><a href="http://www.alpheccar.org/post/19/red1b.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red1b.jpg"></a><div class="caption"></div></div><h2>4.3.Mouvement de Reidemeister de type 3</h2><div class="picture"><a href="http://www.alpheccar.org/post/19/red2a.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red2a.jpg"></a><div class="caption"></div></div><div class="picture"><a href="http://www.alpheccar.org/post/19/arrow.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/arrow.jpg"></a><div class="caption"></div></div><div class="picture"><a href="http://www.alpheccar.org/post/19/red2b.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red2b.jpg"></a><div class="caption"></div></div><p>Une fois que l’on a une règle permettant de calculer un objet algébrique pour un nœud, il suffit de vérifier que le résultat est inchangé quand on utilise n’importe quel mouvement de Reidemeister pour vérifier que l’on a un invariant.
-</p><p>Il existe de très nombreux invariants mais aucun n’est parfait dans le sens ou aucun ne peut montrer que deux objets représentent le même nœud (deux nœuds différents peuvent avoir le même invariant). Par contre, deux nœuds qui ont des invariants différents sont forcéments différents. Donc, en utilisant plusieurs invariants on peut réussir à montrer que deux nœuds sont effectivements différents.
-</p><p>On utilise souvent une relation récursive pour expliquer comment calculer un invariant de nœud (skein relation).
-</p><h3>4.3.1.Par exemple, pour le polynôme de Jones on a:</h3><div class="picture"><a href="http://www.alpheccar.org/post/19/jones.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/jones.jpg"></a><div class="caption"></div></div><p>que je note:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/jonessimple.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/jonessimple.jpg"></a><div class="caption"></div></div><p>Ce qui signifie que si l’on change l’intersection et qu’on passe d’un type de nœud à un autre nœud différent alors l’invariant doit être modifié de la façon indiquée. Le but de ces transformations est d’atteindre le non-nœud : la boucle non nouée.
-</p><p>Notez que cet invariant a besoin d’une notion d’orientation sur le nœud puisque les croisements utilisent des flèches. C’est un invariant de nœud orienté.
-</p><p>Il existe de très nombreux invariants mais en voici un important dernier:
-</p><h3>4.3.2.Polynôme de HOMFLY</h3><div class="picture"><a href="http://www.alpheccar.org/post/19/homfly.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/homfly.jpg"></a><div class="caption"></div></div><p>C’est aussi un invariant de nœud orienté et c’est un polynôme de deux variables.
-</p><p>Avec ces invariants, on peut aboutir à un début de classification pour les nœuds simples (0 croisements, 1 croisement, 2 croisements etc…).
-</p><h1>5.Début de classification</h1><p>On obtient par exemple les quelques nœuds premiers suivants:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/cat.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/cat.jpg"></a><div class="caption"></div></div><p>Parmis ces nœuds premiers, certains ont des propriétés intéressantes. Par exemple, le nœud de trefle est différent de son image dans un miroir:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/treflea.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/treflea.jpg"></a><div class="caption"></div></div><p>alors que le noeud de 8 est identique à son image dans un miroir:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/eight.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/eight.jpg"></a><div class="caption"></div></div><p>Ce qui signifie que les deux nœuds de 8 sont de même type : l’un peut devenir l’autre par déformation. Cela ne signifie pas que la structure tridimensionnelle obtenue en prenant l’image dans le miroir est strictement identique à l’original.
-</p><h1>6.Tresses et chaînes</h1><p>Au delà des nœuds, les mathématiciens s’intéressent aussi aux tresses et aux chaînes
-</p><h2>6.1.Exemple de tresse</h2><div class="picture"><a href="http://www.alpheccar.org/post/19/braid.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/braid.jpg"></a><div class="caption"></div></div><p>Une tresse est un ensemble de brins.
-</p><h2>6.2.Exemple de chaîne</h2><div class="picture"><a href="http://www.alpheccar.org/post/19/link.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/link.jpg"></a><div class="caption"></div></div><p>Une chaîne est une tresse que l’on a refermé. Un ensemble de brins liés les uns aux autres. Un nœud est une chaîne avec un seul brin.
-</p><p>Tout nœud ou toute chaîne peut être obtenue à partir d’une tresse.
-</p><p>Il existe une structure algébrique derrière les tresses : le groupe des tresses de Artin.
-</p><p>Chaque élément du groupe des tresses agit sur deux fils en permutant leurs extrémités dans un sens ou dans l’autre.
-</p><p>Une tresse peut alors être décrite par la succession des éléments du groupe à appliquer.
-</p><p>Ce groupe encode dans sa structure algébrique les mouvements de Reidemeister. 
-</p><h1>7.Applications</h1><p>La théorie des nœuds n’est pas qu’un simple amusement de mathématiciens. C’est certe joli et plein de problèmes non résolus mais c’est aussi utile !
-</p><p>Tout d’abord en biologie où les brins d’ARN et ADN ainsi que les filaments d’acides aminés s’enroulent selon des formes tridimensionnelles complexes. Or, souvent, au travers des microscopes, on ne voit qu’une projection bidimensionnelle. Les invariants permettent de remonter à des informations tridimensionnelles à partir des vues 2D que l’on a.
-</p><p>En physique la théorie des nœuds est très utile en raison des nombreuses connexions qu’elle a avec la théorie de la physique des particules. Prenons l’exemple simple de l’électromagnétisme avec deux fils électriques comme schématisé dans la figure ci-dessous:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/19/elec.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/elec.jpg"></a><div class="caption"></div></div><p>Si un courant circule dans la boucle marron, il va créer un champ magnétique. Si on fait bouger un monopôle magnétique selon la courbe bleue alors le travail que cela nécessite ne dépend pas de la forme précise des courbes marrons et bleues. C’est proportionnel à un invariant topologique : le nombre d’entrelacement.
-</p><p>Les théories de la physique des particules sont des théories de jauge : une symétrie bien particulière. Elles ont un contenu géométrique et elles permettent de construire de nombreux invariants tous reliés au groupe de jauge et à ses représentations.
-</p><p>La théorie des nœuds est aussi utilisée pour la théorie des supercordes.
-</p><p>Pour finir, la théorie des nœuds est connectées à de nombreux domaines très intéressants des mathématiques comme les algèbres de Hopf.
-</p><p>Il y aurait encore beaucoup à écrire mais je n’ai plus le courage de continuer pour cette fois…
-</p><p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
-</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Théorie des nœuds" data-url="http://www.alpheccar.org/content/19.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/19.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/19.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '19';var disqus_url = "http://www.alpheccar.org/content/19.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+<div id="content"><div class="posttitle">Théorie des nœuds</div>
+<p>Le symbole de mon blog étant un nœud, il fallait bien que j’écrive un texte sur la théorie des nœuds.
+</p>
+<h1>1.Introduction</h1>
+<p>En parcourant <a href="http://www.amazon.fr/exec/obidos/ASIN/2070600432/qid=1109067151/sr=1-1/ref=sr_1_8_1/171-1324501-7724216">le grand livre des nœuds</a>, on est stupéfait par la quantité de nœuds qui ont été inventés. Nombreux sont purement décoratifs mais la plupart ont une utilité comme les nœuds du chirurgien, du marin …
+</p>
+<p>Mais, je ne vais pas parler des nœuds physiques. Peu importe le type de corde utilisée, son diamètre ou les forces de frottements qui assurent la cohésion du nœud. Je vais m’intéresser au nœud mathématique idéal utilisant un fil infiniment fin et infiniment extensible. Je vais m’intéresser à l’essence des nœuds et pas à la façon dont ils sont faits.
+</p>
+<h1>2.Qu’est-ce qu’un nœud ?</h1>
+<p>En pratique un nœud ressemble plutôt à ceci:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/noeud3.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/noeud3.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>mais les mathématiciens ont pris l’habitude de connecter les deux extrémités de la corde pour obtenir ceci:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/treflea.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/treflea.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>donc un nœud est toujours une boucle qui se referme sur elle-même.
+</p>
+<h1>3.Classification et nœuds premiers</h1>
+<p>Ces deux nœuds sont deux représentations du même type de nœud : le nœud de trefle.
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/treflea.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/treflea.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/trefleb.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/trefleb.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Plus difficile, Perko a montré que ces deux nœuds de la paire dite de Perko, sont en fait le même nœud:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/perko.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/perko.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Il n’est donc pas évident de savoir lorsque deux objets physiques représentent fondamentalement le même nœud. Mais, c’est cela qui intéresse les mathématiciens. Plus précisemment, ils aimeraient classifier les nœuds, c’est-à-dire déterminer tous les types de nœuds qui sont fondamentalement différents et pas simplement en apparence.
+</p>
+<p>Une première étape vers ce but est la notion de nœud premier. Un nœud peut être compliqué parce qu’il est la succession de nœuds simples:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/double.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/double.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Ces nœuds simples peuvent être séparés en coupant la corde.
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/doublecut.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/doublecut.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Un nœud premier est un nœud qui ne peut être séparé en nœuds plus simples : couper la corde dénoue le nœud. Classifier les nœuds c’est chercher à déterminer les briques élémentaires : tous les nœuds premiers.
+</p>
+<p>Pour cela, il faut trouver des outils qui permettent de vérifier quand deux nœuds premiers sont bien différents. On a vu qu’en se servant de l’objet tridimensionnel ce n’est pas simple.
+</p>
+<h1>4.Invariants</h1>
+<p>On utilise pour cela des invariants topologiques (j’ai rapidement expliqué ce qu’est un invariant topologique dans mon texte sur la géométrie non commutative).
+</p>
+<p>Un invariant topologique est un objet algébrique qui dépend uniquement de l’essence du nœud mais pas de sa forme tridimensionnelle. C’est un objet algébrique qui ne change pas lorsque le nœud est déformé tout en restant le meme type de nœud. Un invariant topologique est donc quelque chose d’assez subtil : il ne doit pas être sensible aux détails de la forme du nœud tout en étant sensible à ce qui le différencie des autres nœuds. Calculer l’invariant d’un nœud est beaucoup plus facile que de déformer (à la main ou mentalement) sa structure tridimensionnelle afin de vérifier qu’il est différent d’un autre nœud.
+</p>
+<p>Pour montrer qu’un objet algébrique est un invariant, il faut montrer qu’il ne change pas quand on déforme le nœud. Les déformations de nœuds sont appelées isotopies. Il semble qu’il y a tellement de façons de déformer un nœud qu’on ne pourra jamais vérifier que l’ objet algébrique ne change pas pour toutes les déformations. Mais, en fait, toutes les isotopies peuvent se ramener à 3 types de déformations fondamentales : les mouvements de Reidemeister.
+</p>
+<h2>4.1.Mouvement de Reidemeister de type 1</h2>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/red0a.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red0a.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/arrow.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/arrow.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/red0b.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red0b.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<h2>4.2.Mouvement de Reidemeister de type 2</h2>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/red1a.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red1a.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/arrow.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/arrow.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/red1b.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red1b.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<h2>4.3.Mouvement de Reidemeister de type 3</h2>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/red2a.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red2a.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/arrow.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/arrow.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/red2b.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/red2b.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Une fois que l’on a une règle permettant de calculer un objet algébrique pour un nœud, il suffit de vérifier que le résultat est inchangé quand on utilise n’importe quel mouvement de Reidemeister pour vérifier que l’on a un invariant.
+</p>
+<p>Il existe de très nombreux invariants mais aucun n’est parfait dans le sens ou aucun ne peut montrer que deux objets représentent le même nœud (deux nœuds différents peuvent avoir le même invariant). Par contre, deux nœuds qui ont des invariants différents sont forcéments différents. Donc, en utilisant plusieurs invariants on peut réussir à montrer que deux nœuds sont effectivements différents.
+</p>
+<p>On utilise souvent une relation récursive pour expliquer comment calculer un invariant de nœud (skein relation).
+</p>
+<h3>4.3.1.Par exemple, pour le polynôme de Jones on a:</h3>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/jones.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/jones.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>que je note:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/jonessimple.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/jonessimple.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Ce qui signifie que si l’on change l’intersection et qu’on passe d’un type de nœud à un autre nœud différent alors l’invariant doit être modifié de la façon indiquée. Le but de ces transformations est d’atteindre le non-nœud : la boucle non nouée.
+</p>
+<p>Notez que cet invariant a besoin d’une notion d’orientation sur le nœud puisque les croisements utilisent des flèches. C’est un invariant de nœud orienté.
+</p>
+<p>Il existe de très nombreux invariants mais en voici un important dernier:
+</p>
+<h3>4.3.2.Polynôme de HOMFLY</h3>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/homfly.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/homfly.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>C’est aussi un invariant de nœud orienté et c’est un polynôme de deux variables.
+</p>
+<p>Avec ces invariants, on peut aboutir à un début de classification pour les nœuds simples (0 croisements, 1 croisement, 2 croisements etc…).
+</p>
+<h1>5.Début de classification</h1>
+<p>On obtient par exemple les quelques nœuds premiers suivants:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/cat.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/cat.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Parmis ces nœuds premiers, certains ont des propriétés intéressantes. Par exemple, le nœud de trefle est différent de son image dans un miroir:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/treflea.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/treflea.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>alors que le noeud de 8 est identique à son image dans un miroir:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/eight.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/eight.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Ce qui signifie que les deux nœuds de 8 sont de même type : l’un peut devenir l’autre par déformation. Cela ne signifie pas que la structure tridimensionnelle obtenue en prenant l’image dans le miroir est strictement identique à l’original.
+</p>
+<h1>6.Tresses et chaînes</h1>
+<p>Au delà des nœuds, les mathématiciens s’intéressent aussi aux tresses et aux chaînes
+</p>
+<h2>6.1.Exemple de tresse</h2>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/braid.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/braid.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Une tresse est un ensemble de brins.
+</p>
+<h2>6.2.Exemple de chaîne</h2>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/link.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/link.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Une chaîne est une tresse que l’on a refermé. Un ensemble de brins liés les uns aux autres. Un nœud est une chaîne avec un seul brin.
+</p>
+<p>Tout nœud ou toute chaîne peut être obtenue à partir d’une tresse.
+</p>
+<p>Il existe une structure algébrique derrière les tresses : le groupe des tresses de Artin.
+</p>
+<p>Chaque élément du groupe des tresses agit sur deux fils en permutant leurs extrémités dans un sens ou dans l’autre.
+</p>
+<p>Une tresse peut alors être décrite par la succession des éléments du groupe à appliquer.
+</p>
+<p>Ce groupe encode dans sa structure algébrique les mouvements de Reidemeister. 
+</p>
+<h1>7.Applications</h1>
+<p>La théorie des nœuds n’est pas qu’un simple amusement de mathématiciens. C’est certe joli et plein de problèmes non résolus mais c’est aussi utile !
+</p>
+<p>Tout d’abord en biologie où les brins d’ARN et ADN ainsi que les filaments d’acides aminés s’enroulent selon des formes tridimensionnelles complexes. Or, souvent, au travers des microscopes, on ne voit qu’une projection bidimensionnelle. Les invariants permettent de remonter à des informations tridimensionnelles à partir des vues 2D que l’on a.
+</p>
+<p>En physique la théorie des nœuds est très utile en raison des nombreuses connexions qu’elle a avec la théorie de la physique des particules. Prenons l’exemple simple de l’électromagnétisme avec deux fils électriques comme schématisé dans la figure ci-dessous:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/19/elec.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/19/elec.jpg">
+</a>
+<div class="caption"></div>
+</div>
+<p>Si un courant circule dans la boucle marron, il va créer un champ magnétique. Si on fait bouger un monopôle magnétique selon la courbe bleue alors le travail que cela nécessite ne dépend pas de la forme précise des courbes marrons et bleues. C’est proportionnel à un invariant topologique : le nombre d’entrelacement.
+</p>
+<p>Les théories de la physique des particules sont des théories de jauge : une symétrie bien particulière. Elles ont un contenu géométrique et elles permettent de construire de nombreux invariants tous reliés au groupe de jauge et à ses représentations.
+</p>
+<p>La théorie des nœuds est aussi utilisée pour la théorie des supercordes.
+</p>
+<p>Pour finir, la théorie des nœuds est connectées à de nombreux domaines très intéressants des mathématiques comme les algèbres de Hopf.
+</p>
+<p>Il y aurait encore beaucoup à écrire mais je n’ai plus le courage de continuer pour cette fois…
+</p>
+<p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Théorie des nœuds" data-url="http://www.alpheccar.org/content/19.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/19.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/19.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '19';
+var disqus_url = "http://www.alpheccar.org/content/19.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>

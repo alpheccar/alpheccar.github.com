@@ -1,106 +1,307 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="Category Theory and Haskell 3 : Algebra and Monads" /><meta property="og:site_name" content="alpheccar&#39;s blog" /><meta property="og:type" content="article" /><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" /><link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" /><link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" /><script src="http://www.alpheccar.org/rsrc/jquery.js" /></script><link href="http://www.alpheccar.org/rsrc/alpha.css" rel="stylesheet" type="text/css" /><title>Category Theory and Haskell 3 : Algebra and Monads</title>
-<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-52168-3']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script></head>
+<html><head><meta property="og:title" content="Category Theory and Haskell 3 : Algebra and Monads" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>Category Theory and Haskell 3 : Algebra and Monads</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">Category Theory and Haskell 3 : Algebra and Monads</div><p>This is the third part of my serie about Haskell and category theory. In the <a href="http://www.alpheccar.org/content/76.html">previous post</a>, I described a bit the Hask category and some categorical constructs.
+<div id="content"><div class="posttitle">Category Theory and Haskell 3 : Algebra and Monads</div>
+<p>This is the third part of my serie about Haskell and category theory. In the <a href="http://www.alpheccar.org/content/76.html">previous post</a>, I described a bit the Hask category and some categorical constructs.
 The goal of this text is to understand
 the meaning of a recursive type like List. For that, we will have to understand what is a free algebra and have a quick look at the relationship with
 monads (for applications look at <a href="http://sigfpe.blogspot.com/2007/06/monads-from-algebra-and-the-gray-code.html">the blog of sigfpe</a>). 
 But first, I would like to highlight a problem with the category Hask.
-</p><h1>1. Hask is not the right category</h1><p>Hask is not the right category and many categorical constructs (like product, coproducts) are failing in Hask. It does not mean that Haskell is bad or
+</p>
+<h1>1. Hask is not the right category</h1>
+<p>Hask is not the right category and many categorical constructs (like product, coproducts) are failing in Hask. It does not mean that Haskell is bad or
 category theory is not adapted. It just means that Haskell is too subtle to be described by a category like Hask. The problems are coming from the fact
 that we impose some structure on the objects of the category (they must contain undefined) but the arrows of the category are not always respecting
 this structure (because of lazyness).
-</p><p>So several existence and unicity proofs in the literature are based upon Hask! : a category with the same objects but where the arrows are only
+</p>
+<p>So several existence and unicity proofs in the literature are based upon Hask! : a category with the same objects but where the arrows are only
 the strict ones.  It means that once we consider lazy arrows, the unicity may be broken but I expect it to happen only if you play with undefined.
-</p><p>For this blog I'll consider there are no problems since my initial goal is to explain category theory using Haskell and not study the Hask category.
+</p>
+<p>For this blog I'll consider there are no problems since my initial goal is to explain category theory using Haskell and not study the Hask category.
 But, you must be aware that in Hask some of the things I will say may be a bit wrong.
-</p><h1>2. What is a recursive type</h1><p>Let's consider the type definition:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Nil</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Cons</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span><br/></div><p>We have to understand the meaning of the right hand side and the meaning of the left hand side. Let's start with the left side.
-</p><h2>2.1. Meaning of List a</h2><p>List a is not an arrow in Hask since it is not an Haskell function. But, it has an effect on objects since for each object a you get another object List a.
+</p>
+<h1>2. What is a recursive type</h1>
+<p>Let's consider the type definition:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Nil</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Cons</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span><br/></div>
+<p>We have to understand the meaning of the right hand side and the meaning of the left hand side. Let's start with the left side.
+</p>
+<h2>2.1. Meaning of List a</h2>
+<p>List a is not an arrow in Hask since it is not an Haskell function. But, it has an effect on objects since for each object a you get another object List a.
 List is a functor ! If it is a functor, it must also have an effect on arrows. Indeed, the effect of List on arrows is map.
-</p><p>And we have map f . map g = map (f . g) which is implied by the definition of a functor.
-</p><p>In Haskell, you have a class Functor that makes the effect on arrows explicit. That class is needed because Haskell is 
+</p>
+<p>And we have map f . map g = map (f . g) which is implied by the definition of a functor.
+</p>
+<p>In Haskell, you have a class Functor that makes the effect on arrows explicit. That class is needed because Haskell is 
 not able to deduce the implementation for map from the type definition in all cases. So, you have to give it by hand.
-</p><p>We do not have only one map function. map is polymorphic but category theory is
+</p>
+<p>We do not have only one map function. map is polymorphic but category theory is
 not. So, it means that from the category theory point of view we have a familly of map functions : one for each object.
 So we have a map_Int from Int to List Int ;  a map_String from String to List String etc ...
-</p><p>Now, we are ready to understand polymorphism.
-</p><h2>2.2. Meaning of polymorphism</h2><p>Let's have a look at the function flatten from Data.Tree.
-</p><div class="haskell"><span class='hs-definition'>flatten</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Tree</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span><br/></div><p>We have:
-</p><div class="haskell"><span class='hs-definition'>g</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>flatten</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>fmap</span>&nbsp;<span class='hs-varid'>g</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>fmap</span>&nbsp;<span class='hs-varid'>g</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>flatten</span><br/></div><p>corresponding to the commutativity of the following diagram :
-</p><div class="picture"><a href="http://www.alpheccar.org/post/77/nat.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/77/nat.jpg"></a></div><p>We can flatten our Tree after applying the transform g or before. It does not make a difference. But of course, fmap g is different in both cases. 
+</p>
+<p>Now, we are ready to understand polymorphism.
+</p>
+<h2>2.2. Meaning of polymorphism</h2>
+<p>Let's have a look at the function flatten from Data.Tree.
+</p>
+<div class="haskell"><span class='hs-definition'>flatten</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Tree</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span><br/></div>
+<p>We have:
+</p>
+<div class="haskell"><span class='hs-definition'>g</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>flatten</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>fmap</span>&nbsp;<span class='hs-varid'>g</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>fmap</span>&nbsp;<span class='hs-varid'>g</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>flatten</span><br/></div>
+<p>corresponding to the commutativity of the following diagram :
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/77/nat.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/77/nat.jpg">
+</a>
+</div>
+<p>We can flatten our Tree after applying the transform g or before. It does not make a difference. But of course, fmap g is different in both cases. 
 In the former case we apply the transformation to a Tree and in the latter case to a List.
-</p><p>So, the polymorphism of flatten just means that flatten is a correspondence between two shapes : Tree and List. It is not sensitive to the
+</p>
+<p>So, the polymorphism of flatten just means that flatten is a correspondence between two shapes : Tree and List. It is not sensitive to the
 content of the Tree or the List and we can perturb them as we want : before or after changing the shape of our structure.
-</p><p>It is the definition of a natural transformation
+</p>
+<p>It is the definition of a natural transformation
 between functors. A polymorphic function is a natural transformation between functors : a correspondence between two shapes.
 (The function types like a -> b are imposing a more complex definition based upon the idea of dinaturality but it 
 does not change the intuitive meaning).
-</p><h2>2.3. Meaning of the type constructors Nil and Cons</h2><p>Now, we need to understand the right hand side of our List definition. Intuitively, we have a recursive equation looking like:
-</p><div class="haskell"><span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>F</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<br/></div><p>where F is a functor that can be written F(X) = 1 + AxX (let's consider "a" fixed and equal to Int for simplifying the explanation
+</p>
+<h2>2.3. Meaning of the type constructors Nil and Cons</h2>
+<p>Now, we need to understand the right hand side of our List definition. Intuitively, we have a recursive equation looking like:
+</p>
+<div class="haskell"><span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>F</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>List</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<br/></div>
+<p>where F is a functor that can be written F(X) = 1 + AxX (let's consider "a" fixed and equal to Int for simplifying the explanation
 otherwise we would need something more complex).
-</p><div class="haskell"><span class='hs-conid'>F</span><span class='hs-layout'>(</span><span class='hs-conid'>X</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Nil</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Cons</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-conid'>X</span><br/></div><p>But, in category theory we never use an equality and are instead working with more relaxed ideas of similarity. So, what we really want is
+</p>
+<div class="haskell"><span class='hs-conid'>F</span><span class='hs-layout'>(</span><span class='hs-conid'>X</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Nil</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Cons</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-conid'>X</span><br/></div>
+<p>But, in category theory we never use an equality and are instead working with more relaxed ideas of similarity. So, what we really want is
 an isomorphism:
-</p><div class="haskell"><span class='hs-conid'>List</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>~</span>&nbsp;<span class='hs-conid'>F</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>List</span>&nbsp;<span class='hs-conid'>Int</span><span class='hs-layout'>)</span><br/></div><p>So, we need to find an object D such that
-</p><div class="haskell"><span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>~</span>&nbsp;<span class='hs-conid'>F</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span><br/></div><p>If I had not fixed A to Int, I would need to consider D ~ F(D,A) and show that D is dependent on A in a functorial way. So, let's simplify the things. After all, it is just a blog.
-</p><p>There are several ways to show that this categorical equation has a solution. You can use domain theory. But, in the right category theory you can use
+</p>
+<div class="haskell"><span class='hs-conid'>List</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyglyph'>~</span>&nbsp;<span class='hs-conid'>F</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>List</span>&nbsp;<span class='hs-conid'>Int</span><span class='hs-layout'>)</span><br/></div>
+<p>So, we need to find an object D such that
+</p>
+<div class="haskell"><span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>~</span>&nbsp;<span class='hs-conid'>F</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span><br/></div>
+<p>If I had not fixed A to Int, I would need to consider D ~ F(D,A) and show that D is dependent on A in a functorial way. So, let's simplify the things. After all, it is just a blog.
+</p>
+<p>There are several ways to show that this categorical equation has a solution. You can use domain theory. But, in the right category theory you can use
 the definition of an initial algebra.
-</p><p>So, what is an algebra ? Just some composition laws. For instance, you can consider addition and multiplication. But, you don't know yet what you
+</p>
+<p>So, what is an algebra ? Just some composition laws. For instance, you can consider addition and multiplication. But, you don't know yet what you
 want to add or multiply (reals ? fractions ? complexes ? polynomials ?) so you just consider the formulas that you can build with + and * without trying
 to evaluate them : you have a free algebra. It is the set of "strings" you can generate with the laws you have chosen.
-</p><p>Instead of having several laws, we can just encode everything with one law and use a functor. Here is an example:
-</p><div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>MyAlgebra</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/>&nbsp;<span class='hs-varid'>mul</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/>&nbsp;<span class='hs-varid'>one</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>We can replace it with:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>One</span><br/><span class='hs-definition'>law</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>MyAlgebra</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/><span class='hs-definition'>law</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>law</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>law</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>one</span><br/></div><p>So, with the functor Alg and the arrow "law" we have described how to encode all of our laws. For "law" we have a familly of arrows. It is not 
+</p>
+<p>Instead of having several laws, we can just encode everything with one law and use a functor. Here is an example:
+</p>
+<div class="haskell"><span class='hs-keyword'>class</span>&nbsp;<span class='hs-conid'>MyAlgebra</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/>&nbsp;<span class='hs-varid'>mul</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/>&nbsp;<span class='hs-varid'>one</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>We can replace it with:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>One</span><br/><span class='hs-definition'>law</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>MyAlgebra</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-varid'>a</span><br/><span class='hs-definition'>law</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>law</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>law</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>one</span><br/></div>
+<p>So, with the functor Alg and the arrow "law" we have described how to encode all of our laws. For "law" we have a familly of arrows. It is not 
 polymorphic in the same way since for each type the implementation will be different.
-</p><p>But, we want a free algebra. When we have
+</p>
+<p>But, we want a free algebra. When we have
 two elements of the free algebra (two formulas) and build new formulas with Sum and Mul we still get formulas of the free algebra by definition of a free algebra. So, for the free algebra we must have:
-</p><div class="haskell"><span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>~</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<br/></div><p>That's the meaning of a recursive type. It is a fix point of an algebraic functor (defined with product and coproducts).
+</p>
+<div class="haskell"><span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>~</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<br/></div>
+<p>That's the meaning of a recursive type. It is a fix point of an algebraic functor (defined with product and coproducts).
 That's why we are talking of an algebraic data type in Haskell. 
-</p><p>The Haskell definition for D is thus defined with:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum'</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul'</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>One'</span><br/></div><p>since
-</p><div class="haskell"><span class='hs-conid'>Alg</span><span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>~</span>&nbsp;<span class='hs-conid'>D</span><br/></div><p>and our "law" arrow must be an isomorphism :
-</p><div class="haskell"><span class='hs-definition'>iso</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>D</span><br/><span class='hs-definition'>iso</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum'</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>iso</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Mul'</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>iso</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>One'</span><br/></div><p>D is the most general algebra generated by add and mul. It is not assuming any property of add and mul. 
-</p><p>It means any other algebra using add and mul can be recovered from the free algebra. The free algebra is recording in which order we do the
+</p>
+<p>The Haskell definition for D is thus defined with:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum'</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul'</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>One'</span><br/></div>
+<p>since
+</p>
+<div class="haskell"><span class='hs-conid'>Alg</span><span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>~</span>&nbsp;<span class='hs-conid'>D</span><br/></div>
+<p>and our "law" arrow must be an isomorphism :
+</p>
+<div class="haskell"><span class='hs-definition'>iso</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>D</span><br/><span class='hs-definition'>iso</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum'</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>iso</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Mul'</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-definition'>iso</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>One'</span><br/></div>
+<p>D is the most general algebra generated by add and mul. It is not assuming any property of add and mul. 
+</p>
+<p>It means any other algebra using add and mul can be recovered from the free algebra. The free algebra is recording in which order we do the
 operations. The function used to recover the value in another algebra is the fold ! fold will just replace any operator from the free algebra (Mul, Sum)
 by the corresponding one from the other algebra.
-</p><p>Here is an example:
-</p><div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyAlgebra</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>+</span><span class='hs-layout'>)</span><br/>&nbsp;<span class='hs-varid'>mul</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>*</span><span class='hs-layout'>)</span><br/>&nbsp;<span class='hs-varid'>one</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-num'>1</span><br/><br/></div><p>Let's map an element of the free algebra (test) to an Int:
-</p><div class="haskell"><span class='hs-definition'>test</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum'</span>&nbsp;<span class='hs-conid'>One'</span>&nbsp;<span class='hs-conid'>One'</span><br/></div><p>We need a function:
-</p><div class="haskell"><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span><br/><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>aFold</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>aFold</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>mul</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>aFold</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>aFold</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-num'>1</span><br/><br/><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-varid'>test</span>&nbsp;<span class='hs-varid'>is</span>&nbsp;<span class='hs-num'>2</span><br/></div><p>In categorical words it means that the following diagram commutes:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/77/algebra.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/77/algebra.jpg"></a></div><p>The free algebra is an initial algebra but to see this we need to change the category because a free algebra is not living in the Hask category.
+</p>
+<p>Here is an example:
+</p>
+<div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>MyAlgebra</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>+</span><span class='hs-layout'>)</span><br/>&nbsp;<span class='hs-varid'>mul</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>*</span><span class='hs-layout'>)</span><br/>&nbsp;<span class='hs-varid'>one</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-num'>1</span><br/><br/></div>
+<p>Let's map an element of the free algebra (test) to an Int:
+</p>
+<div class="haskell"><span class='hs-definition'>test</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum'</span>&nbsp;<span class='hs-conid'>One'</span>&nbsp;<span class='hs-conid'>One'</span><br/></div>
+<p>We need a function:
+</p>
+<div class="haskell"><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Int</span><br/><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>add</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>aFold</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>aFold</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>mul</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>aFold</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>aFold</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-num'>1</span><br/><br/><span class='hs-definition'>aFold</span>&nbsp;<span class='hs-varid'>test</span>&nbsp;<span class='hs-varid'>is</span>&nbsp;<span class='hs-num'>2</span><br/></div>
+<p>In categorical words it means that the following diagram commutes:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/77/algebra.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/77/algebra.jpg">
+</a>
+</div>
+<p>The free algebra is an initial algebra but to see this we need to change the category because a free algebra is not living in the Hask category.
 What is living in the Hask category is the object D such that D ~ F(D). But an algebra is defined with three things:
-</p><div class="doclist"><ul><li> The object A
-</li><li> The functor F
-</li><li> A correspondence law : F(A) -> A
-</li></ul></div><p>In case of a free algebra this correspondence is iso. So, an object of the category where algebras are living is a triple (A,F,law).
+</p>
+<div class="doclist"><ul><li> The object A
+</li>
+<li> The functor F
+</li>
+<li> A correspondence law : F(A) -> A
+</li>
+</ul>
+</div>
+<p>In case of a free algebra this correspondence is iso. So, an object of the category where algebras are living is a triple (A,F,law).
 To specify a category we also need morphisms. A morphism of algebras is a fold.
-</p><p>Saying that the free algebra is initial means that once we have specified the laws of our other algebras then there is only one arrow
+</p>
+<p>Saying that the free algebra is initial means that once we have specified the laws of our other algebras then there is only one arrow
 from the free algebra to the other one : the fold. The free algebra is an initial object in the category of algebras.
-</p><h1>3. Monad</h1><p>We have looked at the recursive types in a static way : a solution of an equation. But we can have a look at them in a dynamic way.
-</p><p>When we have a formula of our free algebra D, we can build a more complex one. This process is encoded with the algebra functor and we can iterate
+</p>
+<h1>3. Monad</h1>
+<p>We have looked at the recursive types in a static way : a solution of an equation. But we can have a look at them in a dynamic way.
+</p>
+<p>When we have a formula of our free algebra D, we can build a more complex one. This process is encoded with the algebra functor and we can iterate
 to get more and more complex formulas. But, at the end, each formula is from the free algebra D since D is solution of our fix point equation. So, we must have correspondences:
-</p><div class="haskell"><span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-conid'>F</span><span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-conid'>F</span><span class='hs-varop'>^</span><span class='hs-num'>2</span><span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-conid'>F</span><span class='hs-varop'>^</span><span class='hs-num'>3</span><span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varop'>...</span><br/></div><p>The correspondence between F^n and F^{n+1} is related to the monadic join ! The monadic join is implicitly contained in the free algebra definition because it is initial.
-</p><p>Let's see how:
-</p><div class="haskell"><span class='hs-definition'>join</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span><br/><span class='hs-definition'>join</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>iso</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>iso</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>join</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>iso</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>iso</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>join</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>One</span><br/></div><p>So : 
-</p><div class="haskell"><span class='hs-definition'>join</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>fmap</span>&nbsp;<span class='hs-varid'>iso</span><br/></div><p>Indeed:
-</p><div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Functor</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varop'>`fmap`</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varop'>`fmap`</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varop'>`fmap`</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>One</span><br/><br/><span class='hs-definition'>join'</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<br/><span class='hs-definition'>join'</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>fmap</span>&nbsp;<span class='hs-varid'>iso</span><br/></div><p>Which can be seen from the diagram:
-</p><div class="picture"><a href="http://www.alpheccar.org/post/77/monad.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/77/monad.jpg"></a></div><p>Now, if we want to play with the Haskell monad class we need to generalize a bit. Instead of considering D we use a polymorphic D a. It just means
+</p>
+<div class="haskell"><span class='hs-conid'>D</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-conid'>F</span><span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-conid'>F</span><span class='hs-varop'>^</span><span class='hs-num'>2</span><span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-conid'>F</span><span class='hs-varop'>^</span><span class='hs-num'>3</span><span class='hs-layout'>(</span><span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>&lt;-</span>&nbsp;<span class='hs-varop'>...</span><br/></div>
+<p>The correspondence between F^n and F^{n+1} is related to the monadic join ! The monadic join is implicitly contained in the free algebra definition because it is initial.
+</p>
+<p>Let's see how:
+</p>
+<div class="haskell"><span class='hs-definition'>join</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span><br/><span class='hs-definition'>join</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>iso</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>iso</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>join</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>iso</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>iso</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/><span class='hs-definition'>join</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>One</span><br/></div>
+<p>So : 
+</p>
+<div class="haskell"><span class='hs-definition'>join</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>fmap</span>&nbsp;<span class='hs-varid'>iso</span><br/></div>
+<p>Indeed:
+</p>
+<div class="haskell"><span class='hs-keyword'>instance</span>&nbsp;<span class='hs-conid'>Functor</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-keyword'>where</span><br/>&nbsp;&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varop'>`fmap`</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varop'>`fmap`</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>f</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;<span class='hs-varid'>f</span>&nbsp;<span class='hs-varop'>`fmap`</span>&nbsp;<span class='hs-conid'>One</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>One</span><br/><br/><span class='hs-definition'>join'</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<br/><span class='hs-definition'>join'</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>fmap</span>&nbsp;<span class='hs-varid'>iso</span><br/></div>
+<p>Which can be seen from the diagram:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/77/monad.jpg" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/77/monad.jpg">
+</a>
+</div>
+<p>Now, if we want to play with the Haskell monad class we need to generalize a bit. Instead of considering D we use a polymorphic D a. It just means
 that we are enriching our free monads with symbols taken from the object a. So for instance, if "a" is String it means the name of a symbol is a String.
-</p><p>We now have:
-</p><div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Var</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum'</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul'</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Var'</span>&nbsp;<span class='hs-varid'>a</span><br/></div><p>and things become more complex :-)
-</p><p>Now, go to <a href="http://sigfpe.blogspot.com/2007/06/monads-from-algebra-and-the-gray-code.html">the blog of sigfpe</a> and enjoy !
-</p><p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
-</p><div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Category Theory and Haskell 3 : Algebra and Monads" data-url="http://www.alpheccar.org/content/77.html" data-count="horizontal" data-via="alpheccar">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div><div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/77.html" size="small" /></g:plusone></div><div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/77.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe></div></div><div id="disqus_thread" /></div><script type="text/javascript">var disqus_shortname = 'alpheccarsblog';var disqus_identifier = '77';var disqus_url = "http://www.alpheccar.org/content/77.html";(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript><a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span></a><div id="copyright"><hr class="line" /><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />This work is licensed under a<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a></a></div></div>
-<div id="sidebar"><div id="blogroll"><h1>Links</h1><div class="link"><a href="http://www.360fashion.net/">360Fashion</a></div><div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a></div><div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a></div><div class="link"><a href="http://arxiv.org">ArXiv</a></div><div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a></div><div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a></div><div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a></div><div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a></div><div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a></div><div class="link"><a href="http://www.haskell.org/">Haskell</a></div><div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a></div><div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a></div><div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a></div><div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a></div><div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a></div><div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a></div><div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a></div><div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a></div><div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a></div><div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a></div><div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a></div><div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a></div><div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a></div><div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a></div></div><div id="tags"></div><script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script><div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</p>
+<p>We now have:
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>Alg</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Var</span>&nbsp;<span class='hs-varid'>b</span><br/><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Sum'</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Mul'</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>D</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;<span class='hs-conid'>Var'</span>&nbsp;<span class='hs-varid'>a</span><br/></div>
+<p>and things become more complex :-)
+</p>
+<p>Now, go to <a href="http://sigfpe.blogspot.com/2007/06/monads-from-algebra-and-the-gray-code.html">the blog of sigfpe</a> and enjoy !
+</p>
+<p><em>(This post was imported from my old blog. The date is the date of the import. The comments where not imported.)</em>
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Category Theory and Haskell 3 : Algebra and Monads" data-url="http://www.alpheccar.org/content/77.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/77.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/77.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '77';
+var disqus_url = "http://www.alpheccar.org/content/77.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephoravenites.tumblr.com/">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
 </div>
 <div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
 </div>
 </div>
 </div>
 </div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; (function () {var s = document.createElement('script'); s.async = true;s.type = 'text/javascript';s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script><script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 </body>
 </html>
