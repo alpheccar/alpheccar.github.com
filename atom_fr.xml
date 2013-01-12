@@ -3,9 +3,21 @@
 <link href="http://www.alpheccar.org/atom_fr.xml" rel="self" //>
 <link href="http://www.alpheccar.org" //>
 <id>http://www.alpheccar.org</id>
-<updated>2012-05-16T20:30:00Z</updated>
+<updated>2012-01-12T14:00:00Z</updated>
 <author><name>alpheccar</name>
 </author>
+<entry><title>iFractal</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/100fr.html" //>
+<id>100fr</id>
+<updated>2012-01-12T14:00:00Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>I had a few applications available in the AppStore. But, a few years ago I decided to remove them because of the risk increase due
+to patent trolls and also because I was no more working on those applications.
+</p>
+<p>Some of those apps are still working on my iPhone 4S. I don't know for how many years they'll continue to work without any update. So to keep a trace for the day they'll fail to work, I decided to make a short video.
+</p>
+</div>
+</content>
+</entry>
 <entry><title>hbayes 0.3</title>
 <link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/99fr.html" //>
 <id>99fr</id>
@@ -48,19 +60,6 @@
 <id>95fr</id>
 <updated>2011-12-11T13:10:00Z</updated>
 <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>In this document, I am trying to compare the APIs of ICS with those of iOS 5. So, the comparison is from the point of view of the developer. And, I am looking only at the public APIs documented on the Android SDK web site. I know there are other APIs in the source code and they may be used by some applications. But if they are private it means they may change in the future and the applications using them would break. 
-</p>
-</div>
-</content>
-</entry>
-<entry><title>Cross-compiling Haskell</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/94fr.html" //>
-<id>94fr</id>
-<updated>2011-12-10T13:10:00Z</updated>
-<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>These patches (for GHC HEAD) would not have been possible without the first <a href="http://projects.haskell.org/ghc-iphone/">iphone-ghc patch</a> by Stephen Blackheath. He did a really big work on that patch.
-So, anything smart in this new version is from Stephen and any problem is probably coming from me.
-</p>
-<p>For lots of reasons, I decided to port Stephen's patch to the new GHC build system and do some cleaning (like adding compilation flags and makefile variables).
-When I started I did not know anything about this new build system and I was not aware that Cabal was so smart and doing so many things. So, what is emerging from this work is that I absolutely don't understand Cabal and only very partially the new build system. The patch will need lot of work to be clean and generic. Some problems were solved with ad'hoc assumptions likely to be wrong in different environments.
 </p>
 </div>
 </content>
