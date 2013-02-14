@@ -3,9 +3,22 @@
 <link href="http://www.alpheccar.org/atom.xml" rel="self" //>
 <link href="http://www.alpheccar.org" //>
 <id>http://www.alpheccar.org</id>
-<updated>2012-01-12T14:00:00Z</updated>
+<updated>2013-02-14T14:00:00Z</updated>
 <author><name>alpheccar</name>
 </author>
+<entry><title>ghci viewer for OS X</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/101.html" //>
+<id>101</id>
+<updated>2013-02-14T14:00:00Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>I am planning to write a library to prototype signal processing algorithms with Haskell (speech, acoustic ...). The first
+missing block is plotting. 
+</p>
+<p>So, I wrote a very quick-and-dirty solution which is enough for me and may be useful to others even if it is very
+preliminary.
+</p>
+</div>
+</content>
+</entry>
 <entry><title>iFractal</title>
 <link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/100.html" //>
 <id>100</id>
@@ -51,15 +64,6 @@ to patent trolls and also because I was no more working on those applications.
 <p>So, there is a long history and some traditions. Food is one important part of this history. But, this post is not about history. I won't try to check if a meal has been invented in Nice or Antibes or somewhere else. I just want to focus on the typical meals of the town of Nice and around it. Also, I am not expert at Niçoise food. But I hope I'll avoid the biggest mistakes.
 </p>
 <p>Let's start with the most famous abroad and I'll end with the most famous in Nice.
-</p>
-</div>
-</content>
-</entry>
-<entry><title>Comparing Ice Cream Sandwich with iOS 5</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/95.html" //>
-<id>95</id>
-<updated>2011-12-11T13:10:00Z</updated>
-<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>In this document, I am trying to compare the APIs of ICS with those of iOS 5. So, the comparison is from the point of view of the developer. And, I am looking only at the public APIs documented on the Android SDK web site. I know there are other APIs in the source code and they may be used by some applications. But if they are private it means they may change in the future and the applications using them would break. 
 </p>
 </div>
 </content>
