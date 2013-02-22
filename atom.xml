@@ -3,9 +3,23 @@
 <link href="http://www.alpheccar.org/atom.xml" rel="self" //>
 <link href="http://www.alpheccar.org" //>
 <id>http://www.alpheccar.org</id>
-<updated>2013-02-14T14:00:00Z</updated>
+<updated>2013-02-22T20:30:00Z</updated>
 <author><name>alpheccar</name>
 </author>
+<entry><title>Signal processing with Haskell : First steps</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/102.html" //>
+<id>102</id>
+<updated>2013-02-22T20:30:00Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>As said in my previous post, I have now started working on an Haskell package for prototyping signal processing algorithms : mainly speech and acoustic.
+None of the packages I have seen so far were matching my needs. So, I decided to start working on something. And, this project is also a good opportunity for me to learn the latest ghc stuff like data type promotion and list fusion.
+</p>
+<p>This work is available on github but warning : I am in an exploratory phase. Anything can change at any time. Also, don't trust the code unless I have written some unit tests. In this first version I only have the foundations and it is only partially tested.
+</p>
+<p>So, let's see what's in the package so far.
+</p>
+</div>
+</content>
+</entry>
 <entry><title>ghci viewer for OS X</title>
 <link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/101.html" //>
 <id>101</id>
@@ -49,21 +63,6 @@ to patent trolls and also because I was no more working on those applications.
 <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>I am learning the algorithms used for inference with discrete bayesian networks. I decided to write an implementation in Haskell to give me an opportunity to code a bit in this beautiful language (I don't have a lot of opportunities at my office).
 </p>
 <p>The first version of the library hbayes is very preliminary but already supporting junction trees.
-</p>
-</div>
-</content>
-</entry>
-<entry><title>Gastronomy of the French Riviera</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/96.html" //>
-<id>96</id>
-<updated>2011-12-16T19:30:00Z</updated>
-<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>French Riviera is known abroad thanks to the Cannes Festival or thanks to the casinos in Monaco. You may also know it for the sea and the sky. But, I would say it is the superficial part of this place. 
-</p>
-<p>Some of the towns on the French Riviera are some of the oldest of France and Europe : they were founded by the Greeks in the antiquity or before the greeks by some other less known civilizations (Ligures for instance).
-</p>
-<p>So, there is a long history and some traditions. Food is one important part of this history. But, this post is not about history. I won't try to check if a meal has been invented in Nice or Antibes or somewhere else. I just want to focus on the typical meals of the town of Nice and around it. Also, I am not expert at Niçoise food. But I hope I'll avoid the biggest mistakes.
-</p>
-<p>Let's start with the most famous abroad and I'll end with the most famous in Nice.
 </p>
 </div>
 </content>

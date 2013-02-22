@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta property="og:title" content="Signal processing with Haskell : First steps" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>Signal processing with Haskell : First steps</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
+<body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
+</a>
+</div>
+<div id="content"><div class="posttitle">Signal processing with Haskell : First steps</div>
+<p>As said in my previous post, I have now started working on an Haskell package for prototyping signal processing algorithms : mainly speech and acoustic.
+None of the packages I have seen so far were matching my needs. So, I decided to start working on something. And, this project is also a good opportunity for me to learn the latest ghc stuff like data type promotion and list fusion.
+</p>
+<p>This work is available on github but warning : I am in an exploratory phase. Anything can change at any time. Also, don't trust the code unless I have written some unit tests. In this first version I only have the foundations and it is only partially tested.
+</p>
+<p>So, let's see what's in the package so far.
+</p>
+<h1>1. Signal </h1>
+<p>The core of the package is the <em>Signal</em> type. It is just a wrapper around lists (using the stream-fusion package). But, I want <em>Signal</em> to be infinite lists. An finite lists will be vectors in this project. So that's why I am not using the list type directly.
+</p>
+<p>To avoid conflict with the <em>Prelude</em>, the standard list manipulation functions are followed with a S when used on a signal.
+</p>
+<p>So, for instance, you can write:
+</p>
+<div class="haskell">&nbsp;<span class='hs-varid'>mapS</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>+</span><span class='hs-num'>2</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>mySignal</span>&nbsp;<br/></div>
+<p>to add a DC offset to the signal.
+</p>
+<h1>2. Fixed point arithmetic</h1>
+<p>Implementing a signal processing algorithm on a true DSP is tricky. That's why professional working on speech / acoustic are using the ITU G.191 specification : a set of C fixed point reference implementations with definition of basic operators (multiply, addition ...) with the fixed point behavior (precision, saturation).
+</p>
+<p>At some point when studying an algorithm, and before porting it to a DSP, you need to study the behavior when passing to a fixed point representation (unless you're rich and using floating point arithmetic on your DSP :-). It is not very fun to do it using G.191 which is very low level and close to the DSP instruction sets.
+</p>
+<p>So, one goal of this project is to support enough fixed point arithmetic to be able to easily study the behavior of an algorithm and keep a high level description.
+</p>
+<p>For this, I am using the type:
+</p>
+<div class="haskell"><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>n</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<br/></div>
+<p>with:
+</p>
+<div class="haskell"><span class='hs-definition'>a</span>&nbsp;<span class='hs-varid'>is</span>&nbsp;<span class='hs-conid'>Int16</span>&nbsp;<span class='hs-varid'>or</span>&nbsp;<span class='hs-conid'>Int32</span>&nbsp;<span class='hs-varid'>or</span>&nbsp;<span class='hs-conid'>Int40</span>&nbsp;<span class='hs-varid'>or</span>&nbsp;<span class='hs-conid'>Int64</span><br/></div>
+<p><em>n</em> is using type level numeral and so you need ghc 7.6 with data type promotion. So <em>n</em> has kind <em>Nat</em>
+</p>
+<div class="haskell">&nbsp;<span class='hs-varid'>n</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Nat</span>&nbsp;<br/></div>
+<p><em>s</em> has the kind <em>Saturation</em> and can be the type <em>Saturated</em> or <em>Unsaturated</em>.
+</p>
+<p>So, an example of fixed point type could be: 
+</p>
+<div class="haskell"><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int16</span>&nbsp;<span class='hs-num'>8</span>&nbsp;<span class='hs-conid'>Saturated</span><br/></div>
+<p>It is the <em>type</em> of a signed number on 16 bits with 8 bits for the fractional part and which is using saturated arithmetic. So for instance
+</p>
+<div class="haskell">&nbsp;<span class='hs-num'>0x7FFE</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-num'>2</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-num'>0x7FFF</span>&nbsp;<span class='hs-varid'>and</span>&nbsp;<span class='hs-varid'>not</span>&nbsp;<span class='hs-num'>0x8000</span><br/></div>
+<p>Saturation is introducing distortion but it is not as bad as a sign change. So, the tradeoff is between quantization noise if you don't have enough bits for the fractional part or saturation. Haskell will use the type level natural to automatically introduce the right shift in the computations needed to position the fixed point at the right place.
+</p>
+<p>Here is an example generated with this library:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/102/temporal.png" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/102/temporal.png">
+</a>
+</div>
+<p>On the above picture you can see a signal computed with Double numbers and with different fixed point formats.
+</p>
+<p>One is showing the quantization noise, another the saturation and another the sign change when saturation is disabled and there is not enough available dynamics.
+</p>
+<p>All the curves above are generated with the same code :
+</p>
+<div class="haskell"><span class='hs-definition'>genericSignal</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-keyword'>forall</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-varop'>.</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Fractional</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>HasDoubleRepresentation</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Signal</span>&nbsp;<span class='hs-varid'>a</span><br/><span class='hs-definition'>genericSignal</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>mapS</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-keyglyph'>\</span><span class='hs-varid'>t</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;&nbsp;<span class='hs-num'>2</span><span class='hs-varop'>*</span><span class='hs-layout'>(</span><span class='hs-varid'>fromDouble</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-num'>1.5</span><span class='hs-varop'>*</span><span class='hs-varid'>sin</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-num'>2</span><span class='hs-varop'>*</span><span class='hs-varid'>pi</span><span class='hs-varop'>*</span><span class='hs-varid'>getT</span>&nbsp;<span class='hs-varid'>t</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>theTimes</span><br/></div>
+<p><em>fromDouble</em> is a simple way to convert a double into a fixed point. That's the reason for <em>HasDoubleRepresentation</em>. In a future version I may have a fixed point algorithm to compute the sine.
+</p>
+<p>I have typed the time and frequency hence the <em>getT</em>.
+</p>
+<p>Then, I can just write:
+</p>
+<div class="haskell"><span class='hs-definition'>mySignalA</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Signal</span>&nbsp;<span class='hs-conid'>Double</span>&nbsp;<br/><span class='hs-definition'>mySignalA</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>genericSignal</span>&nbsp;<br/><br/><span class='hs-definition'>mySignalC</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Signal</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int16</span>&nbsp;<span class='hs-num'>14</span>&nbsp;<span class='hs-conid'>Saturated</span><span class='hs-layout'>)</span>&nbsp;<br/><span class='hs-definition'>mySignalC</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>genericSignal</span><br/><br/><span class='hs-definition'>mySignalD</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Signal</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int16</span>&nbsp;<span class='hs-num'>3</span>&nbsp;<span class='hs-conid'>Saturated</span><span class='hs-layout'>)</span>&nbsp;<br/><span class='hs-definition'>mySignalD</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>genericSignal</span><br/><br/><span class='hs-definition'>mySignalE</span><span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Signal</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int16</span>&nbsp;<span class='hs-num'>14</span>&nbsp;<span class='hs-conid'>Unsaturated</span><span class='hs-layout'>)</span>&nbsp;<br/><span class='hs-definition'>mySignalE</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>genericSignal</span><br/></div>
+<p>for different versions.
+</p>
+<p>The display (using my OS X viewer) is generated with:
+</p>
+<div class="haskell"><span class='hs-definition'>display</span>&nbsp;<span class='hs-varop'>$</span>&nbsp;<span class='hs-varid'>discreteSignalsWithStyle</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>takeWhileS</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varop'>&lt;=</span>&nbsp;<span class='hs-varid'>duration</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>theTimes</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>[</span>&nbsp;<span class='hs-conid'>AS</span>&nbsp;<span class='hs-varid'>mySignalA</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>AS</span>&nbsp;<span class='hs-varid'>mySignalC</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>AS</span>&nbsp;<span class='hs-varid'>mySignalD</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>]</span><br/></div>
+<p><em>theTimes</em> being a <em>Signal</em>, it is an infinite sequence of time instants and we need to select a finite sequence for plotting.
+</p>
+<p>The plot function can display signals using different fixed point formats (and even Double). So, an existential type is required.
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>AnySignal</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-keyword'>forall</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-varop'>.</span>&nbsp;<span class='hs-conid'>HasDoubleRepresentation</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>AS</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Signal</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<br/></div>
+<p>The plotting is using Double at the end (since it is based on PDF).
+</p>
+<p>Once you have displayed some signals, you may want to display some spectrums:
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/102/frequential.png" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/102/frequential.png">
+</a>
+</div>
+<p>It is done with the code:
+</p>
+<div class="haskell"><span class='hs-definition'>spectruma</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Signal</span>&nbsp;<span class='hs-conid'>Double</span><br/><span class='hs-layout'>(</span><span class='hs-varid'>freqR</span><span class='hs-layout'>,</span><span class='hs-varid'>spectruma</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>spectrum</span>&nbsp;<span class='hs-varid'>samplingFrequency</span>&nbsp;<span class='hs-varid'>duration</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>noWindow</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>mySignalA</span><br/></div>
+<p><em>freqR</em> is the frequency resolution. It is needed to draw the spectrum.
+</p>
+<h1>3. Problems</h1>
+<h2>3.1. Type level arithmetic</h2>
+<p>For some fixed point computations, you may need to temporarily do the accumulation with higher accuracy. So, I have introduced a specific multiply which is keeping the full accuracy in output:
+</p>
+<div class="haskell"><span class='hs-definition'>amul</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>SingI</span>&nbsp;<span class='hs-varid'>na</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>SingI</span>&nbsp;<span class='hs-varid'>nb</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>na</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>nb</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>na</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-varid'>nb</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>s</span><br/></div>
+<p>It is a complex type. First, I am using two type level naturals : <em>na</em> and <em>nb</em>. But, I need their value during the computation to change the fixed point position.
+So, I am using the Singleton classes.
+</p>
+<p>Then, the type is specifying that I have more fractional bits at the output using type level arithmetic. Now, the problem is that there is not yet any solver in ghc 7.6.
+</p>
+<p>So, na + nb is never reduced to a natural type. It is causing lots of trouble. In this first version, I only need to compute the type <em>15 + n</em> and I know <em>n</em> is inferior to <em>16</em>. So, I have hacked a solution using type family instances:
+</p>
+<div class="haskell"><span class='hs-keyword'>type</span>&nbsp;<span class='hs-keyword'>instance</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-num'>15</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Nat</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-num'>1</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Nat</span><span class='hs-layout'>)</span>&nbsp;&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-num'>16</span><br/><span class='hs-keyword'>type</span>&nbsp;<span class='hs-keyword'>instance</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-num'>15</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Nat</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-num'>2</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>Nat</span><span class='hs-layout'>)</span>&nbsp;&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-num'>17</span><br/><span class='hs-varop'>...</span><br/></div>
+<p>It is ugly and I hope there is a better solution.
+</p>
+<h2>3.2. Unbox </h2>
+<p>I am using Unboxed vectors for the FFT. And I need to use Complex. Unfortunately, Unbox (Complex a) is requiring <em>RealFloat</em>. Which means that to be able to use unboxed vector on Complex of fixed point numbers, I have to define instances <em>RealFloat Int16</em> etc ... It is not good. I am defining those instances using <em>undefined</em> !
+</p>
+<p>I understand where this constraint is coming from : some Complex functions (like magnitude) are requiring RealFloat. But, I don't like this.
+</p>
+<h1>4. Conclusion</h1>
+<p>So far, things are working like I had imagined. Now, I need to focus on testing the fixed point arithmetic. Then, I'll be able to code some standard signal processing agorithms.
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Signal processing with Haskell : First steps" data-url="http://www.alpheccar.org/content/102.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/102.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/102.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '102';
+var disqus_url = "http://www.alpheccar.org/content/102.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephora-venites.tumblr.com">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</div>
+<div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+</body>
+</html>

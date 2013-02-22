@@ -22,7 +22,18 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/87.html">A Web Monad</a>
+<div id="content"><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/88.html">HTTP content-type comparison at the type level</a>
+</div>
+<p>If you read <a href="http://www.alpheccar.org/content/87.html">my previous post</a>, you'll be interested by this one. Indeed, I have discovered that the idea introduced in the previous post is working but not practical at all since it does not work with type synonym definitions. But, without synonyms, you can't really write the kind of types required to do http content-type comparison at the type level. By luck, some additional type hacking is solving the problem. Moreover, I think it can be useful to show in a very informal way a few applications of computations at type level. It is not so hard (but not totally trivial. I had to make several experiments to get it right).
+</p>
+
+<div class="more"><a href="http://www.alpheccar.org/content/88.html">read more ...</a>
+</div>
+<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
+<a href="http://www.alpheccar.org/content/88.html#disqus_thread" data-disqus-identifier="88" /></a>
+</div>
+</div>
+<div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/87.html">A Web Monad</a>
 </div>
 <p>In my last post, I was writing about the use of coproduct of free monads to do content-type dispatching in a web monad. It was working but it was not the right approach. I changed everything and introduced a lattice of lists at the type level to track hierarchical dependencies between formats and do content-type dispatching thanks to type information. I also added a few other features to my Web Monad.
 </p>
@@ -71,24 +82,6 @@ always ok because I have not yet implemented an hyphenation algorithm. But, the 
 </div>
 <div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
 <a href="http://www.alpheccar.org/content/82.html#disqus_thread" data-disqus-identifier="82" /></a>
-</div>
-</div>
-<div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/81.html">HPDF 1.1 teaser</a>
-</div>
-<p>The text operators of the release 1.0 of my Haskell PDF library are very low level. You have access to most of the PDF text operators but it means you can just specify where to put
-a line of text. So, it is difficult to do more than displaying some labels on a chart. The styles are also very limited : you can use bold and italic if it is supported by the standard
-PDF fonts.
-</p>
-<p>For the 1.1 release of my library, I have decided to improve this and write something cool.
-</p>
-<p>First, I have implemented the TeX line breaking algorithm with glues and penalties. Contrary to the real TeX algorithm, there is no looseness parameter and the hyphenation algorithm is
-not implemented (will be for another release).
-</p>
-
-<div class="more"><a href="http://www.alpheccar.org/content/81.html">read more ...</a>
-</div>
-<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
-<a href="http://www.alpheccar.org/content/81.html#disqus_thread" data-disqus-identifier="81" /></a>
 </div>
 </div>
 <div id="indexNavigation"><div class="previous"><a href="http://www.alpheccar.org/index_1.html">previous</a>
