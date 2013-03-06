@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta property="og:title" content="Signal processing with Haskell : Part 2" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+processEscapes: true}});</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" /></script>
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>Signal processing with Haskell : Part 2</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
+<body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
+</a>
+</div>
+<div id="content"><div class="posttitle">Signal processing with Haskell : Part 2</div>
+<p>I have added a lot of features to my signal processing library and I reworked the foundations. So, a lot of things to cover in this post.
+And a funny (but very simple) Voice Activity Detection example at the end.
+</p>
+<h1>1. Foundations (Fixed, Signal) </h1>
+<h2>1.1. Fixed point</h2>
+<p>By better use of the types, I was able to avoid code duplication. So, it allowed me to improve the fixed point type. Here is
+an example of what can be expressed with the new type:
+</p>
+<div class="haskell"><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int16</span>&nbsp;<span class='hs-num'>14</span>&nbsp;<span class='hs-conid'>Sat</span>&nbsp;<span class='hs-conid'>NR</span><br/></div>
+<p>It is a fixed point word, signed, coded on 16 bits, using 14 bits for the fractional part, saturated arithmetic and no rounding (for multiplications).
+</p>
+<p>You may think that perhaps it would be better to use different operators for saturated arithmetic. $R^2$ and $C$ are considered different and yet they are both implemented using pair of real numbers. I am following this philosophy. A number is not only defined by its implementation but also by what you can do with it.
+</p>
+<p>The advantage of this approach is that I can easily test the same algorithm with different arithmetics.
+</p>
+<p>I have started writing unitary tests. It is boring so I am progressing slowly but it has to be done because it is a critical part of this library.
+</p>
+<h2>1.2. Signal </h2>
+<p>It was cumbersome to track the sampling frequency so now it is included in the <em>Signal</em> data type. I have added a few optimization rules to be sure that list fusion is still taking place.
+</p>
+<p>I have also introduced a new <em>BSignal</em> type for bounded (in time) signal. Using lists for that purpose was not always clear.
+</p>
+<h1>2. Rounding errors and fixed points dynamics</h1>
+<p>Finding the right fixed point representation for each step of an algorithm can be tricky. Some intermediate computations may require a higher accuray.
+So, to help for this analysis I have added a tracing mechanism.
+</p>
+<p>It is as simple as writing:
+</p>
+<div class="haskell"><span class='hs-definition'>trace</span>&nbsp;<span class='hs-str'>"A&nbsp;Signal"</span>&nbsp;<span class='hs-varid'>signal</span>&nbsp;<br/></div>
+<p>or
+</p>
+<div class="haskell"><span class='hs-definition'>traceSample</span>&nbsp;<span class='hs-str'>"A&nbsp;signal"</span>&nbsp;<span class='hs-varid'>sample</span><br/></div>
+<p>Several traces can be active in the same code (and use a different string for identification)
+</p>
+<p>then, once you have enough data, you can trace it using:
+</p>
+<div class="haskell"><span class='hs-definition'>traceValues</span>&nbsp;<span class='hs-str'>"A&nbsp;Signal"</span><br/></div>
+<p><em>traceValues</em> will display a log-log plot of the probability distribution and with a reference line corresponding to an uniform distribution.
+I think I'll have to write another blog post about it (or a good documentation in the package) because the resulting graph is not easy to decode.
+</p>
+<p>Here is an example generated with 
+</p>
+<div class="haskell"><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int16</span>&nbsp;<span class='hs-num'>14</span>&nbsp;<span class='hs-conid'>Sat</span>&nbsp;<span class='hs-conid'>NR</span><br/><br/></div>
+<div class="picture"><a href="http://www.alpheccar.org/post/103/Stats_good.png" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/103/Stats_good.png">
+</a>
+</div>
+<p>The minimum value which can be represented with this format is : 
+</p>
+<div class="equation">$$ 0.00006103515625 $$</div>
+<p>or 
+</p>
+<div class="equation">$$  2^{-14}  $$</div>
+<p>It log is $-9.7$. The minimum horizontal value of the graph.
+</p>
+<p>The maximum value (for positive values) is : $1.99993896484375$ with a log of $0.69$. The maximum horizontal value.
+</p>
+<p>But, the signal is reaching only $1.7$ in this test so with a log of $0.53$.
+</p>
+<p>We see that no positive or negative saturation was detected. We also see that the lowest fractional bits are not used a lot. Indeed, a test with
+</p>
+<div class="haskell"><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int16</span>&nbsp;<span class='hs-num'>13</span>&nbsp;<span class='hs-conid'>Sat</span>&nbsp;<span class='hs-conid'>NR</span><br/></div>
+<p>would show a much better fit between the red and blue curves.
+</p>
+<p>The trace function has the type:
+</p>
+<div class="haskell"><span class='hs-definition'>trace</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>HasDoubleRepresentation</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>Resolution</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>String</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Signal</span>&nbsp;<span class='hs-varid'>t</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>Signal</span>&nbsp;<span class='hs-varid'>t</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<br/></div>
+<p>So, yes, trace is using the horrible <em>unsafePerformIO</em> ! But, for tracing I think it is a perfectly acceptable use.
+</p>
+<h1>3. Plotting</h1>
+<p>PDF is great but when the picture is getting to complex, vectorial drawing is no more a solution ... so the tool is now switching to a raster mode. By luck, HPDF is supporting the inclusion of raw images. So, I have used it. It is working but I have not made any attempt at accelerating my rasterization code which is currently a bit slow.
+</p>
+<h1>4. Sound import / export</h1>
+<p>I am relying on the WAVE package to import / export WAV files. Stereo is supported ! Importation / exportation is taking care of the conversion to/from fixed point.
+</p>
+<p>I have modified the OS X hViewer to be able to play sound. It is based on a custom implementation of an AIFC encoder. So, potentially I may support 5.1 in addition to stereo. More work is needed on this and then I'll also add an API to export AIFC files.
+</p>
+<h1>5. Voice Activity Detection</h1>
+<p>Here is a very simplified VAD algorithm for this blog post. I have not made any attempt at writing a true VAD algorithm so don't expect that one to work on a lot of test patterns. It is just an illustration. In a future version, when I have finished writing unitary tests, I'll start adding true speech and acoustic algorithms. 
+</p>
+<p>I have not done any post-processing of the VAD signal (decision smoothing). It is generally done to improve the signal based on temporal properties of speech. 
+</p>
+<p>The implementation of the VAD is in fixed point. And I have added some non-stationary noise.
+</p>
+<p>The spectrogram is also generated by this library.
+</p>
+<div class="picture"><a href="http://www.alpheccar.org/post/103/Spectrogram.png" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/103/Spectrogram.png">
+</a>
+</div>
+<p>Here are some examples of the code and types for the VAD:
+</p>
+<div class="haskell"><span class='hs-definition'>framed</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>frameWithWinAndOverlap</span>&nbsp;<span class='hs-varid'>winSize</span>&nbsp;<span class='hs-varid'>overlap</span>&nbsp;<span class='hs-varid'>hann</span>&nbsp;<span class='hs-varid'>s</span><br/><span class='hs-definition'>energy</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>mapS</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>U</span><span class='hs-varop'>.</span><span class='hs-varid'>map</span>&nbsp;<span class='hs-varid'>bandEnergyF</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>fft</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-conid'>U</span><span class='hs-varop'>.</span><span class='hs-varid'>map</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conop'>:+</span>&nbsp;<span class='hs-num'>0</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>framed</span><br/></div>
+<p><em>frameWithWinAndOverlap</em> is part of the <em>Windows</em> module in the library.
+</p>
+<p>Here is an example of how could the VAD API be. The current implementation is a bit more complex but can be simplified.
+</p>
+<p>The <em>n + n</em> type is because the energy is a square and I keep all fractionals bits (so 2n).
+</p>
+<div class="haskell"><span class='hs-definition'>getDecision</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>SingI</span>&nbsp;<span class='hs-varid'>n</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>SingI</span>&nbsp;<span class='hs-varid'>s</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>SingI</span>&nbsp;<span class='hs-varid'>r</span><span class='hs-layout'>,</span>&nbsp;<span class='hs-conid'>SingI</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>n</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-varid'>n</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>=&gt;</span>&nbsp;<span class='hs-conid'>Int</span>&nbsp;<span class='hs-comment'>-- ^ Window size</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-conid'>U</span><span class='hs-varop'>.</span><span class='hs-conid'>Vector</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int32</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>n</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-varid'>n</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>r</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-comment'>-- ^ Current Estimation of the energy spectrum</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>U</span><span class='hs-varop'>.</span><span class='hs-conid'>Vector</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int32</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-varid'>n</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-varid'>n</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>r</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-comment'>-- ^ Sequence of spectrum</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-conid'>Fixed</span>&nbsp;<span class='hs-conid'>Int16</span>&nbsp;<span class='hs-varid'>n</span>&nbsp;<span class='hs-varid'>s</span>&nbsp;<span class='hs-varid'>r</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-comment'>-- ^ Sequence of VAD decisions</span><br/></div>
+<h1>6. Problems</h1>
+<p>The rasterization is slow. My functions for <em>Signal</em> are not lazy enough. When I write the framing algorithms using <em>Signal</em> it never ends. When I change some pieces to use a <em>Data.Sream.List</em> it is working. And yet, <em>Signal</em> is just a wrapper around lists. So, I probably made a mistake with my rewrite rules for optimization. 
+</p>
+<p>And there is a problem with <em>Int40</em> so the VAD is using <em>Int64</em> for intermediate computations.
+</p>
+<p>I have written all this code a bit quickly. So, now it is time to make a break to write the unitary tests, document, clean the code, benchmark, optimize and correct the few big remaining bugs. So don't expect another post about this library in short term.
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="Signal processing with Haskell : Part 2" data-url="http://www.alpheccar.org/content/103.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/103.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/103.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '103';
+var disqus_url = "http://www.alpheccar.org/content/103.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephora-venites.tumblr.com">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</div>
+<div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+</body>
+</html>

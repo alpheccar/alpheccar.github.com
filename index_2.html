@@ -22,7 +22,22 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/88.html">HTTP content-type comparison at the type level</a>
+<div id="content"><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/89.html">Web Objects and the underappreciated recursive do</a>
+</div>
+<p>I am doing some additional experiments with Haskell and web development. In this post, I am looking at the problem of composability for web pages.
+</p>
+<p>I have tested different methods for building a web page and what I don't like is the lack of composability. When I look at most
+web pages, I see several components with their own state and control flow. But, when I build a web page from those components, the composability on
+the server side (for the request handlers) is less obvious.
+</p>
+
+<div class="more"><a href="http://www.alpheccar.org/content/89.html">read more ...</a>
+</div>
+<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
+<a href="http://www.alpheccar.org/content/89.html#disqus_thread" data-disqus-identifier="89" /></a>
+</div>
+</div>
+<div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/88.html">HTTP content-type comparison at the type level</a>
 </div>
 <p>If you read <a href="http://www.alpheccar.org/content/87.html">my previous post</a>, you'll be interested by this one. Indeed, I have discovered that the idea introduced in the previous post is working but not practical at all since it does not work with type synonym definitions. But, without synonyms, you can't really write the kind of types required to do http content-type comparison at the type level. By luck, some additional type hacking is solving the problem. Moreover, I think it can be useful to show in a very informal way a few applications of computations at type level. It is not so hard (but not totally trivial. I had to make several experiments to get it right).
 </p>
@@ -71,17 +86,6 @@ always ok because I have not yet implemented an hyphenation algorithm. But, the 
 </div>
 <div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
 <a href="http://www.alpheccar.org/content/84.html#disqus_thread" data-disqus-identifier="84" /></a>
-</div>
-</div>
-<div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/82.html">HPDF 1.1 : Introducing typesetting</a>
-</div>
-<p>I have finally released HPDF 1.1 with some typesetting features. More details are in this post. It is very experimental but working. I am not happy at all with the API of HPDF but I have no choice. I need, for another project, to add features as fast as possible. I'll think about the elegance of the API later even if I need to change lots of things in HPDF (not really a good development methodology I agree). In addition to the typesetting features, I corrected lots of problems, optimized the code and changed a little bit the image API.
-</p>
-
-<div class="more"><a href="http://www.alpheccar.org/content/82.html">read more ...</a>
-</div>
-<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
-<a href="http://www.alpheccar.org/content/82.html#disqus_thread" data-disqus-identifier="82" /></a>
 </div>
 </div>
 <div id="indexNavigation"><div class="previous"><a href="http://www.alpheccar.org/index_1.html">previous</a>
