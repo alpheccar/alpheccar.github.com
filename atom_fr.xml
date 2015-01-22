@@ -3,9 +3,20 @@
 <link href="http://www.alpheccar.org/atom_fr.xml" rel="self" //>
 <link href="http://www.alpheccar.org" //>
 <id>http://www.alpheccar.org</id>
-<updated>2013-03-06T16:20:00Z</updated>
+<updated>2015-01-22T17:00:00Z</updated>
 <author><name>alpheccar</name>
 </author>
+<entry><title>The interfaces of libraries in functional programming</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/104fr.html" //>
+<id>104fr</id>
+<updated>2015-01-22T17:00:00Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>When I started learning functional programming I asked myself what was considered a good API for a functional programming library. Recently, some newcomers asked me the same question.
+</p>
+<p>So, I thought that it was a good idea to try to articulate an answer in a blog post.
+</p>
+</div>
+</content>
+</entry>
 <entry><title>Signal processing with Haskell : Part 2</title>
 <link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/103fr.html" //>
 <id>103fr</id>
@@ -51,17 +62,6 @@ preliminary.
 to patent trolls and also because I was no more working on those applications.
 </p>
 <p>Some of those apps are still working on my iPhone 4S. I don't know for how many years they'll continue to work without any update. So to keep a trace for the day they'll fail to work, I decided to make a short video.
-</p>
-</div>
-</content>
-</entry>
-<entry><title>hbayes 0.3</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/99fr.html" //>
-<id>99fr</id>
-<updated>2012-05-16T20:30:00Z</updated>
-<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>Lot of news in this version : big network, mpe, soft evidence, logical table ...
-</p>
-<p>The documentation is available in the package.
 </p>
 </div>
 </content>

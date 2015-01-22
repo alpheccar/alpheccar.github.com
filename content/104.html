@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta property="og:title" content="The interfaces of libraries in functional programming" />
+<meta property="og:site_name" content="alpheccar&#39;s blog" />
+<meta property="og:type" content="article" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<link rel="alternate" href="http://www.alpheccar.org/atom.xml" type="application/atom+xml" title="alpheccar&#39;s blog ATOM Feed" />
+<link rel="apple-touch-icon" href="http://www.alpheccar.org/rsrc/appleicon.png" />
+<link rel="shortcut icon" href="http://www.alpheccar.org/siteicon.ico" />
+<script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
+<link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
+
+<title>The interfaces of libraries in functional programming</title>
+<script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52168-3']);
+_gaq.push(['_trackPageview']);
+(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+</head>
+<body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
+</a>
+</div>
+<div id="content"><div class="posttitle">The interfaces of libraries in functional programming</div>
+<p>When I started learning functional programming I asked myself what was considered a good API for a functional programming library. Recently, some newcomers asked me the same question.
+</p>
+<p>So, I thought that it was a good idea to try to articulate an answer in a blog post.
+</p>
+<h2> What is functional programming about ?</h2>
+<p>The first question that people are asking themselve is really what is functional programming about. So, they read stuff about immutability, about functions as first class values ... But, I think it is missing the point.
+</p>
+<p>For me functional programming is about composability. Let's take a very simple (and very artificial) example:
+</p>
+<div class="haskell"><span class='hs-definition'>a</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-varid'>b</span><br/></div>
+<p>The <em>+ </em>operator for integer as implemented in your hardware is perfectly understood. You know it is commutative. You know what is happening when you add <em>1</em> to the maximum representable positive integer etc ...
+</p>
+<p>And yet, in spite of the fact that you perfectly understand this operator, you can't answer simple questions like:
+</p>
+<div class="haskell"><span class='hs-definition'>f</span><span class='hs-layout'>(</span><span class='hs-varid'>x</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-varid'>g</span><span class='hs-layout'>(</span><span class='hs-varid'>x</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>g</span><span class='hs-layout'>(</span><span class='hs-varid'>x</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-varid'>f</span><span class='hs-layout'>(</span><span class='hs-varid'>x</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varop'>?</span>&nbsp;<br/><span class='hs-definition'>f</span><span class='hs-layout'>(</span><span class='hs-varid'>x</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varop'>+</span>&nbsp;<span class='hs-varid'>f</span><span class='hs-layout'>(</span><span class='hs-varid'>x</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-num'>2</span>&nbsp;<span class='hs-varop'>*</span>&nbsp;<span class='hs-varid'>f</span><span class='hs-layout'>(</span><span class='hs-varid'>x</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-varop'>?</span><br/></div>
+<p>It may be true or wrong. You need to look at the code of <em>f</em> and <em>g</em> to be sure. And this is due to side effects in general (IO; shared state ...)
+</p>
+<p>Side effects are making programming anti modular unless they are controlled and do not break composability. What composability means is that you can understand the meaning of your complex expression from the meaning of its parts. And so, you can progressively build more and more complex expressions and increase the level of abstraction and reuse. Because the semantic of the expression remain understandable and manageable due to its composable nature.
+</p>
+<p>In a functional program what is finally important is that it is a <em>value oriented language</em>.  Your <em>f(x)</em> is not executed to produce side effects and eventually a result. Your <em>f(x)</em> is a complex expression which denotes a value. Like <em>4-4</em>, <em>5-5</em> are different ways to write <em>0</em>. A value just is. It can't be changed. It has no side effect. It can only be combined with other values to produce other values.
+A value is the expression that you can't simplify any further. <em>4-4</em> is not considered a value and can be simplified into the expression <em>0</em>. This simplification process is generally called evaluation (but note that it is more subtle that you may think from this post)
+</p>
+<p>Of course, functional programming gets its name from the fact that one category of values is made of functions and functions are values like any other values : they can be created as result of evaluation. They can be used as argument of other functions. They can be used in data structure.
+</p>
+<p>But there are several other types of values available. Some values could even represent side effects (without doing the side effect themselves).
+</p>
+<h2> What is an API for a library ?</h2>
+<p>So, what is the relation with the API of a functional program ? 
+</p>
+<p>The problem is that composability is not the goal of traditional languages. First on a semantic level they don't really do any effort for ensuring the composability. It is far too easy to shoot yourself in the foot because of uncontrolled side effects.
+</p>
+<p>Then, technically they don't really help by not supporting algebraic types (or discriminated union). Let's look at the simple example of composition:
+</p>
+<div class="haskell"><span class='hs-definition'>f</span><span class='hs-layout'>(</span><span class='hs-varid'>g</span><span class='hs-layout'>(</span><span class='hs-varid'>x</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span><br/></div>
+<p>So, in C you may have: 
+</p>
+<div class="code">err=f(&result);</div>
+<p>which is breaking composability.
+</p>
+<p>You could try to use a <em>struct</em> to package the error and result (and a tag to distinguish the cases). But, in any case what is needed is the possibility of returning different results. And what we have is only the possibility of returning all results and use a tag to select one of them hoping we will never make a mistake and select the wrong one.
+</p>
+<p>Or you could use a hierarchy of classes in OO and use the dynamic type to distinguish between error or result objects. And you may have to do dynamic casts.
+</p>
+<p>So, although it is possible to write things so that they can be syntactically composed, it is generally verbose and can easily introduce additional mistakes. This added to the fact that on a semantic level side effects can easily break everything then we can conclude that composability is not really favored in most languages.
+</p>
+<p>But, if composability was just about the composition of two functions it would be rather limited. Thank to the fact that functions are values like any other ones then there is even more flexibility. 
+</p>
+<p>You can build new abstractions and combine the functions in different ways :
+</p>
+<div class="haskell"><span class='hs-definition'>f</span>&nbsp;<span class='hs-varop'>.</span>&nbsp;<span class='hs-varid'>g</span>&nbsp;<br/><span class='hs-definition'>f</span>&nbsp;<span class='hs-varop'>&gt;&gt;=</span>&nbsp;<span class='hs-varid'>g</span>&nbsp;<br/><span class='hs-definition'>f</span>&nbsp;<span class='hs-varop'>`myOperator`</span>&nbsp;<span class='hs-varid'>g</span>&nbsp;<br/></div>
+<p>So, what we start to see is that functional programming is favoring the writing of complex expressions not only from standard values like integer and strings (the nouns) but also from functions (the verbs). But it is also helping us define new ways for combining and glue all those elements together. So, what we are building are sentences made from different values and higher order functions.
+</p>
+<p>The types and higher order values are defining the grammar of those sentences.
+</p>
+<p>It leads to the conclusion that a good API for a functional program is a <em>domain specific language</em>.
+</p>
+<p>If there is no composability in the interface then you should think about it more. Perhaps it is normal but most of the time it means the added value of functional programming has not been used to its full potential.
+</p>
+<p>So, a good API is a domain specific language. You think I am crazy ? Let's look at a simple example. For the lists, the usual functions of an API could be:
+</p>
+<div class="haskell"><span class='hs-definition'>empty</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span><br/><span class='hs-definition'>cons</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span><br/><span class='hs-definition'>append</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span><br/></div>
+<p>In that case, the DSL has an interesting property : you're never getting out of the type <em>[a]</em> which is always the type of the result. This API is an example of universal algebra and we can replace this API with an algebraic data type.
+</p>
+<div class="haskell"><span class='hs-keyword'>data</span>&nbsp;<span class='hs-conid'>MyList</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;&nbsp;<span class='hs-conid'>Empty</span>&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;&nbsp;<span class='hs-conid'>Cons</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>MyList</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='hs-keyglyph'>|</span>&nbsp;&nbsp;<span class='hs-conid'>Append</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>MyList</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>MyList</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-layout'>)</span><br/></div>
+<p>The functions can then be implemented as 
+</p>
+<div class="haskell"><span class='hs-definition'>myEmpty</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Empty</span><br/><span class='hs-definition'>myCons</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Cons</span>&nbsp;<br/><span class='hs-definition'>myAppend</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>Append</span>&nbsp;<br/></div>
+<p>Those functions are indeed doing nothing more than building an element of the type.
+</p>
+<p>Then we could have:
+</p>
+<div class="haskell"><span class='hs-definition'>eval</span>&nbsp;<span class='hs-keyglyph'>::</span>&nbsp;<span class='hs-conid'>MyList</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-keyglyph'>-&gt;</span>&nbsp;<span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span><br/><span class='hs-definition'>eval</span>&nbsp;<span class='hs-conid'>Empty</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-conid'>[]</span><br/><span class='hs-definition'>eval</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Cons</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>l</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>a</span><span class='hs-conop'>:</span><span class='hs-varid'>eval</span>&nbsp;<span class='hs-varid'>l</span>&nbsp;<br/><span class='hs-definition'>eval</span>&nbsp;<span class='hs-layout'>(</span><span class='hs-conid'>Append</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varid'>b</span><span class='hs-layout'>)</span>&nbsp;<span class='hs-keyglyph'>=</span>&nbsp;<span class='hs-varid'>eval</span>&nbsp;<span class='hs-varid'>a</span>&nbsp;<span class='hs-varop'>++</span>&nbsp;<span class='hs-varid'>eval</span>&nbsp;<span class='hs-varid'>b</span>&nbsp;<br/></div>
+<p>This clearly shows that the API can be seen as a little language since the syntax and semantic have been separated through the use
+of an algebraic data type.
+</p>
+<p>And it is exactly what a good API should be in the functional programming world : <em>the definition of a language</em>.
+</p>
+<p>Functional programming is of course not the only category of languages focusing on composability. Concatenative languages also have this focus.
+</p>
+<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="The interfaces of libraries in functional programming" data-url="http://www.alpheccar.org/content/104.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/104.html" size="small" /></g:plusone>
+</div>
+<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/104.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
+</div>
+</div>
+
+<div id="disqus_thread" /></div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
+var disqus_identifier = '104';
+var disqus_url = "http://www.alpheccar.org/content/104.html";
+(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
+<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
+</a>
+
+<div id="copyright"><hr class="line" />
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.</a>
+</a>
+</div>
+</div>
+<div id="sidebar">
+<div id="blogroll"><h1>Links</h1>
+<div class="link"><a href="http://www.360fashion.net/">360Fashion</a>
+</div>
+<div class="link"><a href="http://blog.sigfpe.com">A Neighborhood of Infinity</a>
+</div>
+<div class="link"><a href="http://www.anina.typepad.com/">Anina.net</a>
+</div>
+<div class="link"><a href="http://arxiv.org">ArXiv</a>
+</div>
+<div class="link"><a href="http://antwrp.gsfc.nasa.gov/apod/astropix.html">Astronomy Picture of the Day</a>
+</div>
+<div class="link"><a href="http://johncarlosbaez.wordpress.com/">Azimuth</a>
+</div>
+<div class="link"><a href="http://www.phys.ens.fr/cours/">Cours de l&#39;ENS</a>
+</div>
+<div class="link"><a href="http://mfrost.typepad.com/cute_overload/">Cute Overload</a>
+</div>
+<div class="link"><a href="http://bastiat.org/fr">Frédéric Bastiat</a>
+</div>
+<div class="link"><a href="http://www.haskell.org/">Haskell</a>
+</div>
+<div class="link"><a href="http://www.math.ucr.edu/home/baez/">John Baez&#39;s stuff</a>
+</div>
+<div class="link"><a href="http://maitre.eolas.free.fr/">Journal d&#39;un Avocat</a>
+</div>
+<div class="link"><a href="http://lambda-the-ultimate.org/">Lambda The Ultimate</a>
+</div>
+<div class="link"><a href="http://math.andrej.com/">Mathematics and Computation</a>
+</div>
+<div class="link"><a href="http://micou-toiles.blogspot.com/">Micou Toiles</a>
+</div>
+<div class="link"><a href="http://www.motionmountain.net/">Motion Mountain</a>
+</div>
+<div class="link"><a href="http://noncommutativegeometry.blogspot.com/">Non commutative geometry</a>
+</div>
+<div class="link"><a href="http://planet.haskell.org/">Planet Haskell</a>
+</div>
+<div class="link"><a href="http://www.diffusion.ens.fr/">Savoirs en multimédia</a>
+</div>
+<div class="link"><a href="http://sephora-venites.tumblr.com">Sephora Venites</a>
+</div>
+<div class="link"><a href="http://www.johndcook.com/blog/">The Endeavour</a>
+</div>
+<div class="link"><a href="http://blogs.plos.org/badphysics/">The Language of Bad Physics</a>
+</div>
+<div class="link"><a href="http://golem.ph.utexas.edu/category">The n-Category Café</a>
+</div>
+<div class="link"><a href="http://www.wikiberal.org/">Wikiberal</a>
+</div>
+</div>
+
+<div id="tags"></div>
+<script>$("#tags").load("http://www.alpheccar.org/tag.xml");</script>
+
+<div id="feed"><div><a class="feed" href="http://www.alpheccar.org/atom.xml">feed</a>
+</div>
+<div><a class="feed" href="http://www.alpheccar.org/atom_fr.xml">french feed</a>
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">var disqus_shortname = 'alpheccarsblog'; 
+(function () {var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}());</script>
+
+<script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'https://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+</body>
+</html>
