@@ -3,9 +3,18 @@
 <link href="http://www.alpheccar.org/atom.xml" rel="self" //>
 <link href="http://www.alpheccar.org" //>
 <id>http://www.alpheccar.org</id>
-<updated>2015-01-22T17:00:00Z</updated>
+<updated>2015-04-25T18:50:00Z</updated>
 <author><name>alpheccar</name>
 </author>
+<entry><title>Mes impressions sur l&#39;Apple Watch</title>
+<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/105.html" //>
+<id>105</id>
+<updated>2015-04-25T18:50:00Z</updated>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>Résumé après 1,5 jour d'utilisation de l'Apple Watch pour les geeks qui sont intéressés. 
+</p>
+</div>
+</content>
+</entry>
 <entry><title>The interfaces of libraries in functional programming</title>
 <link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/104.html" //>
 <id>104</id>
@@ -50,18 +59,6 @@ missing block is plotting.
 </p>
 <p>So, I wrote a very quick-and-dirty solution which is enough for me and may be useful to others even if it is very
 preliminary.
-</p>
-</div>
-</content>
-</entry>
-<entry><title>iFractal</title>
-<link rel="alternate" type="text/html" href="http://www.alpheccar.org/content/100.html" //>
-<id>100</id>
-<updated>2012-01-12T14:00:00Z</updated>
-<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>I had a few applications available in the AppStore. But, a few years ago I decided to remove them because of the risk increase due
-to patent trolls and also because I was no more working on those applications.
-</p>
-<p>Some of those apps are still working on my iPhone 4S. I don't know for how many years they'll continue to work without any update. So to keep a trace for the day they'll fail to work, I decided to make a short video.
 </p>
 </div>
 </content>

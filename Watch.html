@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta property="og:title" content="ghci viewer for OS X" />
+<html><head><meta property="og:title" content="Watch" />
 <meta property="og:site_name" content="alpheccar&#39;s blog" />
-<meta property="og:type" content="article" />
+<meta property="og:type" content="website" />
 
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
@@ -11,7 +11,7 @@
 <script src="http://www.alpheccar.org/rsrc/jquery.js" /></script>
 <link href="http://www.alpheccar.org/rsrc/alpha.css?1" rel="stylesheet" type="text/css" />
 
-<title>ghci viewer for OS X</title>
+<title>Watch</title>
 <script type="text/javascript">var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-52168-3']);
 _gaq.push(['_trackPageview']);
@@ -22,51 +22,18 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 <body><div page><div id="banner"><a href="http://www.alpheccar.org/index.html"><img src="http://www.alpheccar.org/rsrc/banner.png">
 </a>
 </div>
-<div id="content"><div class="posttitle">ghci viewer for OS X</div>
-<p>I am planning to write a library to prototype signal processing algorithms with Haskell (speech, acoustic ...). The first
-missing block is plotting. 
-</p>
-<p>So, I wrote a very quick-and-dirty solution which is enough for me and may be useful to others even if it is very
-preliminary.
-</p>
-<p>It is made of two parts. An OS X application with is just a PDF viewer listening on port 9000. The displayed PDF can be saved and the window can be rescaled or switched to full screen. I am naming this app hViewer. You can <a href="https://github.com/alpheccar/hViewer">get it on github</a>
-</p>
-<p>The second part is a small set of Haskell files that you can <a href="https://github.com/alpheccar/HaskellViewer">get on github</a>. One of the files is used to communicate with the hViewer and generate a compressed PDF stream.
-</p>
-<p>Another file is defining the <em>Displayable</em> class. The values which can be displayed : they can be converted into a <em>Draw()</em> value from the HPDF package.
-</p>
-<p>And, as an example, I am providing an implementation of plotting for signals with a few settings.
-</p>
-<p>Some tests are available in the file Test.hs. Just load it into ghci, type testt to generate a plot of the signals and testf to generate a plot of the spectrum. The hViewer must be running.
-</p>
-<p>Here is the result:
-</p>
-<div class="picture"><a href="http://www.alpheccar.org/post/101/screenshot.png" rel="prettyPhoto"><img src="http://www.alpheccar.org/post/101/screenshot.png">
-</a>
+<div id="content"><div class="postQuote"><div class="posttitle"><a href="http://www.alpheccar.org/content/105.html">Mes impressions sur l&#39;Apple Watch</a>
 </div>
-<p>So, why PDF ? First, because it is the standard format on OS X and I can easily generate it with my HPDF Haskell library. Second, because the pictures look great and I have a good control on the typesetting which is useful to position labels, wrap text ...
+<p>Résumé après 1,5 jour d'utilisation de l'Apple Watch pour les geeks qui sont intéressés. 
 </p>
-<p>And, PDF can be easily imported into a TeX document. 
-</p>
-<div class="social"><div class="socialButton"><a class="twitter-share-button" href="http://twitter.com/share" data-lang="en" data-text="ghci viewer for OS X" data-url="http://www.alpheccar.org/content/101.html" data-count="horizontal" data-via="alpheccar">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</div>
-<div class="socialButton"><g:plusone href="http://www.alpheccar.org/content/101.html" size="small" /></g:plusone>
-</div>
-<div class="socialButton"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.alpheccar.org/content/101.html&amp;layout=button_count&amp;width=90&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=20" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true" /></iframe>
-</div>
-</div>
 
-<div id="disqus_thread" /></div>
-<script type="text/javascript">var disqus_shortname = 'alpheccarsblog';
-var disqus_identifier = '101';
-var disqus_url = "http://www.alpheccar.org/content/101.html";
-(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</noscript>
-<a class="dsq-brlink" href="http://disqus.com">blog comments powered by <span class="logo-disqus">Disqus</span>
-</a>
+<div class="more"><a href="http://www.alpheccar.org/content/105.html">lisez plus ...</a>
+</div>
+<div class="commentCount"><img src="http://www.alpheccar.org/rsrc/comment.png" />&nbsp;</img>
+<a href="http://www.alpheccar.org/content/105.html#disqus_thread" data-disqus-identifier="105" /></a>
+</div>
+</div>
+<div id="indexNavigation"></div>
 
 <div id="copyright"><hr class="line" />
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
