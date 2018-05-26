@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/alpheccar
+--------------------------------------------------------------------
+
+I hereby claim:
+
+ * I am an admin of https://www.alpheccar.org
+ * I am alpheccar (https://keybase.io/alpheccar) on keybase.
+ * I have a public key ASD3fZhHUIBuQ-FnOAcgDphclG1Ddyk5r1Cu5V1z_v5q6wo
+
+To do so, I am signing this object:
+
+{
+ "body": {
+   "key": {
+     "eldest_kid": "0120f77d984750806e43e1673807200e985c946d43772939af50aee55d73fefe6aeb0a",
+     "host": "keybase.io",
+     "kid": "0120f77d984750806e43e1673807200e985c946d43772939af50aee55d73fefe6aeb0a",
+     "uid": "e195cdd46410a4b6ed7703049cfc9919",
+     "username": "alpheccar"
+   },
+   "merkle_root": {
+     "ctime": 1527342124,
+     "hash": "6f9116f8b54926e66967bdcbfa59fef40df249231dd98f835bf0cf0e720e40e76710e54f664c28bee547e25f73a2302f5d8d895a21c74a8259094b5802687f72",
+     "hash_meta": "42ca42885de0689020c5697166470fcb767861ca9436db1a037d2745b43eb58d",
+     "seqno": 2929748
+   },
+   "service": {
+     "entropy": "8PY3CBfMYmvHFsmgqdFIma5d",
+     "hostname": "www.alpheccar.org",
+     "protocol": "https:"
+   },
+   "type": "web_service_binding",
+   "version": 2
+ },
+ "client": {
+   "name": "keybase.io go client",
+   "version": "1.0.47"
+ },
+ "ctime": 1527342158,
+ "expire_in": 504576000,
+ "prev": "42e12b206e48d91565efd70ca2d82e60d292174c9cb01e4cd1c5c3ddf49a30cb",
+ "seqno": 11,
+ "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEg932YR1CAbkPhZzgHIA6YXJRtQ3cpOa9QruVdc/7+ausKp3BheWxvYWTESpcCC8QgQuErIG5I2RVl79cMotguYNKSF0ycsB5M0cXD3fSaMMvEIHhgXQDLY8nhXVNphqOiFajqh5tRqW4iOTFK8pvSwVDtAgHCo3NpZ8RAyZdyKthAK9hDiDrcbQjTzDB65MoOaCycemqJ2Eo5y6LiUGrqHHp+CVulcn1pZ/PckmQFU+OOpLfVf9oymiBLBqhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIGrBP9aJRGq8RpchUoGBnz4j7JUsbjozwa6yuiplPwzvo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/alpheccar
+
+==================================================================
